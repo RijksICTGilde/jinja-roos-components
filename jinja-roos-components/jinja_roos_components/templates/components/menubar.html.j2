@@ -1,0 +1,170 @@
+{% set size = _component_context.size | default('md') %}
+{% set direction = _component_context.direction | default('horizontal') %}
+{% set items = _component_context.get('items', []) %}
+{% set use_icons = _component_context.useIcons | default(false) %}
+{% set icon_placement = _component_context.iconPlacement | default('before') %}
+{% set max_width = _component_context.maxWidth | default('none') %}
+{% set horizontal_rule = _component_context.horizontalRule | default(true) %}
+{% set link_color = _component_context.linkColor | default('logoblauw') %}
+{% set use_background_color = _component_context.useBackgroundColor | default(false) %}
+{% set grid = _component_context.grid | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Filter items by alignment #}
+{% set left_items = items | rejectattr('align', 'equalto', 'right') | list %}
+{% set right_items = items | selectattr('align', 'equalto', 'right') | list %}
+
+
+{# Build CSS classes #}
+{% set background_classes = ['rvo-menubar__background'] %}
+{% if horizontal_rule %}
+    {% set background_classes = background_classes + ['rvo-menubar__background--horizontal-rule'] %}
+{% endif %}
+{% if additional_class %}
+    {% set background_classes = background_classes + [additional_class] %}
+{% endif %}
+
+{% set nav_classes = ['rvo-menubar', 'rvo-menubar--' + size] %}
+
+<div 
+    class="{{ background_classes | join(' ') }}"
+    data-roos-component="menubar"
+    data-roos-size="{{ size }}"
+    data-roos-direction="{{ direction }}">
+    
+    {% if direction == 'horizontal' and max_width != 'none' %}
+        <div class="rvo-max-width-layout{% if max_width %} rvo-max-width-layout--{{ max_width }}{% endif %}">
+    {% endif %}
+    
+    {% if content %}
+        {{ content | safe }}
+    {% else %}
+        <nav class="{{ nav_classes | join(' ') }}">
+            <ul class="rvo-menubar__ul">
+                <li class="rvo-menubar__list{% if direction == 'vertical' %} rvo-menubar__list--vertical{% endif %}">
+                    
+                    {# Left-aligned items #}
+                    <ul class="rvo-menubar__group--flex{% if direction == 'vertical' %} rvo-menubar__group--vertical{% endif %}">
+                        {% for item in left_items %}
+                            <li class="rvo-menubar__item">
+                                {% if item.submenu %}
+                                    <div class="rvo-menubar__dropdown">
+                                        <button class="rvo-link rvo-menubar__link rvo-link--{{ link_color }}{% if item.active or item.selected %} rvo-link--active{% endif %}"
+                                                type="button"
+                                                aria-expanded="false">
+                                            {% if use_icons and item.icon and icon_placement == 'before' %}
+                                                <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--before" 
+                                                      role="img" 
+                                                      aria-label="{{ item.icon }}"></span>
+                                            {% endif %}
+                                            {{ item.label }}
+                                            {% if use_icons and item.icon and icon_placement == 'after' %}
+                                                <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--after" 
+                                                      role="img" 
+                                                      aria-label="{{ item.icon }}"></span>
+                                            {% endif %}
+                                        </button>
+                                        <ul class="rvo-menubar__submenu">
+                                            {% for subitem in item.submenu %}
+                                                <li class="rvo-menubar__submenu-item">
+                                                    <a href="{{ subitem.link }}" 
+                                                       class="rvo-link rvo-menubar__submenu-link{% if subitem.active or subitem.selected %} rvo-link--active{% endif %}">
+                                                        {{ subitem.label }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <a href="{{ item.link }}" 
+                                       class="rvo-link rvo-menubar__link rvo-link--{{ link_color }}{% if item.active or item.selected %} rvo-link--active{% endif %}">
+                                        {% if use_icons and item.icon and icon_placement == 'before' %}
+                                            <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--before" 
+                                                  role="img" 
+                                                  aria-label="{{ item.icon }}"></span>
+                                        {% endif %}
+                                        {{ item.label }}
+                                        {% if use_icons and item.icon and icon_placement == 'after' %}
+                                            <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--after" 
+                                                  role="img" 
+                                                  aria-label="{{ item.icon }}"></span>
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+                                
+                                {% if item.useDivider %}
+                                    <div class="rvo-menubar__divider"></div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    {# Right-aligned items #}
+                    {% if right_items | length > 0 %}
+                        <ul class="rvo-menubar__group--flex{% if direction == 'vertical' %} rvo-menubar__group--vertical{% endif %}">
+                            {% for item in right_items %}
+                                <li class="rvo-menubar__item">
+                                    {% if item.submenu %}
+                                        <div class="rvo-menubar__dropdown">
+                                            <button class="rvo-link rvo-menubar__link rvo-link--{{ link_color }}{% if item.active or item.selected %} rvo-link--active{% endif %}"
+                                                    type="button"
+                                                    aria-expanded="false">
+                                                {% if use_icons and item.icon and icon_placement == 'before' %}
+                                                    <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--before" 
+                                                          role="img" 
+                                                          aria-label="{{ item.icon }}"></span>
+                                                {% endif %}
+                                                {{ item.label }}
+                                                {% if use_icons and item.icon and icon_placement == 'after' %}
+                                                    <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--after" 
+                                                          role="img" 
+                                                          aria-label="{{ item.icon }}"></span>
+                                                {% endif %}
+                                            </button>
+                                            <ul class="rvo-menubar__submenu">
+                                                {% for subitem in item.submenu %}
+                                                    <li class="rvo-menubar__submenu-item">
+                                                        <a href="{{ subitem.link }}" 
+                                                           class="rvo-link rvo-menubar__submenu-link{% if subitem.active or subitem.selected %} rvo-link--active{% endif %}">
+                                                            {{ subitem.label }}
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% else %}
+                                        <a href="{{ item.link }}" 
+                                           class="rvo-link rvo-menubar__link rvo-link--{{ link_color }}{% if item.active or item.selected %} rvo-link--active{% endif %}">
+                                            {% if use_icons and item.icon and icon_placement == 'before' %}
+                                                <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--before" 
+                                                      role="img" 
+                                                      aria-label="{{ item.icon }}"></span>
+                                            {% endif %}
+                                            {{ item.label }}
+                                            {% if use_icons and item.icon and icon_placement == 'after' %}
+                                                <span class="utrecht-icon rvo-icon rvo-icon-{{ item.icon }} rvo-icon--{{ size }} rvo-menubar__icon--after" 
+                                                      role="img" 
+                                                      aria-label="{{ item.icon }}"></span>
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
+                                    
+                                    {% if item.useDivider %}
+                                        <div class="rvo-menubar__divider"></div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+    
+    {% if direction == 'horizontal' and max_width != 'none' %}
+        </div>
+    {% endif %}
+    
+</div>

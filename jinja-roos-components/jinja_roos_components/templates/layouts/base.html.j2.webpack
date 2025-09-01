@@ -1,0 +1,50 @@
+{% set assets = get_component_assets() %}
+<!DOCTYPE html>
+<html lang="{{ language | default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ROOS Components{% endblock %}</title>
+    
+    {% block styles %}
+        <% for (const css of htmlWebpackPlugin.files.css) { %>
+            <link rel="stylesheet" href="{{ url_for_cache('static', path='<%= css.split('/static/')[1] %>') }}">
+        <% } %>
+        {% for css_file in assets.css_files %}
+            <link rel="stylesheet" href="{{ css_file }}">
+        {% endfor %}
+    {% endblock %}
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="rvo-theme roos-theme roos-theme--{{ roos_theme }}" 
+      {% if roos_htmx %}hx-ext="response-targets"{% endif %}>
+    
+    {% block header %}{% endblock %}
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% block footer %}{% endblock %}
+    
+    {% block scripts %}
+        <% for (const js of htmlWebpackPlugin.files.js) { %>
+            <% if (js.endsWith(".mjs")) { %>
+                <script type="module" src="{{ url_for_cache('static', path='<%= js.split('/static/')[1] %>') }}"></script>
+            <% } else { %>
+                <script type="text/javascript" src="{{ url_for_cache('static', path='<%= js.split('/static/')[1] %>') }}"></script>
+            <% } %>
+        <% } %>
+        {% for js_file in assets.js_files %}
+            {% if js_file.endswith('.mjs') %}
+                <script type="module" src="{{ js_file }}"></script>
+            {% else %}
+                <script src="{{ js_file }}"></script>
+            {% endif %}
+        {% endfor %}
+    {% endblock %}
+    
+    {% block body_end %}{% endblock %}
+</body>
+</html>

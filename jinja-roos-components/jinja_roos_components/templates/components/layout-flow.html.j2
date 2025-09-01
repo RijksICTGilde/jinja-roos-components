@@ -1,0 +1,67 @@
+{% set gap = _component_context.gap | default('md') %}
+{% set size = _component_context.size | default('lg') %}
+{% set row = _component_context.row | default(false) %}
+{% set wrap = _component_context.wrap | default(false) %}
+{% set align_items = _component_context.alignItems | default('') %}
+{% set align_content = _component_context.alignContent | default('') %}
+{% set justify_items = _component_context.justifyItems | default('') %}
+{% set justify_content = _component_context.justifyContent | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = [] %}
+
+{# Add max-width layout classes based on size #}
+{% if size and size != 'uncentered' %}
+    {% set css_classes = css_classes + ['rvo-max-width-layout', 'rvo-max-width-layout--' + size] %}
+{% elif size == 'uncentered' %}
+    {% set css_classes = css_classes + ['rvo-max-width-layout', 'rvo-max-width-layout--uncentered'] %}
+{% endif %}
+
+{% if row %}
+    {% set css_classes = css_classes + ['rvo-layout-row'] %}
+{% else %}
+    {% set css_classes = css_classes + ['rvo-layout-column'] %}
+{% endif %}
+
+{% if align_items and align_items | length > 0 %}
+    {% set css_classes = css_classes + ['rvo-layout-align-items-' + align_items] %}
+{% endif %}
+{% if align_content and align_content | length > 0 %}
+    {% set css_classes = css_classes + ['rvo-layout-align-content-' + align_content] %}
+{% endif %}
+{% if justify_items and justify_items | length > 0 %}
+    {% set css_classes = css_classes + ['rvo-layout-justify-items-' + justify_items] %}
+{% endif %}
+{% if justify_content and justify_content | length > 0 %}
+    {% set css_classes = css_classes + ['rvo-layout-justify-content-' + justify_content] %}
+{% endif %}
+
+{% if gap %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--' + gap] %}
+{% endif %}
+
+{% if wrap %}
+    {% set css_classes = css_classes + ['rvo-layout--wrap'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set css_classes = css_classes + [additional_class] %}
+{% endif %}
+
+<div 
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="layout-flow"
+    data-roos-gap="{{ gap }}"
+    data-roos-size="{{ size }}"
+    data-roos-row="{{ row }}"
+    {% if not content %}style="min-height: 100px;"{% endif %}>
+    
+    {% if content %}
+        {{ content | safe }}
+    {% else %}
+        <div>Element A</div>
+        <div>Element B</div>
+    {% endif %}
+</div>

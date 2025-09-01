@@ -1,0 +1,56 @@
+{% set gap = _component_context.gap | default('md') %}
+{% set columns = _component_context.columns | default('') %}
+{% set division = _component_context.division | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Build CSS classes to match RVO pattern #}
+{% set container_classes = ['rvo-layout-grid-container'] %}
+{% if additional_class %}
+    {% set container_classes = container_classes + [additional_class] %}
+{% endif %}
+
+{% set grid_classes = ['rvo-layout-grid'] %}
+{% set grid_classes = grid_classes + ['rvo-layout-gap--' + gap] %}
+
+{% if columns %}
+    {% set grid_classes = grid_classes + ['rvo-layout-grid-columns--' + columns] %}
+{% endif %}
+
+{% if division %}
+    {% set grid_classes = grid_classes + ['rvo-layout-grid--division'] %}
+{% endif %}
+
+{# Generate demo content based on column count #}
+{% set column_count = 1 %}
+{% if columns == 'two' %}{% set column_count = 2 %}
+{% elif columns == 'three' %}{% set column_count = 3 %}
+{% elif columns == 'four' %}{% set column_count = 4 %}
+{% elif columns == 'five' %}{% set column_count = 5 %}
+{% elif columns == 'six' %}{% set column_count = 6 %}
+{% elif columns == 'seven' %}{% set column_count = 7 %}
+{% elif columns == 'eight' %}{% set column_count = 8 %}
+{% elif columns == 'nine' %}{% set column_count = 9 %}
+{% elif columns == 'ten' %}{% set column_count = 10 %}
+{% elif columns == 'eleven' %}{% set column_count = 11 %}
+{% elif columns == 'twelve' %}{% set column_count = 12 %}
+{% endif %}
+
+<div class="{{ container_classes | join(' ') }}">
+    <div 
+        class="{{ grid_classes | join(' ') }}"
+        data-roos-component="grid"
+        data-roos-gap="{{ gap }}"
+        {% if columns %}data-roos-columns="{{ columns }}"{% endif %}
+        {% if division %}style="--division: {{ division }};"{% endif %}>
+        
+        {% if content %}
+            {{ content | safe }}
+        {% else %}
+            {# Generate demo elements matching RVO pattern #}
+            {% for i in range(column_count) %}
+                <div>Element {{ i + 1 }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

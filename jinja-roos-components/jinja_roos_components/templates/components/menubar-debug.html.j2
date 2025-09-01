@@ -1,0 +1,88 @@
+{% set size = _component_context.size | default('md') %}
+{% set direction = _component_context.direction | default('horizontal') %}
+{% set items = _component_context.get('items', []) %}
+{% set use_icons = _component_context.useIcons | default(false) %}
+{% set icon_placement = _component_context.iconPlacement | default('before') %}
+{% set max_width = _component_context.maxWidth | default('none') %}
+{% set horizontal_rule = _component_context.horizontalRule | default(true) %}
+{% set link_color = _component_context.linkColor | default('donkerblauw') %}
+
+<!-- DEBUG OUTPUT -->
+<div style="border: 2px solid red; padding: 10px; margin: 10px; background: #ffe6e6;">
+    <h3>MENUBAR DEBUG INFO</h3>
+    <p><strong>_component_context keys:</strong> {{ _component_context.keys() | list }}</p>
+    <p><strong>items type:</strong> {{ items.__class__.__name__ if items else 'None' }}</p>
+    <p><strong>items content:</strong> {{ items | tojson if items else 'None' }}</p>
+    <p><strong>items length:</strong> {{ items | length if items else 0 }}</p>
+    <p><strong>use_icons:</strong> {{ use_icons }} (type: {{ use_icons.__class__.__name__ }})</p>
+    <p><strong>Raw _component_context:</strong> {{ _component_context | tojson }}</p>
+</div>
+
+{# Filter items by alignment #}
+{% set left_items = [] %}
+{% set right_items = [] %}
+{% for item in items %}
+    {% if item.align == 'right' %}
+        {% set right_items = right_items + [item] %}
+    {% else %}
+        {% set left_items = left_items + [item] %}
+    {% endif %}
+{% endfor %}
+
+<!-- DEBUG: Show filtered items -->
+<div style="border: 2px solid blue; padding: 10px; margin: 10px; background: #e6f3ff;">
+    <h3>FILTERED ITEMS DEBUG</h3>
+    <p><strong>left_items:</strong> {{ left_items | tojson }}</p>
+    <p><strong>right_items:</strong> {{ right_items | tojson }}</p>
+    <p><strong>left_items length:</strong> {{ left_items | length }}</p>
+</div>
+
+{# Build CSS classes #}
+{% set background_classes = ['rvo-menubar__background'] %}
+{% if horizontal_rule %}
+    {% set background_classes = background_classes + ['rvo-menubar__background--horizontal-rule'] %}
+{% endif %}
+
+{% set nav_classes = ['rvo-menubar', 'rvo-menubar--' + size] %}
+
+<div 
+    class="{{ background_classes | join(' ') }}"
+    data-roos-component="menubar"
+    data-roos-size="{{ size }}"
+    data-roos-direction="{{ direction }}">
+    
+    {% if direction == 'horizontal' and max_width != 'none' %}
+        <div class="rvo-max-width-layout{% if max_width %} rvo-max-width-layout--{{ max_width }}{% endif %}">
+    {% endif %}
+    
+    <nav class="rvo-menubar--debug">
+        <!-- DEBUG: Show what we're iterating over -->
+        <p style="color: red; font-weight: bold;">About to iterate over {{ left_items | length }} left items</p>
+        
+        <ul class="rvo-menubar__ul">
+            <li class="rvo-menubar__list{% if direction == 'vertical' %} rvo-menubar__list--vertical{% endif %}">
+                
+                {# Left-aligned items #}
+                <ul class="rvo-menubar__group--flex{% if direction == 'vertical' %} rvo-menubar__group--vertical{% endif %}">
+                    {% for item in left_items %}
+                        <li class="rvo-menubar__item">
+                            <span style="color: red; background: yellow;">DEBUG ITEM: {{ item | tojson }}</span>
+                            <a href="{{ item.link }}" 
+                               class="rvo-menubar__link rvo-menubar__link--{{ link_color }}{% if item.active %} rvo-menubar__link--active{% endif %}">
+                                {{ item.label }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li style="color: red; font-weight: bold;">NO LEFT ITEMS FOUND</li>
+                    {% endfor %}
+                </ul>
+                
+            </li>
+        </ul>
+    </nav>
+    
+    {% if direction == 'horizontal' and max_width != 'none' %}
+        </div>
+    {% endif %}
+    
+</div>

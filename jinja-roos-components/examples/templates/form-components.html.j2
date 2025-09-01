@@ -1,0 +1,361 @@
+{#
+  Form Components Reference
+  
+  This example demonstrates form component patterns and interactions:
+  - Form layouts and structure
+  - Input components and validation
+  - Button groups and actions
+  - Component interaction patterns
+  
+  Based on patterns from existing roos-form.html.j2 and RVO demo pages
+#}
+
+<c-page title="RVO Form Components Reference" 
+        bodyClass="rvo-responsive"
+        lang="nl">
+    
+    <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-layout-flow gap="3xl">
+            
+            {# Page Header #}
+            <header class="rvo-page-header">
+                <h1 class="utrecht-heading-1">Form Components & Interactions</h1>
+                <p class="rvo-text--lg">
+                    Demonstrating form patterns, component interactions, and validation used in RVO applications.
+                </p>
+            </header>
+            
+            {# Basic Form Example #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Basic Form Structure</h2>
+                
+                <c-card outline="true" padding="lg">
+                    <form method="POST" action="/api/example/submit">
+                        <c-layout-flow gap="lg">
+                            
+                            <div class="rvo-form-group">
+                                <label for="project-name" class="utrecht-form-label">
+                                    Projectnaam <span class="rvo-required">*</span>
+                                </label>
+                                <c-input id="project-name" 
+                                       name="project-name"
+                                       type="text"
+                                       placeholder="Voer projectnaam in"
+                                       required="true" />
+                                <p class="rvo-form-help">Gebruik alleen letters, cijfers en koppeltekens</p>
+                            </div>
+
+                            <div class="rvo-form-group">
+                                <label for="description" class="utrecht-form-label">Beschrijving</label>
+                                <c-textarea id="description"
+                                          name="description"
+                                          placeholder="Beschrijf uw project..."
+                                          rows="4" />
+                            </div>
+
+                            <div class="rvo-form-group">
+                                <label for="category" class="utrecht-form-label">
+                                    Categorie <span class="rvo-required">*</span>
+                                </label>
+                                <c-select id="category"
+                                        name="category"
+                                        required="true">
+                                    <option value="">Selecteer een categorie</option>
+                                    <option value="web">Web applicatie</option>
+                                    <option value="api">API service</option>
+                                    <option value="database">Database</option>
+                                    <option value="other">Anders</option>
+                                </c-select>
+                            </div>
+
+                            <c-layout-flow gap="md" row="true">
+                                <c-button type="submit" kind="primary" label="Opslaan" />
+                                <c-button type="button" kind="secondary" label="Annuleren" />
+                            </c-layout-flow>
+
+                        </c-layout-flow>
+                    </form>
+                </c-card>
+            </section>
+            
+            {# Advanced Form with Sections #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Multi-Section Form</h2>
+                
+                <form method="POST" action="/api/application/submit">
+                    <c-layout-flow gap="xl">
+                        
+                        {# Personal Information Section #}
+                        <c-card title="Persoonlijke gegevens" outline="true" padding="lg">
+                            <c-layout-flow gap="lg">
+                                
+                                <c-grid columns="two" gap="lg">
+                                    <div class="rvo-form-group">
+                                        <label for="first-name" class="utrecht-form-label">
+                                            Voornaam <span class="rvo-required">*</span>
+                                        </label>
+                                        <c-input id="first-name" 
+                                               name="first-name"
+                                               type="text"
+                                               required="true" />
+                                    </div>
+                                    
+                                    <div class="rvo-form-group">
+                                        <label for="last-name" class="utrecht-form-label">
+                                            Achternaam <span class="rvo-required">*</span>
+                                        </label>
+                                        <c-input id="last-name" 
+                                               name="last-name"
+                                               type="text"
+                                               required="true" />
+                                    </div>
+                                </c-grid>
+                                
+                                <div class="rvo-form-group">
+                                    <label for="email" class="utrecht-form-label">
+                                        E-mailadres <span class="rvo-required">*</span>
+                                    </label>
+                                    <c-input id="email" 
+                                           name="email"
+                                           type="email"
+                                           placeholder="naam@voorbeeld.nl"
+                                           required="true" />
+                                </div>
+                                
+                            </c-layout-flow>
+                        </c-card>
+                        
+                        {# Organization Information Section #}
+                        <c-card title="Organisatiegegevens" outline="true" padding="lg">
+                            <c-layout-flow gap="lg">
+                                
+                                <div class="rvo-form-group">
+                                    <label for="organization" class="utrecht-form-label">
+                                        Organisatie <span class="rvo-required">*</span>
+                                    </label>
+                                    <c-input id="organization" 
+                                           name="organization"
+                                           type="text"
+                                           required="true" />
+                                </div>
+                                
+                                <div class="rvo-form-group">
+                                    <label for="kvk-number" class="utrecht-form-label">KvK-nummer</label>
+                                    <c-input id="kvk-number" 
+                                           name="kvk-number"
+                                           type="text"
+                                           placeholder="12345678" />
+                                </div>
+                                
+                            </c-layout-flow>
+                        </c-card>
+                        
+                        {# Preferences Section with Checkboxes and Radio #}
+                        <c-card title="Voorkeuren" outline="true" padding="lg">
+                            <c-layout-flow gap="lg">
+                                
+                                <fieldset class="rvo-fieldset">
+                                    <legend class="utrecht-form-label">Communicatievoorkeuren</legend>
+                                    <c-layout-flow gap="md">
+                                        <c-checkbox id="newsletter" 
+                                                  name="newsletter" 
+                                                  label="Nieuwsbrief ontvangen" />
+                                        <c-checkbox id="updates" 
+                                                  name="updates" 
+                                                  label="Updates over regelingen" />
+                                        <c-checkbox id="events" 
+                                                  name="events" 
+                                                  label="Uitnodigingen voor evenementen" />
+                                    </c-layout-flow>
+                                </fieldset>
+                                
+                                <fieldset class="rvo-fieldset">
+                                    <legend class="utrecht-form-label">
+                                        Gewenste contactmethode <span class="rvo-required">*</span>
+                                    </legend>
+                                    <c-layout-flow gap="md">
+                                        <c-radio id="contact-email" 
+                                               name="contact-method" 
+                                               value="email"
+                                               label="E-mail" />
+                                        <c-radio id="contact-phone" 
+                                               name="contact-method" 
+                                               value="phone"
+                                               label="Telefoon" />
+                                        <c-radio id="contact-post" 
+                                               name="contact-method" 
+                                               value="post"
+                                               label="Post" />
+                                    </c-layout-flow>
+                                </fieldset>
+                                
+                            </c-layout-flow>
+                        </c-card>
+                        
+                        {# Form Actions #}
+                        <c-card background="color" backgroundColor="grijs-100" padding="lg">
+                            <c-layout-flow gap="md" row="true" justifyContent="space-between" alignItems="center">
+                                <c-layout-flow gap="sm">
+                                    <p class="rvo-text--sm rvo-text--subtle">
+                                        Velden met <span class="rvo-required">*</span> zijn verplicht
+                                    </p>
+                                </c-layout-flow>
+                                
+                                <c-layout-flow gap="md" row="true">
+                                    <c-button type="button" kind="tertiary" label="Opslaan als concept" />
+                                    <c-button type="button" kind="secondary" label="Vorige stap" />
+                                    <c-button type="submit" kind="primary" label="Volgende stap" />
+                                </c-layout-flow>
+                            </c-layout-flow>
+                        </c-card>
+                        
+                    </c-layout-flow>
+                </form>
+            </section>
+            
+            {# Form Validation Examples #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Form Validation States</h2>
+                
+                <c-grid columns="two" gap="xl">
+                    
+                    {# Error State #}
+                    <c-card title="Error State" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            <div class="rvo-form-group rvo-form-group--error">
+                                <label for="email-error" class="utrecht-form-label">
+                                    E-mailadres <span class="rvo-required">*</span>
+                                </label>
+                                <c-input id="email-error" 
+                                       name="email-error"
+                                       type="email"
+                                       value="invalid-email"
+                                       class="rvo-input--error" />
+                                <p class="rvo-form-error">Voer een geldig e-mailadres in</p>
+                            </div>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    {# Success State #}
+                    <c-card title="Success State" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            <div class="rvo-form-group rvo-form-group--success">
+                                <label for="email-success" class="utrecht-form-label">
+                                    E-mailadres <span class="rvo-required">*</span>
+                                </label>
+                                <c-input id="email-success" 
+                                       name="email-success"
+                                       type="email"
+                                       value="gebruiker@voorbeeld.nl"
+                                       class="rvo-input--success" />
+                                <p class="rvo-form-success">E-mailadres is geldig</p>
+                            </div>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                </c-grid>
+            </section>
+            
+            {# Interactive Components #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Interactive Component Patterns</h2>
+                
+                <c-layout-flow gap="lg">
+                    
+                    {# File Upload Area #}
+                    <c-card title="File Upload" outline="true" padding="lg">
+                        <div class="rvo-file-upload">
+                            <div class="rvo-file-upload__dropzone">
+                                <c-layout-flow gap="md" alignItems="center">
+                                    <div class="rvo-icon rvo-icon--2xl rvo-icon-upload"></div>
+                                    <p class="rvo-text">Sleep bestanden hierheen of klik om te uploaden</p>
+                                    <c-button kind="secondary" label="Bestanden selecteren" />
+                                    <p class="rvo-text--sm rvo-text--subtle">
+                                        Maximum bestandsgrootte: 10MB. Toegestane formaten: PDF, DOC, DOCX
+                                    </p>
+                                </c-layout-flow>
+                            </div>
+                        </div>
+                    </c-card>
+                    
+                    {# Search with Filters #}
+                    <c-card title="Search & Filter" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            
+                            <c-layout-flow gap="md" row="true">
+                                <div style="flex: 1;">
+                                    <c-input type="search" 
+                                           placeholder="Zoeken in regelingen..."
+                                           name="search" />
+                                </div>
+                                <c-button kind="primary" label="Zoeken" />
+                            </c-layout-flow>
+                            
+                            <details class="rvo-details">
+                                <summary class="rvo-details__summary">Geavanceerde filters</summary>
+                                <div class="rvo-details__content">
+                                    <c-grid columns="three" gap="md">
+                                        <c-select name="category">
+                                            <option value="">Alle categorieën</option>
+                                            <option value="subsidie">Subsidies</option>
+                                            <option value="regeling">Regelingen</option>
+                                        </c-select>
+                                        <c-select name="status">
+                                            <option value="">Alle statussen</option>
+                                            <option value="open">Open</option>
+                                            <option value="closed">Gesloten</option>
+                                        </c-select>
+                                        <c-button kind="secondary" label="Filters wissen" />
+                                    </c-grid>
+                                </div>
+                            </details>
+                            
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    {# Step Progress Indicator #}
+                    <c-card title="Multi-step Process" outline="true" padding="lg">
+                        <div class="rvo-steps">
+                            <ol class="rvo-steps__list">
+                                <li class="rvo-step rvo-step--completed">
+                                    <span class="rvo-step__number">1</span>
+                                    <span class="rvo-step__label">Persoonlijke gegevens</span>
+                                </li>
+                                <li class="rvo-step rvo-step--current">
+                                    <span class="rvo-step__number">2</span>
+                                    <span class="rvo-step__label">Organisatiegegevens</span>
+                                </li>
+                                <li class="rvo-step">
+                                    <span class="rvo-step__number">3</span>
+                                    <span class="rvo-step__label">Voorkeuren</span>
+                                </li>
+                                <li class="rvo-step">
+                                    <span class="rvo-step__number">4</span>
+                                    <span class="rvo-step__label">Bevestiging</span>
+                                </li>
+                            </ol>
+                        </div>
+                    </c-card>
+                    
+                </c-layout-flow>
+            </section>
+            
+            {# Component Usage Guidelines #}
+            <section class="rvo-content-section">
+                <c-card background="color" backgroundColor="grijs-100" padding="lg">
+                    <h2 class="utrecht-heading-2">Form Component Guidelines</h2>
+                    <c-layout-flow gap="md">
+                        <p><strong>Form Structure:</strong> Use cards to group related form sections</p>
+                        <p><strong>Required Fields:</strong> Mark with red asterisk (*) and aria-required="true"</p>
+                        <p><strong>Validation:</strong> Show errors inline below the field with clear messages</p>
+                        <p><strong>Button Groups:</strong> Primary action on the right, secondary actions on the left</p>
+                        <p><strong>Progressive Enhancement:</strong> Forms should work without JavaScript</p>
+                        <p><strong>Accessibility:</strong> Use proper labels, fieldsets, and ARIA attributes</p>
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+        </c-layout-flow>
+    </div>
+    
+</c-page>

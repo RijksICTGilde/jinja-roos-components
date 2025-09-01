@@ -1,0 +1,91 @@
+{% set primary_menu = _component_context.primaryMenu | default([]) %}
+{% set secondary_menu = _component_context.secondaryMenu | default([]) %}
+{% set max_width = _component_context.maxWidth | default('') %}
+{% set pay_off = _component_context.payOff | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Build CSS classes #}
+{% set footer_classes = ['rvo-footer'] %}
+{% if additional_class %}
+    {% set footer_classes = footer_classes + [additional_class] %}
+{% endif %}
+
+{% set container_classes = ['rvo-footer__container'] %}
+{% if max_width == 'sm' %}
+    {% set container_classes = container_classes + ['rvo-footer__container--sm'] %}
+{% elif max_width == 'md' %}
+    {% set container_classes = container_classes + ['rvo-footer__container--md'] %}
+{% elif max_width == 'lg' %}
+    {% set container_classes = container_classes + ['rvo-footer__container--lg'] %}
+{% endif %}
+
+<footer 
+    class="{{ footer_classes | join(' ') }}"
+    data-roos-component="footer"
+    {% if max_width %}data-roos-max-width="{{ max_width }}"{% endif %}>
+    
+    <div class="{{ container_classes | join(' ') }}">
+        
+        {% if content %}
+            {{ content | safe }}
+        {% elif primary_menu %}
+            <div class="rvo-footer__menu-container{% if max_width == 'sm' %} rvo-footer__menu-container--sm{% endif %}">
+                {% for column in primary_menu %}
+                    <div class="rvo-footer__column">
+                        {% if column.label %}
+                            <h3 class="rvo-footer__column-title utrecht-heading-3">{{ column.label }}</h3>
+                        {% endif %}
+                        
+                        {% if column.get('items') %}
+                            <ul class="rvo-footer__menu{% if column.orientation == 'horizontal' %} rvo-footer__menu--horizontal{% endif %}">
+                                {% for item in column.get('items', []) %}
+                                    <li class="rvo-footer__menu-item">
+                                        {% if item.link %}
+                                            <a href="{{ item.link }}" 
+                                               class="rvo-link rvo-link--no-underline{% if column.orientation != 'horizontal' %} rvo-link--with-icon{% endif %}">
+                                                {% if column.orientation != 'horizontal' %}
+                                                    <span class="utrecht-icon rvo-icon rvo-icon-delta-naar-rechts rvo-icon--sm rvo-icon--wit rvo-link__icon--before" 
+                                                          role="img" 
+                                                          aria-label="Arrow right"></span>
+                                                {% endif %}
+                                                {{ item.content }}
+                                            </a>
+                                        {% else %}
+                                            <span>{{ item.content }}</span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if pay_off %}
+            <div class="rvo-footer__payoff">{{ pay_off }}</div>
+        {% endif %}
+        
+        {% if secondary_menu %}
+            {% if (primary_menu and primary_menu | length > 0) or (pay_off and pay_off | length > 0) %}
+                <hr class="rvo-hr">
+            {% endif %}
+            
+            <div class="rvo-footer__menu-container rvo-footer__menu-container--secondary{% if max_width == 'sm' %} rvo-footer__menu-container--sm{% endif %}">
+                {% for item in secondary_menu %}
+                    {% if item.link %}
+                        <a href="{{ item.link }}" 
+                           class="rvo-link rvo-link--no-underline rvo-link--wit rvo-link--normal">
+                            {{ item.content }}
+                        </a>
+                    {% else %}
+                        <span class="rvo-link--wit">{{ item.content }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+    </div>
+    
+</footer>

@@ -1,0 +1,71 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% set size = _component_context.size | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['rvo-layout-column'] %}
+
+{# Add size classes based on RVO layout system #}
+{% if size %}
+    {% if size == 'xs-1' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-1'] %}
+    {% elif size == 'xs-2' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-2'] %}
+    {% elif size == 'xs-3' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-3'] %}
+    {% elif size == 'xs-4' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-4'] %}
+    {% elif size == 'xs-5' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-5'] %}
+    {% elif size == 'xs-6' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-6'] %}
+    {% elif size == 'xs-7' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-7'] %}
+    {% elif size == 'xs-8' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-8'] %}
+    {% elif size == 'xs-9' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-9'] %}
+    {% elif size == 'xs-10' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-10'] %}
+    {% elif size == 'xs-11' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-11'] %}
+    {% elif size == 'xs-12' %}{% set css_classes = css_classes + ['rvo-layout-column--xs-12'] %}
+    {% elif size == 'sm-1' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-1'] %}
+    {% elif size == 'sm-2' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-2'] %}
+    {% elif size == 'sm-3' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-3'] %}
+    {% elif size == 'sm-4' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-4'] %}
+    {% elif size == 'sm-5' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-5'] %}
+    {% elif size == 'sm-6' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-6'] %}
+    {% elif size == 'sm-7' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-7'] %}
+    {% elif size == 'sm-8' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-8'] %}
+    {% elif size == 'sm-9' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-9'] %}
+    {% elif size == 'sm-10' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-10'] %}
+    {% elif size == 'sm-11' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-11'] %}
+    {% elif size == 'sm-12' %}{% set css_classes = css_classes + ['rvo-layout-column--sm-12'] %}
+    {% elif size == 'md-1' %}{% set css_classes = css_classes + ['rvo-layout-column--md-1'] %}
+    {% elif size == 'md-2' %}{% set css_classes = css_classes + ['rvo-layout-column--md-2'] %}
+    {% elif size == 'md-3' %}{% set css_classes = css_classes + ['rvo-layout-column--md-3'] %}
+    {% elif size == 'md-4' %}{% set css_classes = css_classes + ['rvo-layout-column--md-4'] %}
+    {% elif size == 'md-5' %}{% set css_classes = css_classes + ['rvo-layout-column--md-5'] %}
+    {% elif size == 'md-6' %}{% set css_classes = css_classes + ['rvo-layout-column--md-6'] %}
+    {% elif size == 'md-7' %}{% set css_classes = css_classes + ['rvo-layout-column--md-7'] %}
+    {% elif size == 'md-8' %}{% set css_classes = css_classes + ['rvo-layout-column--md-8'] %}
+    {% elif size == 'md-9' %}{% set css_classes = css_classes + ['rvo-layout-column--md-9'] %}
+    {% elif size == 'md-10' %}{% set css_classes = css_classes + ['rvo-layout-column--md-10'] %}
+    {% elif size == 'md-11' %}{% set css_classes = css_classes + ['rvo-layout-column--md-11'] %}
+    {% elif size == 'md-12' %}{% set css_classes = css_classes + ['rvo-layout-column--md-12'] %}
+    {% elif size == 'lg-1' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-1'] %}
+    {% elif size == 'lg-2' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-2'] %}
+    {% elif size == 'lg-3' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-3'] %}
+    {% elif size == 'lg-4' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-4'] %}
+    {% elif size == 'lg-5' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-5'] %}
+    {% elif size == 'lg-6' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-6'] %}
+    {% elif size == 'lg-7' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-7'] %}
+    {% elif size == 'lg-8' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-8'] %}
+    {% elif size == 'lg-9' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-9'] %}
+    {% elif size == 'lg-10' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-10'] %}
+    {% elif size == 'lg-11' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-11'] %}
+    {% elif size == 'lg-12' %}{% set css_classes = css_classes + ['rvo-layout-column--lg-12'] %}
+    {% endif %}
+{% endif %}
+
+{% if additional_class %}
+    {% set css_classes = css_classes + [additional_class] %}
+{% endif %}
+
+<div 
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="layout-column"
+    data-roos-size="{{ size }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ _component_context.content | safe }}
+</div>

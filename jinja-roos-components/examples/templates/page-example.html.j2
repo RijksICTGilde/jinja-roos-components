@@ -1,0 +1,85 @@
+{# Example usage of c-page component #}
+<c-page title="Operations Manager Dashboard" 
+        description="Self-service Kubernetes environments for RIG projects"
+        bodyClass="dashboard-layout"
+        favicon="/favicon.ico"
+        additionalCss="
+            .dashboard-layout { 
+                background: #f8f9fa; 
+                min-height: 100vh; 
+                padding: 2rem; 
+            }
+        ">
+    
+    {# Page header #}
+    <header class="utrecht-surface utrecht-surface--well" style="margin-bottom: 2rem;">
+        <c-layout-flow gap="md" row="true" alignItems="center" justifyContent="space-between">
+            <h1 class="utrecht-heading-1">Operations Manager</h1>
+            <c-button kind="primary" label="New Project" showIcon="before" icon="plus" />
+        </c-layout-flow>
+    </header>
+    
+    {# Main content area #}
+    <main>
+        <c-layout-flow gap="xl">
+            {# Project cards grid #}
+            <section>
+                <h2 class="utrecht-heading-2" style="margin-bottom: 1rem;">Your Projects</h2>
+                
+                <c-grid columns="three" gap="lg">
+                    <c-card title="E-Commerce Platform" 
+                            content="Production environment for the new e-commerce platform with PostgreSQL and Redis."
+                            outline="true"
+                            padding="lg"
+                            link="/projects/ecommerce"
+                            showLinkIndicator="true" />
+                    
+                    <c-card title="Data Analytics POC" 
+                            content="Proof of concept environment for data analytics with Apache Spark."
+                            outline="true"
+                            padding="lg"
+                            background="color"
+                            backgroundColor="grijs-100" />
+                    
+                    <c-card title="Mobile API Backend" 
+                            content="Backend services for mobile applications with microservices architecture."
+                            outline="true"
+                            padding="lg"
+                            link="/projects/mobile-api"
+                            showLinkIndicator="true" />
+                </c-grid>
+            </section>
+            
+            {# Quick actions #}
+            <section>
+                <h2 class="utrecht-heading-2" style="margin-bottom: 1rem;">Quick Actions</h2>
+                
+                <c-layout-flow gap="md" row="true" wrap="true">
+                    <c-button kind="secondary" label="View All Projects" showIcon="after" icon="external-link" />
+                    <c-button kind="tertiary" label="Documentation" showIcon="before" icon="book" />
+                    <c-button kind="quaternary" label="Support" showIcon="before" icon="help" />
+                </c-layout-flow>
+            </section>
+            
+            {# Status indicators #}
+            <section>
+                <h2 class="utrecht-heading-2" style="margin-bottom: 1rem;">System Status</h2>
+                
+                <c-layout-flow gap="sm" row="true">
+                    <c-tag content="All Systems Operational" type="success" />
+                    <c-tag content="3 Projects Running" type="info" />
+                    <c-tag content="Updates Available" type="warning" url="/updates" />
+                </c-layout-flow>
+            </section>
+        </c-layout-flow>
+    </main>
+    
+    {# Footer #}
+    <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+        <c-layout-flow gap="sm">
+            <p class="utrecht-paragraph utrecht-paragraph--small">
+                Operations Manager &copy; 2024 RIG Cluster - ODC Noord
+            </p>
+        </c-layout-flow>
+    </footer>
+</c-page>

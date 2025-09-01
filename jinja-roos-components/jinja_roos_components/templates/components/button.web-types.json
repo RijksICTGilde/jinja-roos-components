@@ -1,0 +1,107 @@
+{
+  "name": "c-button",
+  "description": "RVO Button component for actions and navigation",
+  "doc-url": "https://rvo.nl/design-system/components/button",
+  "attributes": [
+    {
+      "name": "label",
+      "description": "The text content of the button",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "kind",
+      "description": "The visual style of the button",
+      "value": {
+        "type": "enum",
+        "required": false,
+        "default": "primary",
+        "enum": ["primary", "secondary", "tertiary", "quaternary", "warning", "warning-subtle", "subtle"]
+      }
+    },
+    {
+      "name": "size",
+      "description": "The size of the button",
+      "value": {
+        "type": "enum",
+        "required": false,
+        "default": "md",
+        "enum": ["sm", "md", "lg", "xl"]
+      }
+    },
+    {
+      "name": "type",
+      "description": "The HTML button type attribute",
+      "value": {
+        "type": "enum",
+        "required": false,
+        "default": "button",
+        "enum": ["button", "submit", "reset"]
+      }
+    },
+    {
+      "name": "icon",
+      "description": "Icon to display in the button",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "showIcon",
+      "description": "Position of the icon relative to the label",
+      "value": {
+        "type": "enum",
+        "required": false,
+        "default": "no",
+        "enum": ["no", "before", "after", "only"]
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "Whether the button is disabled",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "busy",
+      "description": "Whether the button shows a busy/loading state",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "active",
+      "description": "Whether the button is in active state",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "fullWidth",
+      "description": "Whether the button should take full width of its container",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "@click",
+      "description": "Click event handler",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    }
+  ]
+}

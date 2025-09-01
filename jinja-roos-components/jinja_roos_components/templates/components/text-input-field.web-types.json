@@ -1,0 +1,141 @@
+{
+  "name": "c-text-input-field",
+  "description": "RVO Text input field with label, helper text, and validation",
+  "doc-url": "https://rvo.nl/design-system/components/text-input",
+  "attributes": [
+    {
+      "name": "id",
+      "description": "Unique identifier for the input field",
+      "value": {
+        "type": "string",
+        "required": true
+      }
+    },
+    {
+      "name": "name",
+      "description": "Name attribute for form submission",
+      "value": {
+        "type": "string",
+        "required": true
+      }
+    },
+    {
+      "name": "label",
+      "description": "Label text for the input field",
+      "value": {
+        "type": "string",
+        "required": true
+      }
+    },
+    {
+      "name": "value",
+      "description": "Initial value of the input field",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Placeholder text when field is empty",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "type",
+      "description": "HTML input type",
+      "value": {
+        "type": "enum",
+        "required": false,
+        "default": "text",
+        "enum": ["text", "email", "password", "tel", "url", "number", "search"]
+      }
+    },
+    {
+      "name": "helperText",
+      "description": "Helper text displayed below the input",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "errorText",
+      "description": "Error message to display",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "warningText",
+      "description": "Warning message to display",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "required",
+      "description": "Whether the field is required",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "Whether the field is disabled",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "readonly",
+      "description": "Whether the field is read-only",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "pattern",
+      "description": "Regex pattern for validation",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    },
+    {
+      "name": "maxlength",
+      "description": "Maximum length of input",
+      "value": {
+        "type": "number",
+        "required": false
+      }
+    },
+    {
+      "name": "expandableHelperText",
+      "description": "Whether helper text is expandable",
+      "value": {
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      }
+    },
+    {
+      "name": "expandableHelperTextTitle",
+      "description": "Title for expandable helper text",
+      "value": {
+        "type": "string",
+        "required": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set label = _component_context.label | default('') %}
+{% set options = _component_context.options | default([]) %}
+{% set value = _component_context.value | default('') %}
+{% set required = _component_context.required | default(false) %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set size = _component_context.size | default('max') %}
+{% set helper_text = _component_context.helperText | default('') %}
+{% set expandable_helper_text = _component_context.expandableHelperText | default(false) %}
+{% set expandable_helper_text_title = _component_context.expandableHelperTextTitle | default('More info') %}
+{% set error_message = _component_context.errorMessage | default('') %}
+{% set has_error = _component_context.hasError | default(false) %}
+{% set placeholder = _component_context.placeholder | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set field_classes = ['utrecht-form-field', 'rvo-form-field'] %}
+{% if size != 'md' and size != 'max' %}
+    {% set field_classes = field_classes + ['rvo-form-field--' + size] %}
+{% endif %}
+{% if has_error or error_message %}
+    {% set field_classes = field_classes + ['rvo-form-field--error'] %}
+{% endif %}
+{% if additional_class %}
+    {% set field_classes = field_classes + [additional_class] %}
+{% endif %}
+
+{% set select_classes = ['utrecht-select', 'utrecht-select--html-select'] %}
+{% if size != 'max' %}
+    {% set select_classes = select_classes + ['utrecht-select--' + size] %}
+{% endif %}
+{% if has_error or error_message %}
+    {% set select_classes = select_classes + ['utrecht-select--invalid'] %}
+{% endif %}
+
+<div 
+    class="{{ field_classes | join(' ') }}"
+    data-roos-component="select-field"
+    data-roos-size="{{ size }}"
+    {% if has_error or error_message %}data-roos-has-error="true"{% endif %}>
+    
+    {% if label %}
+        <div class="rvo-form-field__label">
+            <label for="{{ id }}" class="rvo-label{% if required %} rvo-label--required{% endif %} utrecht-form-label" id="{{ id }}-label">
+                {{ label }}
+            </label>
+            {% if helper_text and not error_message %}
+                <div id="{{ id }}-help" class="utrecht-form-field-description">
+                    {% if expandable_helper_text %}
+                        <details class="rvo-expandable-content">
+                            <summary class="rvo-expandable-content__summary">
+                                <span class="utrecht-icon rvo-icon rvo-icon-info rvo-icon--md rvo-icon--hemelblauw" 
+                                      role="img" 
+                                      aria-label="Info"></span>{{ expandable_helper_text_title }}
+                            </summary>
+                            <div class="rvo-expandable-content__details">
+                                {{ helper_text }}
+                            </div>
+                        </details>
+                    {% else %}
+                        {{ helper_text }}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <div class="rvo-select-wrapper">
+        <select 
+            {% if id %}id="{{ id }}"{% endif %}
+            {% if name %}name="{{ name }}"{% endif %}
+            class="{{ select_classes | join(' ') }}"
+            {% if disabled %}disabled{% endif %}
+            {% if has_error or error_message %}aria-invalid="true"{% endif %}
+            {% if error_message %}aria-describedby="{{ id }}-error"{% endif %}
+            {% if helper_text %}aria-describedby="{{ id }}-help"{% endif %}
+            {{ events.render_extra_attributes(_component_context) }}>
+            
+            {% if placeholder %}
+                <option value="">{{ placeholder }}</option>
+            {% endif %}
+            
+            {% if options %}
+                {% for option in options %}
+                    {% if option is string %}
+                        <option value="{{ option }}"
+                                {% if option == value %}selected{% endif %}>
+                            {{ option }}
+                        </option>
+                    {% else %}
+                        <option value="{{ option.value | default(option.label) }}"
+                                {% if option.value == value or option.label == value %}selected{% endif %}
+                                {% if option.disabled %}disabled{% endif %}>
+                            {{ option.label }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            
+        </select>
+    </div>
+    
+    {% if error_message %}
+        <div id="{{ id }}-error" class="rvo-form-field__error-message" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
+    
+</div>

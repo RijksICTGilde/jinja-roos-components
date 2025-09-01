@@ -1,0 +1,52 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% set columns = _component_context.columns | default('1') %}
+{% set gap = _component_context.gap | default('md') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['rvo-layout-grid'] %}
+
+{# Add column class #}
+{% if columns == '1' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-1'] %}
+{% elif columns == '2' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-2'] %}
+{% elif columns == '3' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-3'] %}
+{% elif columns == '4' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-4'] %}
+{% elif columns == '6' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-6'] %}
+{% elif columns == '12' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--columns-12'] %}
+{% endif %}
+
+{# Add gap class #}
+{% if gap == 'xs' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-xs'] %}
+{% elif gap == 'sm' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-sm'] %}
+{% elif gap == 'md' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-md'] %}
+{% elif gap == 'lg' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-lg'] %}
+{% elif gap == 'xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-xl'] %}
+{% elif gap == '2xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-2xl'] %}
+{% elif gap == '3xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-grid--gap-3xl'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set css_classes = css_classes + [additional_class] %}
+{% endif %}
+
+<div 
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="layout-grid"
+    data-roos-columns="{{ columns }}"
+    data-roos-gap="{{ gap }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ _component_context.content | safe }}
+</div>

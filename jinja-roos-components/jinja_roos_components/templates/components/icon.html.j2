@@ -1,0 +1,59 @@
+{% set icon = _component_context.icon | default('') %}
+{% set size = _component_context.size | default('md') %}
+{% set color = _component_context.color | default('') %}
+{% set aria_label = _component_context.ariaLabel | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Import shared color configuration #}
+{% from 'shared/colors.html.j2' import rvo_colors %}
+
+{# Check if color is a named color or hex (case insensitive) #}
+{% set color_lower = color.lower() if color else '' %}
+{% set is_named_color = rvo_colors.get(color_lower) is not none %}
+{% set is_hex_color = color.startswith('#') if color else false %}
+{% set resolved_color = rvo_colors.get(color_lower, color) %}
+
+{# Build icon name from complex icon names (e.g., "Category > Icon Name") #}
+{% set icon_name = icon %}
+{% if ' > ' in icon %}
+    {% set icon_parts = icon.split(' > ') %}
+    {% set icon_name = icon_parts[1] | lower | replace(' ', '-') %}
+{% else %}
+    {% set icon_name = icon | lower | replace(' ', '-') %}
+{% endif %}
+
+{# Build CSS classes #}
+{% set css_classes = ['utrecht-icon', 'rvo-icon'] %}
+
+{% if icon_name %}
+    {% set css_classes = css_classes + ['rvo-icon-' + icon_name] %}
+{% endif %}
+
+{% if size %}
+    {% set css_classes = css_classes + ['rvo-icon--' + size] %}
+{% endif %}
+
+{% if is_named_color %}
+    {% set css_classes = css_classes + ['rvo-icon--' + color] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set css_classes = css_classes + [additional_class] %}
+{% endif %}
+
+{# Generate aria-label if not provided #}
+{% set computed_aria_label = aria_label %}
+{% if not computed_aria_label and icon_name %}
+    {% set computed_aria_label = (icon_name | title | replace('-', ' ')) %}
+{% endif %}
+
+<span 
+    class="{{ css_classes | join(' ') }}"
+    role="img"
+    aria-label="{{ computed_aria_label }}"
+    data-roos-component="icon"
+    data-roos-icon="{{ icon_name }}"
+    {% if size %}data-roos-size="{{ size }}"{% endif %}
+    {% if color %}data-roos-color="{{ color }}"{% endif %}
+    {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}>
+</span>

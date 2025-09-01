@@ -1,0 +1,56 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% set gap = _component_context.gap | default('md') %}
+{% set vertical_spacing = _component_context.verticalSpacing | default('lg') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['rvo-layout-row'] %}
+
+{# Add gap class #}
+{% if gap == 'xs' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--xs'] %}
+{% elif gap == 'sm' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--sm'] %}
+{% elif gap == 'md' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--md'] %}
+{% elif gap == 'lg' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--lg'] %}
+{% elif gap == 'xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--xl'] %}
+{% elif gap == '2xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--2xl'] %}
+{% elif gap == '3xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-gap--3xl'] %}
+{% endif %}
+
+{# Add vertical spacing class #}
+{% if vertical_spacing == 'xs' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--xs'] %}
+{% elif vertical_spacing == 'sm' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--sm'] %}
+{% elif vertical_spacing == 'md' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--md'] %}
+{% elif vertical_spacing == 'lg' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--lg'] %}
+{% elif vertical_spacing == 'xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--xl'] %}
+{% elif vertical_spacing == '2xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--2xl'] %}
+{% elif vertical_spacing == '3xl' %}
+    {% set css_classes = css_classes + ['rvo-layout-vertical--3xl'] %}
+{% elif vertical_spacing == 'center' %}
+    {% set css_classes = css_classes + ['rvo-layout-align-content-center'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set css_classes = css_classes + [additional_class] %}
+{% endif %}
+
+<div 
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="layout-row"
+    data-roos-gap="{{ gap }}"
+    data-roos-vertical-spacing="{{ vertical_spacing }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ _component_context.content | safe }}
+</div>

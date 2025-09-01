@@ -1,0 +1,67 @@
+{% set content = _component_context.content | default('') %}
+{% set type = _component_context.type | default('') %}
+{% set icon_placement = _component_context.iconPlacement | default('') %}
+{% set icon = _component_context.icon | default('') %}
+{% set is_pill = _component_context.isPill | default(false) %}
+{% set url = _component_context.url | default('') %}
+{% set url_target = _component_context.urlTarget | default('_self') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['rvo-tag'] %}
+{% if url %}{% set css_classes = css_classes + ['rvo-tag--as-link'] %}{% endif %}
+{% if _component_context.get('@click') %}{% set css_classes = css_classes + ['rvo-tag--clickable'] %}{% endif %}
+{% if icon_placement %}{% set css_classes = css_classes + ['rvo-tag--with-icon'] %}{% endif %}
+{% if type %}{% set css_classes = css_classes + ['rvo-tag--' + type] %}{% endif %}
+{% if is_pill %}{% set css_classes = css_classes + ['rvo-tag--pill'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+{# Determine tag element type #}
+{% set tag_element = 'a' if url else 'div' %}
+
+{# Generate icon markup #}
+{% set icon_markup = '' %}
+{% if icon_placement %}
+    {% if icon %}
+        {% set icon_markup = '<span class="rvo-icon rvo-icon--' + icon + ' rvo-icon--lg rvo-link__icon--' + icon_placement + '" aria-hidden="true"></span>' %}
+    {% elif type %}
+        {# Status icons for different types #}
+        {% set status_icons = {
+            'info': 'info',
+            'warning': 'waarschuwing',
+            'error': 'foutmelding',
+            'success': 'bevestiging'
+        } %}
+        {% set status_icon = status_icons.get(type, 'info') %}
+        {% set icon_markup = '<span class="rvo-status-icon rvo-status-icon--' + status_icon + ' rvo-status-icon--lg" aria-hidden="true"></span>' %}
+    {% endif %}
+{% endif %}
+
+<{{ tag_element }}
+    {% if url %}href="{{ url }}" target="{{ url_target }}"{% endif %}
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="tag"
+    {% if type %}data-roos-type="{{ type }}"{% endif %}
+    {% if _component_context.get('@click') %}
+        {% if roos_htmx %}
+            {% if _component_context['@click'].startswith('hx-') %}
+                {{ _component_context['@click'] | safe }}
+            {% else %}
+                onclick="{{ _component_context['@click'] }}"
+            {% endif %}
+        {% else %}
+            onclick="{{ _component_context['@click'] }}"
+        {% endif %}
+    {% endif %}>
+    
+    {% if icon_placement == 'before' and icon_markup %}
+        {{ icon_markup | safe }}
+    {% endif %}
+    
+    {{ content | safe }}
+    
+    {% if icon_placement == 'after' and icon_markup %}
+        {{ icon_markup | safe }}
+    {% endif %}
+    
+</{{ tag_element }}>

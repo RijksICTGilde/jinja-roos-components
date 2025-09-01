@@ -1,0 +1,312 @@
+{#
+  Grid Layout Reference
+  
+  This example demonstrates the grid layout patterns used in RVO applications:
+  - Responsive grid columns (two, three, four)
+  - Card grids for content sections
+  - Mixed grid layouts
+  
+  Based on patterns from RVO demo pages like Home.tsx
+#}
+
+<c-page title="RVO Grid Layout Reference" 
+        bodyClass="rvo-responsive"
+        lang="nl">
+    
+    <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-layout-flow gap="3xl">
+            
+            {# Page Header #}
+            <header class="rvo-page-header">
+                <h1 class="utrecht-heading-1">Grid Layout Examples</h1>
+                <p class="rvo-text--lg">
+                    Demonstrating responsive grid patterns used throughout RVO applications.
+                </p>
+            </header>
+            
+            {# Four Column Grid - Topics/Services Pattern #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Four Column Grid - Topics</h2>
+                <p class="rvo-text">Used for topic overviews, service cards, and feature highlights.</p>
+                
+                <c-grid columns="four" gap="xl">
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <div class="rvo-icon rvo-icon--2xl rvo-icon-wereldbol"></div>
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-link--no-underline rvo-link--full-container">
+                                    Klimaat & Energie
+                                </a>
+                            </h3>
+                            <span class="rvo-text--lg">
+                                Energie besparen en opwekken, duurzame mobiliteit, co2-reductie industrie...
+                            </span>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <div class="rvo-icon rvo-icon--2xl rvo-icon-grootstedelijk"></div>
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-link--no-underline rvo-link--full-container">
+                                    Bouwen & Wonen
+                                </a>
+                            </h3>
+                            <span class="rvo-text--lg">
+                                Energielabel, BENG, verduurzamen gebouwen en woningen, gebiedsontwikkeling...
+                            </span>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <div class="rvo-icon rvo-icon--2xl rvo-icon-handel"></div>
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-link--no-underline rvo-link--full-container">
+                                    Internationaal ondernemen
+                                </a>
+                            </h3>
+                            <span class="rvo-text--lg">
+                                Landeninformatie, netwerken en contacten, financiering, handelsmissies...
+                            </span>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <div class="rvo-icon rvo-icon--2xl rvo-icon-tractor"></div>
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-link--no-underline rvo-link--full-container">
+                                    Landbouw
+                                </a>
+                            </h3>
+                            <span class="rvo-text--lg">
+                                Grond, mest, marktordening, gemeenschappelijk landbouwbeleid...
+                            </span>
+                        </c-layout-flow>
+                    </c-card>
+                </c-grid>
+            </section>
+            
+            {# Two Column Grid - Content Sections #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Two Column Grid - Content Sections</h2>
+                <p class="rvo-text">Used for news/events, feature comparisons, and content splits.</p>
+                
+                <c-grid columns="two" gap="xl">
+                    <div>
+                        <h3 class="utrecht-heading-3">Evenementen</h3>
+                        <c-layout-flow gap="md">
+                            <div class="rvo-content-item">
+                                <h4 class="utrecht-heading-4 rvo-heading--no-margins">
+                                    <a href="#" class="rvo-link rvo-link--no-underline">
+                                        Webinar Hoe schrijf ik een succesvolle Eurostars aanvraag?
+                                    </a>
+                                </h4>
+                                <p class="rvo-text--sm rvo-text--subtle">18 januari 2024, online</p>
+                            </div>
+                            <div class="rvo-content-item">
+                                <h4 class="utrecht-heading-4 rvo-heading--no-margins">
+                                    <a href="#" class="rvo-link rvo-link--no-underline">
+                                        Webinar versnellen woningbouw
+                                    </a>
+                                </h4>
+                                <p class="rvo-text--sm rvo-text--subtle">18 januari 2024, online</p>
+                            </div>
+                        </c-layout-flow>
+                    </div>
+                    
+                    <div>
+                        <h3 class="utrecht-heading-3">Nieuws</h3>
+                        <c-layout-flow gap="md">
+                            <div class="rvo-content-item">
+                                <h4 class="utrecht-heading-4 rvo-heading--no-margins">
+                                    <a href="#" class="rvo-link rvo-link--no-underline">
+                                        Samen de Baltische windenergiemarkt op
+                                    </a>
+                                </h4>
+                                <p class="rvo-text--sm rvo-text--subtle">8 december 2023</p>
+                            </div>
+                            <div class="rvo-content-item">
+                                <h4 class="utrecht-heading-4 rvo-heading--no-margins">
+                                    <a href="#" class="rvo-link rvo-link--no-underline">
+                                        Eerste regionale woonzorgakkoord
+                                    </a>
+                                </h4>
+                                <p class="rvo-text--sm rvo-text--subtle">8 december 2023</p>
+                            </div>
+                        </c-layout-flow>
+                    </div>
+                </c-grid>
+            </section>
+            
+            {# Featured Cards with Images #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Featured Content Grid</h2>
+                <p class="rvo-text">Cards with images for highlighted content and featured articles.</p>
+                
+                <c-grid columns="four" gap="xl">
+                    <c-card class="rvo-card--with-image" outline="true" padding="xl">
+                        <div class="rvo-card__image-container">
+                            <img src="https://via.placeholder.com/300x200" 
+                                 alt="Featured content" 
+                                 class="rvo-card__image" />
+                        </div>
+                        <div class="rvo-card__content">
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-card__link rvo-card__full-card-link">
+                                    Energieprojecten in Nederland
+                                </a>
+                            </h3>
+                            <p class="rvo-text">
+                                In Nederland wordt hard gewerkt aan de verbouwing van ons energiesysteem. 
+                                Bekijk alle projecten in ons jaaroverzicht.
+                            </p>
+                        </div>
+                    </c-card>
+                    
+                    <c-card class="rvo-card--with-image" outline="true" padding="xl">
+                        <div class="rvo-card__image-container">
+                            <img src="https://via.placeholder.com/300x200" 
+                                 alt="Featured content" 
+                                 class="rvo-card__image" />
+                        </div>
+                        <div class="rvo-card__content">
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-card__link rvo-card__full-card-link">
+                                    Cultuurverschillen
+                                </a>
+                            </h3>
+                            <p class="rvo-text">
+                                Praktische tips voor internationaal ondernemen van onze adviseurs 
+                                en het ambassadenetwerk.
+                            </p>
+                        </div>
+                    </c-card>
+                    
+                    <c-card class="rvo-card--with-image" outline="true" padding="xl">
+                        <div class="rvo-card__image-container">
+                            <img src="https://via.placeholder.com/300x200" 
+                                 alt="Featured content" 
+                                 class="rvo-card__image" />
+                        </div>
+                        <div class="rvo-card__content">
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-card__link rvo-card__full-card-link">
+                                    10 jaar DEI+
+                                </a>
+                            </h3>
+                            <p class="rvo-text">
+                                Honderden innovaties voor de toekomst via de Demonstratie 
+                                Energie- en klimaat-innovatie.
+                            </p>
+                        </div>
+                    </c-card>
+                    
+                    <c-card class="rvo-card--with-image" outline="true" padding="xl">
+                        <div class="rvo-card__image-container">
+                            <img src="https://via.placeholder.com/300x200" 
+                                 alt="Featured content" 
+                                 class="rvo-card__image" />
+                        </div>
+                        <div class="rvo-card__content">
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link rvo-card__link rvo-card__full-card-link">
+                                    Agrarische veranderingen
+                                </a>
+                            </h3>
+                            <p class="rvo-text">
+                                Bent u agrarisch ondernemer? Deze veranderingen gelden 
+                                voor 2025.
+                            </p>
+                        </div>
+                    </c-card>
+                </c-grid>
+            </section>
+            
+            {# Service Overview Grid #}
+            <section class="rvo-content-section">
+                <h2 class="utrecht-heading-2">Service Overview Grid</h2>
+                <p class="rvo-text">Colored cards for service categories and target audiences.</p>
+                
+                <c-grid columns="four" gap="xl">
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Bedrijven" 
+                                 class="rvo-card-img" 
+                                 width="100" 
+                                 height="66" />
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link--no-underline rvo-link--wit rvo-link--full-container">
+                                    Bedrijven
+                                </a>
+                            </h3>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Particulieren" 
+                                 class="rvo-card-img" 
+                                 width="100" 
+                                 height="66" />
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link--no-underline rvo-link--wit rvo-link--full-container">
+                                    Particulieren
+                                </a>
+                            </h3>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Overheden" 
+                                 class="rvo-card-img" 
+                                 width="100" 
+                                 height="66" />
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link--no-underline rvo-link--wit rvo-link--full-container">
+                                    Overheden
+                                </a>
+                            </h3>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Kennisinstellingen" 
+                                 class="rvo-card-img" 
+                                 width="100" 
+                                 height="66" />
+                            <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                                <a href="#" class="rvo-link--no-underline rvo-link--wit rvo-link--full-container">
+                                    Kennisinstellingen
+                                </a>
+                            </h3>
+                        </c-layout-flow>
+                    </c-card>
+                </c-grid>
+            </section>
+            
+            {# Responsive Grid Notes #}
+            <section class="rvo-content-section">
+                <c-card background="color" backgroundColor="grijs-100" padding="lg">
+                    <h2 class="utrecht-heading-2">Grid Usage Notes</h2>
+                    <c-layout-flow gap="md">
+                        <p><strong>Four columns:</strong> Best for topic overviews, service cards, featured content</p>
+                        <p><strong>Three columns:</strong> Good for medium content areas, product listings</p>
+                        <p><strong>Two columns:</strong> Perfect for news/events, comparisons, text-heavy content</p>
+                        <p><strong>Responsive behavior:</strong> Grids automatically stack on smaller screens</p>
+                        <p><strong>Gap options:</strong> Use sm, md, lg, xl, 2xl, 3xl for different spacing needs</p>
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+        </c-layout-flow>
+    </div>
+    
+</c-page>

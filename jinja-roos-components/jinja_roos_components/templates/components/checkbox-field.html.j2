@@ -1,0 +1,81 @@
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set label = _component_context.label | default('') %}
+{% set options = _component_context.get('options', []) %}
+{% set helper_text = _component_context.helperText | default('') %}
+{% set error_text = _component_context.errorText | default('') %}
+{% set warning_text = _component_context.warningText | default('') %}
+{% set invalid = _component_context.invalid | default(false) %}
+{% set required = _component_context.required | default(false) %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set additional_class = _component_context.get('class', '') %}
+
+{# Build CSS classes #}
+{% set field_classes = ['utrecht-form-field', 'utrecht-form-field--text', 'rvo-form-field'] %}
+{% if additional_class %}
+    {% set field_classes = field_classes + [additional_class] %}
+{% endif %}
+
+<div role="group" 
+     aria-labelledby="{{ id }}-label"
+     class="{{ field_classes | join(' ') }}">
+    
+    {# Label and helper/error text #}
+    <div class="rvo-form-field__label">
+        <label class="rvo-label" id="{{ id }}-label" for="{{ id }}">
+            {{ label }}
+            {% if required %}<span class="rvo-required">*</span>{% endif %}
+        </label>
+        
+        {% if helper_text and not error_text and not warning_text %}
+            <div class="utrecht-form-field-description" id="{{ id }}-helper">
+                {{ helper_text }}
+            </div>
+        {% endif %}
+        
+        {% if error_text %}
+            <div class="utrecht-form-field-description utrecht-form-field-description--invalid rvo-form-feedback rvo-form-feedback--error">
+                <span class="utrecht-icon rvo-icon rvo-icon-foutmelding rvo-icon--md rvo-status-icon-foutmelding" 
+                      role="img" 
+                      aria-label="Foutmelding"></span>{{ error_text }}
+            </div>
+        {% endif %}
+        
+        {% if warning_text %}
+            <div class="utrecht-form-field-description utrecht-form-field-description--warning rvo-form-feedback rvo-form-feedback--warning">
+                <span class="utrecht-icon rvo-icon rvo-icon-waarschuwing rvo-icon--md rvo-status-icon-waarschuwing" 
+                      role="img" 
+                      aria-label="Waarschuwing"></span>{{ warning_text }}
+            </div>
+        {% endif %}
+    </div>
+    
+    {# Checkbox group #}
+    {% set group_classes = ['rvo-checkbox__group'] %}
+    {% if error_text or (invalid and invalid != false and invalid != 'false') %}
+        {% set group_classes = group_classes + ['rvo-checkbox__group--error'] %}
+    {% endif %}
+    
+    <div class="{{ group_classes | join(' ') }}">
+        {% for option in options %}
+            {% set checkbox_classes = ['rvo-checkbox'] %}
+            {% if option.checked %}
+                {% set checkbox_classes = checkbox_classes + ['rvo-checkbox--checked'] %}
+            {% else %}
+                {% set checkbox_classes = checkbox_classes + ['rvo-checkbox--not-checked'] %}
+            {% endif %}
+            
+            <label class="{{ checkbox_classes | join(' ') }}" for="{{ option.id }}">
+                <input id="{{ option.id }}"
+                       name="{{ name }}[]"
+                       type="checkbox"
+                       class="rvo-checkbox__input"
+                       value="{{ option.value | default(option.id) }}"
+                       {% if option.checked %}checked{% endif %}
+                       {% if disabled or option.disabled %}disabled{% endif %}>
+                {{ option.label }}
+            </label>
+        {% endfor %}
+    </div>
+    
+</div>

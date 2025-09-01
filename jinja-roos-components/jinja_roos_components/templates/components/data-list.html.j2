@@ -1,0 +1,30 @@
+{% set items = _component_context.get('items', []) %}
+{% set additional_class = _component_context.get('class', '') %}
+{% set content = _component_context.get('content', '') %}
+
+{# Build CSS classes #}
+{% set dl_classes = ['rvo-data-list'] %}
+{% if additional_class %}
+    {% set dl_classes = dl_classes + [additional_class] %}
+{% endif %}
+
+<dl 
+    class="{{ dl_classes | join(' ') }}"
+    data-roos-component="data-list">
+    
+    {% if content %}
+        {{ content | safe }}
+    {% elif items %}
+        {% for item in items %}
+            <dt class="rvo-data-list__term">{{ item.term | default(item.label) }}</dt>
+            <dd class="rvo-data-list__description">
+                {% if item.link %}
+                    <a href="{{ item.link }}" class="rvo-link">{{ item.value | default(item.description) }}</a>
+                {% else %}
+                    {{ item.value | default(item.description) }}
+                {% endif %}
+            </dd>
+        {% endfor %}
+    {% endif %}
+    
+</dl>

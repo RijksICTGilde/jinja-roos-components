@@ -1,0 +1,61 @@
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set label = _component_context.label | default('') %}
+{% set checked = _component_context.checked | default(false) %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set required = _component_context.required | default(false) %}
+{% set invalid = _component_context.invalid | default(false) %}
+{% set indeterminate = _component_context.indeterminate | default(false) %}
+{% set active = _component_context.active | default(false) %}
+{% set hover = _component_context.hover | default(false) %}
+{% set focus = _component_context.focus | default(false) %}
+{% set helper_text_id = _component_context.helperTextId | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set value = _component_context.value | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['rvo-checkbox'] %}
+{% if active %}{% set css_classes = css_classes + ['rvo-checkbox--active'] %}{% endif %}
+{% if hover %}{% set css_classes = css_classes + ['rvo-checkbox--hover'] %}{% endif %}
+{% if checked %}{% set css_classes = css_classes + ['rvo-checkbox--checked'] %}
+{% else %}{% set css_classes = css_classes + ['rvo-checkbox--not-checked'] %}{% endif %}
+{% if disabled %}{% set css_classes = css_classes + ['rvo-checkbox--disabled'] %}{% endif %}
+{% if focus %}{% set css_classes = css_classes + ['rvo-checkbox--focus-visible'] %}{% endif %}
+{% if invalid %}{% set css_classes = css_classes + ['rvo-checkbox--invalid'] %}{% endif %}
+{% if indeterminate %}{% set css_classes = css_classes + ['rvo-checkbox--indeterminate'] %}{% endif %}
+{% if required %}{% set css_classes = css_classes + ['rvo-checkbox--required'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<label 
+    class="{{ css_classes | join(' ') }}"
+    {% if id %}for="{{ id }}"{% endif %}
+    data-roos-component="checkbox">
+    
+    <input 
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if name %}name="{{ name }}"{% endif %}
+        {% if value %}value="{{ value }}"{% endif %}
+        class="rvo-checkbox__input"
+        type="checkbox"
+        {% if checked %}checked{% endif %}
+        {% if disabled %}disabled{% endif %}
+        {% if required %}required{% endif %}
+        {% if indeterminate %}data-indeterminate="true"{% endif %}
+        {% if helper_text_id %}aria-describedby="{{ helper_text_id }}"{% endif %}
+        {% if invalid %}aria-invalid="true"{% endif %}
+        data-roos-checkbox-input
+        {% if _component_context.get('@change') %}
+            {% if roos_htmx %}
+                {% if _component_context['@change'].startswith('hx-') %}
+                    {{ _component_context['@change'] | safe }}
+                {% else %}
+                    onchange="{{ _component_context['@change'] }}"
+                {% endif %}
+            {% else %}
+                onchange="{{ _component_context['@change'] }}"
+            {% endif %}
+        {% endif %}
+    />
+    
+    {% if label %}{{ label }}{% endif %}
+</label>

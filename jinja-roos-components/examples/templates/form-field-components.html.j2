@@ -1,0 +1,405 @@
+{#
+  Form Field Components Reference
+  
+  This example demonstrates all the form field components and their usage patterns:
+  - Text input fields with validation states
+  - Select fields with options
+  - Date input fields
+  - Fieldset grouping  
+  - Action groups for buttons
+  - Data lists for read-only information
+  
+  Based on RVO patterns from CMOR and I&R demo pages
+#}
+
+<c-page title="RVO Form Field Components Reference" 
+        bodyClass="rvo-theme rvo-responsive"
+        lang="nl">
+    
+    <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-layout-flow gap="3xl">
+            
+            {# Page Header #}
+            <header class="rvo-page-header">
+                <c-heading type="h1" textContent="Form Field Components Reference" />
+                <p class="rvo-text--lg">
+                    Comprehensive examples of all form field components with validation states, help text, and proper labeling.
+                </p>
+            </header>
+            
+            {# Basic Form Fields #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Basic Form Fields" />
+                
+                <c-card outline="true" padding="lg">
+                    <c-layout-flow gap="lg">
+                        
+                        {# Text Input Field Examples #}
+                        <c-fieldset legend="Text Input Fields">
+                            <c-layout-flow gap="lg">
+                                
+                                <c-text-input-field 
+                                    id="example-name"
+                                    name="name"
+                                    label="Volledige naam"
+                                    type="text"
+                                    placeholder="Jan Janssen"
+                                    required="true"
+                                    helperText="Voer uw voor- en achternaam in" />
+                                
+                                <c-text-input-field 
+                                    id="example-email"
+                                    name="email"
+                                    label="E-mailadres"
+                                    type="email"
+                                    placeholder="jan.janssen@example.com"
+                                    required="true"
+                                    helperText="Via dit e-mailadres nemen wij contact met u op" />
+                                
+                                <c-text-input-field 
+                                    id="example-phone"
+                                    name="phone"
+                                    label="Telefoonnummer"
+                                    type="tel"
+                                    placeholder="+31 6 12345678"
+                                    helperText="Inclusief landcode (+31 voor Nederland)" />
+                                
+                            </c-layout-flow>
+                        </c-fieldset>
+                        
+                        {# Select Field Examples #}
+                        <c-fieldset legend="Select Fields">
+                            <c-layout-flow gap="lg">
+                                
+                                <c-select-field 
+                                    id="example-country"
+                                    name="country"
+                                    label="Land"
+                                    required="true"
+                                    placeholder="Selecteer een land"
+                                    options="[
+                                        {'label': 'Nederland', 'value': 'NL'},
+                                        {'label': 'België', 'value': 'BE'},
+                                        {'label': 'Duitsland', 'value': 'DE'},
+                                        {'label': 'Frankrijk', 'value': 'FR'},
+                                        {'label': 'Verenigd Koninkrijk', 'value': 'GB'}
+                                    ]"
+                                    helperText="Selecteer het land waar u gevestigd bent" />
+                                
+                                <c-select-field 
+                                    id="example-organization-type"
+                                    name="organization-type"
+                                    label="Type organisatie"
+                                    placeholder="Selecteer organisatietype"
+                                    options="[
+                                        {'label': 'Eenmanszaak', 'value': 'sole-proprietorship'},
+                                        {'label': 'BV (Besloten Vennootschap)', 'value': 'bv'},
+                                        {'label': 'NV (Naamloze Vennootschap)', 'value': 'nv'},
+                                        {'label': 'Stichting', 'value': 'foundation'},
+                                        {'label': 'Vereniging', 'value': 'association'},
+                                        {'label': 'Overheid', 'value': 'government'}
+                                    ]"
+                                    helperText="Kies het type organisatie dat het best bij u past" />
+                                
+                            </c-layout-flow>
+                        </c-fieldset>
+                        
+                        {# Date Input Field Examples #}
+                        <c-fieldset legend="Date Input Fields">
+                            <c-layout-flow gap="lg">
+                                
+                                <c-date-input-field 
+                                    id="example-birthdate"
+                                    name="birthdate"
+                                    label="Geboortedatum"
+                                    required="true"
+                                    helperText="Gebruik het formaat dd-mm-jjjj (bijvoorbeeld 15-03-1985)" />
+                                
+                                <c-date-input-field 
+                                    id="example-start-date"
+                                    name="start-date"
+                                    label="Startdatum project"
+                                    minDate="2024-01-01"
+                                    maxDate="2025-12-31"
+                                    helperText="De datum moet tussen 2024 en 2025 liggen" />
+                                
+                            </c-layout-flow>
+                        </c-fieldset>
+                        
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+            {# Field Sizing Examples #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Field Sizing" />
+                
+                <c-card outline="true" padding="lg">
+                    <c-layout-flow gap="lg">
+                        
+                        <c-text-input-field 
+                            id="example-xs"
+                            name="field-xs"
+                            label="Extra Small Field"
+                            size="xs"
+                            placeholder="XS"
+                            helperText="Extra small field for short inputs like codes" />
+                        
+                        <c-text-input-field 
+                            id="example-sm"
+                            name="field-sm"
+                            label="Small Field"
+                            size="sm"
+                            placeholder="Small"
+                            helperText="Small field for medium-length inputs" />
+                        
+                        <c-text-input-field 
+                            id="example-md"
+                            name="field-md"
+                            label="Medium Field (Default)"
+                            size="md"
+                            placeholder="Medium"
+                            helperText="Default medium size field" />
+                        
+                        <c-text-input-field 
+                            id="example-lg"
+                            name="field-lg"
+                            label="Large Field"
+                            size="lg"
+                            placeholder="Large"
+                            helperText="Large field for longer inputs" />
+                        
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+            {# Validation States #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Validation States" />
+                
+                <c-grid columns="two" gap="lg">
+                    
+                    {# Error States #}
+                    <c-card title="Error States" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            
+                            <c-text-input-field 
+                                id="error-required"
+                                name="error-required"
+                                label="Verplicht veld"
+                                required="true"
+                                hasError="true"
+                                errorMessage="Dit veld is verplicht"
+                                helperText="Voer een waarde in" />
+                            
+                            <c-text-input-field 
+                                id="error-format"
+                                name="error-format"
+                                label="E-mailadres"
+                                type="email"
+                                value="invalid-email"
+                                hasError="true"
+                                errorMessage="Voer een geldig e-mailadres in"
+                                helperText="Bijvoorbeeld: naam@voorbeeld.nl" />
+                            
+                            <c-date-input-field 
+                                id="error-date"
+                                name="error-date"
+                                label="Geboortedatum"
+                                value="2025-01-01"
+                                hasError="true"
+                                errorMessage="Datum mag niet in de toekomst liggen"
+                                helperText="Gebruik het formaat dd-mm-jjjj" />
+                            
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    {# Success States #}
+                    <c-card title="Success States" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            
+                            <c-text-input-field 
+                                id="success-name"
+                                name="success-name"
+                                label="Naam"
+                                value="Jan Janssen"
+                                class="rvo-form-field--success"
+                                helperText="✓ Naam is correct ingevuld" />
+                            
+                            <c-select-field 
+                                id="success-country"
+                                name="success-country"
+                                label="Land"
+                                value="NL"
+                                class="rvo-form-field--success"
+                                options="[
+                                    {'label': 'Nederland', 'value': 'NL'},
+                                    {'label': 'België', 'value': 'BE'}
+                                ]"
+                                helperText="✓ Land is geselecteerd" />
+                            
+                        </c-layout-flow>
+                    </c-card>
+                    
+                </c-grid>
+            </section>
+            
+            {# Complex Form Layout Examples #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Complex Form Layouts" />
+                
+                <c-card title="Address Information" outline="true" padding="lg">
+                    <form>
+                        <c-fieldset legend="Adresgegevens">
+                            <c-layout-flow gap="lg">
+                                
+                                {# Street and House Number Row #}
+                                <c-grid columns="two" gap="md">
+                                    <c-text-input-field 
+                                        id="street"
+                                        name="street"
+                                        label="Straatnaam"
+                                        required="true"
+                                        placeholder="Kalverstraat" />
+                                    
+                                    <c-text-input-field 
+                                        id="house-number"
+                                        name="house-number"
+                                        label="Huisnummer"
+                                        size="sm"
+                                        required="true"
+                                        placeholder="123" />
+                                </c-grid>
+                                
+                                {# Addition and Postal Code Row #}
+                                <c-grid columns="three" gap="md">
+                                    <c-text-input-field 
+                                        id="house-addition"
+                                        name="house-addition"
+                                        label="Toevoeging"
+                                        size="xs"
+                                        placeholder="A" />
+                                    
+                                    <c-text-input-field 
+                                        id="postal-code"
+                                        name="postal-code"
+                                        label="Postcode"
+                                        size="sm"
+                                        required="true"
+                                        placeholder="1012 AB"
+                                        helperText="4 cijfers + 2 letters" />
+                                    
+                                    <c-text-input-field 
+                                        id="city"
+                                        name="city"
+                                        label="Plaats"
+                                        required="true"
+                                        placeholder="Amsterdam" />
+                                </c-grid>
+                                
+                                {# Country Selection #}
+                                <c-select-field 
+                                    id="address-country"
+                                    name="address-country"
+                                    label="Land"
+                                    value="NL"
+                                    required="true"
+                                    options="[
+                                        {'label': 'Nederland', 'value': 'NL'},
+                                        {'label': 'België', 'value': 'BE'},
+                                        {'label': 'Duitsland', 'value': 'DE'}
+                                    ]" />
+                                
+                            </c-layout-flow>
+                        </c-fieldset>
+                    </form>
+                </c-card>
+            </section>
+            
+            {# Action Groups #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Action Groups" />
+                
+                <c-grid columns="two" gap="lg">
+                    
+                    <c-card title="Horizontal Actions" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            
+                            <c-action-group 
+                                alignment="start"
+                                actions="[
+                                    {'type': 'button', 'kind': 'primary', 'label': 'Opslaan'},
+                                    {'type': 'button', 'kind': 'secondary', 'label': 'Annuleren'}
+                                ]" />
+                            
+                            <c-action-group 
+                                alignment="end"
+                                actions="[
+                                    {'type': 'button', 'kind': 'tertiary', 'label': 'Concept opslaan'},
+                                    {'type': 'button', 'kind': 'primary', 'label': 'Verzenden'}
+                                ]" />
+                            
+                            <c-action-group 
+                                alignment="space-between"
+                                actions="[
+                                    {'type': 'link', 'href': '#', 'label': 'Terug'},
+                                    {'type': 'button', 'kind': 'primary', 'label': 'Volgende stap'}
+                                ]" />
+                            
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card title="Vertical Actions" outline="true" padding="lg">
+                        <c-action-group 
+                            direction="vertical"
+                            alignment="start"
+                            gap="md"
+                            actions="[
+                                {'type': 'button', 'kind': 'primary', 'label': 'Nieuwe aanvraag'},
+                                {'type': 'button', 'kind': 'secondary', 'label': 'Concept laden'},
+                                {'type': 'link', 'href': '#', 'label': 'Help en documentatie'}
+                            ]" />
+                    </c-card>
+                    
+                </c-grid>
+            </section>
+            
+            {# Data Lists #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Data Lists (Read-only Information)" />
+                
+                <c-card title="Bedrijfsgegevens" outline="true" padding="lg">
+                    <c-data-list 
+                        items="[
+                            {'term': 'Handelsnaam', 'value': 'Jansen IT Solutions B.V.'},
+                            {'term': 'KvK-nummer', 'value': '12345678'},
+                            {'term': 'BTW-nummer', 'value': 'NL123456789B01'},
+                            {'term': 'Rechtsvorm', 'value': 'Besloten Vennootschap'},
+                            {'term': 'Vestigingsadres', 'value': 'Kalverstraat 123, 1012 AB Amsterdam'},
+                            {'term': 'Website', 'value': 'www.jansen-it.nl', 'link': 'https://www.jansen-it.nl'},
+                            {'term': 'Status', 'value': 'Actief'}
+                        ]" />
+                </c-card>
+            </section>
+            
+            {# Usage Guidelines #}
+            <section class="rvo-content-section">
+                <c-card background="color" backgroundColor="grijs-100" padding="lg">
+                    <c-heading type="h2" textContent="Form Component Usage Guidelines" />
+                    <c-layout-flow gap="md">
+                        <p><strong>Field Wrappers:</strong> Use c-text-input-field, c-select-field, c-date-input-field for complete form fields with labels and validation</p>
+                        <p><strong>Fieldset Grouping:</strong> Group related fields using c-fieldset with meaningful legends</p>
+                        <p><strong>Validation:</strong> Always provide clear error messages and helpful text for proper form completion</p>
+                        <p><strong>Required Fields:</strong> Mark required fields with asterisk (*) and aria-required="true"</p>
+                        <p><strong>Field Sizing:</strong> Use appropriate sizes (xs, sm, md, lg) based on expected input length</p>
+                        <p><strong>Action Groups:</strong> Use c-action-group for consistent button layouts and spacing</p>
+                        <p><strong>Data Lists:</strong> Use c-data-list for read-only information display in forms</p>
+                        <p><strong>Accessibility:</strong> All components include proper ARIA attributes and semantic HTML</p>
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+        </c-layout-flow>
+    </div>
+    
+</c-page>

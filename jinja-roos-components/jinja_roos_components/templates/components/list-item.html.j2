@@ -1,0 +1,6 @@
+{% set content = _component_context.content | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+<li{% if additional_class %} class="{{ additional_class }}"{% endif %} data-roos-component="list-item">
+    {{ content | safe }}
+</li>

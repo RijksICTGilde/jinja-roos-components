@@ -1,0 +1,77 @@
+{% set kind = _component_context.kind | default('info') %}
+{% set heading = _component_context.heading | default('') %}
+{% set content = _component_context.content | default('') %}
+{% set closable = _component_context.closable | default(false) %}
+{% set padding = _component_context.padding | default('md') %}
+{% set max_width = _component_context.maxWidth | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Map kind to status icon types #}
+{% set status_icon_map = {
+    'info': 'info',
+    'warning': 'waarschuwing',
+    'error': 'foutmelding',
+    'success': 'bevestiging'
+} %}
+
+{# Build CSS classes #}
+{% set alert_classes = ['rvo-alert', 'rvo-alert--' + kind] %}
+
+{% if padding %}
+    {% set alert_classes = alert_classes + ['rvo-alert--padding-' + padding] %}
+{% endif %}
+
+{% if max_width %}
+    {% set alert_classes = alert_classes + ['rvo-alert--layout'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set alert_classes = alert_classes + [additional_class] %}
+{% endif %}
+
+{% set container_classes = ['rvo-alert__container'] %}
+{% if max_width %}
+    {% set container_classes = container_classes + ['rvo-max-width-layout--' + max_width] %}
+{% endif %}
+
+<div 
+    class="{{ alert_classes | join(' ') }}"
+    data-roos-component="alert"
+    data-roos-kind="{{ kind }}"
+    data-roos-closable="{{ closable }}"
+    role="alert">
+    
+    <div class="{{ container_classes | join(' ') }}">
+        
+        {# Status Icon #}
+        {% if kind in status_icon_map %}
+            <span class="utrecht-icon rvo-icon rvo-icon-info rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl"
+                  role="img"
+                  aria-label="{{ status_icon_map[kind] | title }}"></span>
+        {% endif %}
+        
+        {# Alert Content #}
+        <div class="rvo-alert-text">
+            {% if heading %}
+                <strong>{{ heading }}</strong>
+            {% endif %}
+            {% if content %}
+                <div>{{ content | safe }}</div>
+            {% endif %}
+        </div>
+        
+        {# Close Button #}
+        {% if closable %}
+            <button type="button" 
+                    class="rvo-button rvo-button--subtle rvo-button__close"
+                    aria-label="Sluiten"
+                    onclick="this.closest('.rvo-alert').style.display='none'">
+                <span class="utrecht-icon rvo-icon rvo-icon-kruis rvo-icon--md"
+                      role="img"
+                      aria-label="Sluiten"></span>
+            </button>
+        {% endif %}
+        
+    </div>
+    
+</div>

@@ -1,0 +1,77 @@
+{#
+  Component Test Page
+  
+  This page tests that all components are properly parsed and rendered,
+  especially the hyphenated components that were causing issues.
+#}
+
+<c-page title="Component Test" bodyClass="rvo-theme" lang="nl">
+    
+    {# Test layout-flow component #}
+    <c-layout-flow gap="lg">
+        
+        <c-heading type="h1" textContent="Component Test Page" />
+        
+        <c-alert kind="info" 
+                 heading="Testing Components" 
+                 content="This page tests that all components are properly parsed and rendered." />
+        
+        {# Test nested layout-flow #}
+        <c-layout-flow gap="md" row="true">
+            <c-button kind="primary" label="Primary Button" />
+            <c-button kind="secondary" label="Secondary Button" />
+        </c-layout-flow>
+        
+        {# Test form field components #}
+        <c-card outline="true" padding="lg">
+            <c-fieldset legend="Form Test">
+                <c-layout-flow gap="lg">
+                    
+                    <c-text-input-field 
+                        id="test-name"
+                        name="test-name" 
+                        label="Name"
+                        placeholder="Enter your name"
+                        required="true"
+                        helperText="This field is required" />
+                    
+                    <c-select-field 
+                        id="test-country"
+                        name="test-country"
+                        label="Country"
+                        placeholder="Select country"
+                        options="[
+                            {'label': 'Netherlands', 'value': 'NL'},
+                            {'label': 'Germany', 'value': 'DE'}
+                        ]" />
+                    
+                    <c-date-input-field 
+                        id="test-date"
+                        name="test-date"
+                        label="Date"
+                        required="true" />
+                    
+                    <c-action-group 
+                        alignment="end"
+                        actions="[
+                            {'type': 'button', 'kind': 'primary', 'label': 'Submit'},
+                            {'type': 'button', 'kind': 'secondary', 'label': 'Cancel'}
+                        ]" />
+                    
+                </c-layout-flow>
+            </c-fieldset>
+        </c-card>
+        
+        {# Test grid layout #}
+        <c-grid columns="two" gap="lg">
+            <c-card title="Card 1" outline="true" padding="md">
+                <p>First card content</p>
+            </c-card>
+            <c-card title="Card 2" outline="true" padding="md">
+                <p>Second card content</p>
+            </c-card>
+        </c-grid>
+        
+    </c-layout-flow>
+    
+</c-page>

@@ -1,0 +1,38 @@
+{% set tabs = _component_context.tabs | default([]) %}
+{% set active_tab = _component_context.activeTab | default(0) %}
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Build CSS classes #}
+{% set tabs_classes = ['rvo-tabs'] %}
+{% if additional_class %}
+    {% set tabs_classes = tabs_classes + [additional_class] %}
+{% endif %}
+
+<div 
+    class="{{ tabs_classes | join(' ') }}"
+    data-roos-component="tabs"
+    data-roos-active-tab="{{ active_tab }}">
+    
+    {% if tabs | length > 0 %}
+        <nav class="rvo-tabs__nav" role="tablist">
+            {% for tab in tabs %}
+                <a href="{{ tab.href | default('#') }}"
+                   class="rvo-tab{% if loop.index0 == active_tab %} rvo-tab--active{% endif %}"
+                   role="tab"
+                   {% if loop.index0 == active_tab %}aria-selected="true"{% else %}aria-selected="false"{% endif %}
+                   aria-controls="tab-panel-{{ loop.index0 }}"
+                   id="tab-{{ loop.index0 }}">
+                    {{ tab.label }}
+                </a>
+            {% endfor %}
+        </nav>
+    {% endif %}
+    
+    {% if content %}
+        <div class="rvo-tabs__content">
+            {{ content | safe }}
+        </div>
+    {% endif %}
+    
+</div>

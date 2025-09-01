@@ -1,0 +1,26 @@
+{% set legend = _component_context.legend | default('') %}
+{% set content = _component_context.content | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set wrapper_classes = ['utrecht-form-fieldset', 'rvo-form-fieldset'] %}
+{% set fieldset_classes = ['utrecht-form-fieldset__fieldset', 'utrecht-form-fieldset--html-fieldset'] %}
+{% if additional_class %}
+    {% set wrapper_classes = wrapper_classes + [additional_class] %}
+{% endif %}
+
+<div class="{{ wrapper_classes | join(' ') }}">
+    <fieldset class="{{ fieldset_classes | join(' ') }}">
+        
+        {% if legend %}
+            <legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">
+                {{ legend }}
+            </legend>
+        {% endif %}
+        
+        {% if content %}
+            {{ content | safe }}
+        {% endif %}
+        
+    </fieldset>
+</div>

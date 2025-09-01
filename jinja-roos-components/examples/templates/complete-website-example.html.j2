@@ -1,0 +1,362 @@
+{#
+  Complete Website Example
+  
+  This example demonstrates a full RVO website using all the newly created components:
+  - Header with logo and title
+  - MenuBar navigation
+  - Hero section  
+  - Alert notifications
+  - Content sections with grids
+  - Footer with menu items
+  
+  Uses the new components: header, footer, menubar, icon, alert, hero, tabs, link, heading
+#}
+
+<c-page title="Complete RVO Website Example" 
+        bodyClass="rvo-theme rvo-responsive"
+        lang="nl">
+    
+    {# Header with Logo and Title #}
+    <c-header title="Rijksdienst voor Ondernemend Nederland" 
+              subtitle="Ministerie van Economische Zaken en Klimaat"
+              link="/">
+        
+        {# Top MenuBar with user actions #}
+        <c-menubar size="lg" 
+                   useIcons="true"
+                   iconPlacement="before"
+                   maxWidth="lg"
+                   items="[
+                       {'label': 'Hulp & Contact', 'link': '#', 'align': 'right'},
+                       {'label': 'English', 'link': '#', 'align': 'right', 'icon': 'wereldbol'},
+                       {'label': 'Mijn RVO', 'link': '#', 'align': 'right', 'icon': 'user', 'active': true}
+                   ]" />
+        
+        {# Main Navigation #}
+        <c-menubar size="lg"
+                   maxWidth="lg"
+                   horizontalRule="false"
+                   items="[
+                       {'label': 'Home', 'link': '#', 'active': true},
+                       {'label': 'Onderwerpen', 'link': '#'},
+                       {'label': 'Subsidie- en financieringswijzer', 'link': '#'},
+                       {'label': 'Over ons', 'link': '#'},
+                       {'label': 'Contact', 'link': '#'}
+                   ]" />
+        
+    </c-header>
+    
+    {# Hero Section #}
+    <c-hero size="lg" 
+            title="Welkom bij RVO"
+            subtitle="Uw partner voor ondernemerschap, innovatie en duurzaamheid"
+            image="{'src': 'https://via.placeholder.com/1200x400', 'alt': 'RVO Hero Image'}"
+            overlay="true">
+        <c-layout-flow gap="md" row="true">
+            <c-button kind="primary" label="Ontdek onze diensten" />
+            <c-button kind="secondary" label="Contact opnemen" />
+        </c-layout-flow>
+    </c-hero>
+    
+    {# Alert Notification #}
+    <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-alert kind="info" 
+                 heading="Belangrijk bericht"
+                 content="Er zijn nieuwe regelingen beschikbaar voor duurzame energie. <a href='#' class='rvo-link'>Lees meer</a>"
+                 closable="true"
+                 maxWidth="lg" />
+    </div>
+    
+    {# Main Content #}
+    <main class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-layout-flow gap="3xl">
+            
+            {# Quick Navigation Section #}
+            <section class="rvo-content-section">
+                <div class="rvo-snel-naar rvo-text--xl">
+                    Snel naar
+                    <c-layout-flow row="true" gap="md" wrap="true">
+                        <c-link href="#" 
+                                content="ISDE"
+                                showIcon="before" 
+                                icon="pijl-naar-rechts"
+                                iconColor="hemelblauw"
+                                noUnderline="true" />
+                        <c-link href="#" 
+                                content="Lbv-plus"
+                                showIcon="before" 
+                                icon="pijl-naar-rechts"
+                                iconColor="hemelblauw"
+                                noUnderline="true" />
+                        <c-link href="#" 
+                                content="GLB 2025"
+                                showIcon="before" 
+                                icon="pijl-naar-rechts"
+                                iconColor="hemelblauw"
+                                noUnderline="true" />
+                        <c-link href="#" 
+                                content="WBSO"
+                                showIcon="before" 
+                                icon="pijl-naar-rechts"
+                                iconColor="hemelblauw"
+                                noUnderline="true" />
+                    </c-layout-flow>
+                </div>
+            </section>
+            
+            {# Topics Section #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Onderwerpen" />
+                
+                <c-grid columns="four" gap="xl">
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <c-icon icon="wereldbol" size="2xl" />
+                            <c-heading type="h3" 
+                                      textContent="Klimaat & Energie" 
+                                      noMargins="true" />
+                            <span class="rvo-text--lg">
+                                Energie besparen en opwekken, duurzame mobiliteit, co2-reductie industrie...
+                            </span>
+                            <c-link href="#" 
+                                    content="Meer informatie"
+                                    showIcon="after"
+                                    icon="pijl-naar-rechts"
+                                    noUnderline="true"
+                                    fullContainer="true" />
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <c-icon icon="grootstedelijk" size="2xl" />
+                            <c-heading type="h3" 
+                                      textContent="Bouwen & Wonen" 
+                                      noMargins="true" />
+                            <span class="rvo-text--lg">
+                                Energielabel, BENG, verduurzamen gebouwen en woningen, gebiedsontwikkeling...
+                            </span>
+                            <c-link href="#" 
+                                    content="Meer informatie"
+                                    showIcon="after"
+                                    icon="pijl-naar-rechts"
+                                    noUnderline="true"
+                                    fullContainer="true" />
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <c-icon icon="tractor" size="2xl" />
+                            <c-heading type="h3" 
+                                      textContent="Landbouw" 
+                                      noMargins="true" />
+                            <span class="rvo-text--lg">
+                                Grond, mest, marktordening, gemeenschappelijk landbouwbeleid...
+                            </span>
+                            <c-link href="#" 
+                                    content="Meer informatie"
+                                    showIcon="after"
+                                    icon="pijl-naar-rechts"
+                                    noUnderline="true"
+                                    fullContainer="true" />
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card outline="true" padding="md">
+                        <c-layout-flow gap="md">
+                            <c-icon icon="lamp" size="2xl" />
+                            <c-heading type="h3" 
+                                      textContent="Innovatie & Onderzoek" 
+                                      noMargins="true" />
+                            <span class="rvo-text--lg">
+                                Octrooien, topsectoren, start-ups, research & development...
+                            </span>
+                            <c-link href="#" 
+                                    content="Meer informatie"
+                                    showIcon="after"
+                                    icon="pijl-naar-rechts"
+                                    noUnderline="true"
+                                    fullContainer="true" />
+                        </c-layout-flow>
+                    </c-card>
+                </c-grid>
+            </section>
+            
+            {# Tabbed Content Section #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Actueel" />
+                
+                <c-tabs tabs="[
+                            {'label': 'Nieuws', 'href': '#nieuws'},
+                            {'label': 'Evenementen', 'href': '#evenementen'},
+                            {'label': 'Regelingen', 'href': '#regelingen'}
+                        ]"
+                        activeTab="0">
+                    
+                    <div class="rvo-tabs__content">
+                        <c-grid columns="three" gap="lg">
+                            <c-card padding="md">
+                                <c-layout-flow gap="sm">
+                                    <c-heading type="h4" 
+                                              textContent="Nieuwe subsidieregeling duurzame energie"
+                                              noMargins="true" />
+                                    <p class="rvo-text--sm rvo-text--subtle">15 januari 2024</p>
+                                    <p>Vanaf maart 2024 is er een nieuwe subsidieregeling voor zonnepanelen en warmtepompen beschikbaar.</p>
+                                    <c-link href="#" content="Lees meer" />
+                                </c-layout-flow>
+                            </c-card>
+                            
+                            <c-card padding="md">
+                                <c-layout-flow gap="sm">
+                                    <c-heading type="h4" 
+                                              textContent="Update handelsmissie Duitsland"
+                                              noMargins="true" />
+                                    <p class="rvo-text--sm rvo-text--subtle">12 januari 2024</p>
+                                    <p>De handelsmissie naar Duitsland is uitgebreid met extra deelnemers uit de technologiesector.</p>
+                                    <c-link href="#" content="Lees meer" />
+                                </c-layout-flow>
+                            </c-card>
+                            
+                            <c-card padding="md">
+                                <c-layout-flow gap="sm">
+                                    <c-heading type="h4" 
+                                              textContent="Aanpassingen GLB 2024"
+                                              noMargins="true" />
+                                    <p class="rvo-text--sm rvo-text--subtle">10 januari 2024</p>
+                                    <p>Belangrijke wijzigingen in het Gemeenschappelijk Landbouwbeleid voor het komende seizoen.</p>
+                                    <c-link href="#" content="Lees meer" />
+                                </c-layout-flow>
+                            </c-card>
+                        </c-grid>
+                    </div>
+                </c-tabs>
+            </section>
+            
+            {# Service Overview #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Dienstverlening voor" />
+                
+                <c-grid columns="four" gap="xl">
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Bedrijven" 
+                                 class="rvo-card-img" />
+                            <c-heading type="h3" noMargins="true">
+                                <c-link href="#" 
+                                        content="Bedrijven"
+                                        color="wit"
+                                        noUnderline="true"
+                                        fullContainer="true" />
+                            </c-heading>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Particulieren" 
+                                 class="rvo-card-img" />
+                            <c-heading type="h3" noMargins="true">
+                                <c-link href="#" 
+                                        content="Particulieren"
+                                        color="wit"
+                                        noUnderline="true"
+                                        fullContainer="true" />
+                            </c-heading>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Overheden" 
+                                 class="rvo-card-img" />
+                            <c-heading type="h3" noMargins="true">
+                                <c-link href="#" 
+                                        content="Overheden"
+                                        color="wit"
+                                        noUnderline="true"
+                                        fullContainer="true" />
+                            </c-heading>
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    <c-card background="color" backgroundColor="hemelblauw" padding="lg">
+                        <c-layout-flow row="true" alignItems="center" gap="md">
+                            <img src="https://via.placeholder.com/100x66" 
+                                 alt="Kennisinstellingen" 
+                                 class="rvo-card-img" />
+                            <c-heading type="h3" noMargins="true">
+                                <c-link href="#" 
+                                        content="Kennisinstellingen"
+                                        color="wit"
+                                        noUnderline="true"
+                                        fullContainer="true" />
+                            </c-heading>
+                        </c-layout-flow>
+                    </c-card>
+                </c-grid>
+            </section>
+            
+            {# Feedback Section #}
+            <section class="rvo-feedback">
+                <c-layout-flow row="true" wrap="true" gap="sm" justifyContent="center">
+                    <c-icon icon="tekstballon-met-hart" size="2xl" />
+                    <em class="rvo-text--xl">Bent u tevreden over deze pagina?</em>
+                    <c-button kind="secondary" label="Geef uw mening" />
+                </c-layout-flow>
+            </section>
+            
+        </c-layout-flow>
+    </main>
+    
+    {# Footer #}
+    <c-footer maxWidth="lg"
+              primaryMenu="[
+                  {
+                      'label': 'Onderwerpen',
+                      'items': [
+                          {'content': 'Klimaat & Energie', 'link': '#'},
+                          {'content': 'Bouwen & Wonen', 'link': '#'},
+                          {'content': 'Landbouw', 'link': '#'},
+                          {'content': 'Visserij', 'link': '#'}
+                      ]
+                  },
+                  {
+                      'label': 'Doelgroepen',
+                      'items': [
+                          {'content': 'Bedrijven', 'link': '#'},
+                          {'content': 'Particulieren', 'link': '#'},
+                          {'content': 'Overheden', 'link': '#'},
+                          {'content': 'Kennisinstellingen', 'link': '#'}
+                      ]
+                  },
+                  {
+                      'label': 'Over RVO',
+                      'items': [
+                          {'content': 'Organisatie', 'link': '#'},
+                          {'content': 'Werken bij RVO', 'link': '#'},
+                          {'content': 'Contact', 'link': '#'},
+                          {'content': 'Pers', 'link': '#'}
+                      ]
+                  },
+                  {
+                      'label': 'Service',
+                      'items': [
+                          {'content': 'Klantenservice', 'link': '#'},
+                          {'content': 'Privacy', 'link': '#'},
+                          {'content': 'Toegankelijkheid', 'link': '#'},
+                          {'content': 'Cookies', 'link': '#'}
+                      ]
+                  }
+              ]"
+              secondaryMenu="[
+                  {'content': 'Privacy', 'link': '#'},
+                  {'content': 'Cookies', 'link': '#'},
+                  {'content': 'Toegankelijkheid', 'link': '#'},
+                  {'content': '© 2024 Rijksdienst voor Ondernemend Nederland', 'link': ''}
+              ]" />
+    
+</c-page>

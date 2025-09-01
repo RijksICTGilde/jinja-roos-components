@@ -1,0 +1,38 @@
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set label = _component_context.label | default('') %}
+{% set accept = _component_context.accept | default('') %}
+{% set multiple = _component_context.multiple | default(false) %}
+{% set required = _component_context.required | default(false) %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set additional_class = _component_context.get('class', '') %}
+
+{# Build CSS classes #}
+{% set field_classes = ['utrecht-form-field', 'utrecht-form-field--text', 'rvo-form-field'] %}
+{% if additional_class %}
+    {% set field_classes = field_classes + [additional_class] %}
+{% endif %}
+
+<div role="group" 
+     aria-labelledby="{{ id }}-label"
+     class="{{ field_classes | join(' ') }}">
+    
+    {% if label %}
+        <div class="rvo-form-field__label">
+            <label class="rvo-label" id="{{ id }}-label" for="{{ id }}">
+                {{ label }}
+                {% if required %}<span class="rvo-required">*</span>{% endif %}
+            </label>
+        </div>
+    {% endif %}
+    
+    <input id="{{ id }}"
+           type="file"
+           class="rvo-file-input"
+           {% if name %}name="{{ name }}"{% endif %}
+           {% if accept %}accept="{{ accept }}"{% endif %}
+           {% if multiple %}multiple{% endif %}
+           {% if required %}required{% endif %}
+           {% if disabled %}disabled{% endif %}>
+    
+</div>

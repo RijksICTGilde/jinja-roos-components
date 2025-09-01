@@ -1,0 +1,27 @@
+{% set type = _component_context.type | default('h1') %}
+{% set text_content = _component_context.textContent | default('') %}
+{% set content = _component_context.content | default('') %}
+{% set no_margins = _component_context.noMargins | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set heading_classes = ['utrecht-heading-' + type.replace('h', '')] %}
+
+{% if no_margins %}
+    {% set heading_classes = heading_classes + ['rvo-heading--no-margins'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set heading_classes = heading_classes + [additional_class] %}
+{% endif %}
+
+{# Determine content to display #}
+{% set display_content = content or text_content %}
+
+<{{ type }} 
+    class="{{ heading_classes | join(' ') }}"
+    data-roos-component="heading"
+    data-roos-type="{{ type }}"
+    data-roos-no-margins="{{ no_margins }}">
+    {{ display_content | safe }}
+</{{ type }}>

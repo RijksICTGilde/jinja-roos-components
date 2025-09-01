@@ -1,0 +1,129 @@
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set type = _component_context.type | default('text') %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set required = _component_context.required | default(false) %}
+{% set invalid = _component_context.invalid | default(false) %}
+{% set focus = _component_context.focus | default(false) %}
+{% set readonly = _component_context.readOnly | default(false) %}
+{% set placeholder = _component_context.placeholder | default('') %}
+{% set value = _component_context.value | default('') %}
+{% set default_value = _component_context.defaultValue | default('') %}
+{% set max_length = _component_context.maxLength | default('') %}
+{% set size = _component_context.size | default('md') %}
+{% set prefix = _component_context.prefix | default('') %}
+{% set suffix = _component_context.suffix | default('') %}
+{% set validation = _component_context.validation | default('none') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['utrecht-textbox'] %}
+{% if disabled %}{% set css_classes = css_classes + ['utrecht-textbox--disabled'] %}{% endif %}
+{% if focus %}{% set css_classes = css_classes + ['utrecht-textbox--focus', 'utrecht-textbox--focus-visible'] %}{% endif %}
+{% if invalid %}{% set css_classes = css_classes + ['utrecht-textbox--invalid'] %}{% endif %}
+{% if readonly %}{% set css_classes = css_classes + ['utrecht-textbox--read-only'] %}{% endif %}
+{% if required %}{% set css_classes = css_classes + ['utrecht-textbox--required'] %}{% endif %}
+
+{% if size == 'xs' %}{% set css_classes = css_classes + ['utrecht-textbox--xs'] %}
+{% elif size == 'sm' %}{% set css_classes = css_classes + ['utrecht-textbox--sm'] %}
+{% elif size == 'md' %}{% set css_classes = css_classes + ['utrecht-textbox--md'] %}
+{% elif size == 'lg' %}{% set css_classes = css_classes + ['utrecht-textbox--lg'] %}
+{% elif size == 'max' %}{% set css_classes = css_classes + ['utrecht-textbox--max'] %}
+{% endif %}
+
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+{% if prefix or suffix %}
+    <div class="rvo-layout-row rvo-layout-gap--md" data-roos-component="input">
+        {% if prefix %}
+            <span class="rvo-textinput-prefix">{{ prefix }}</span>
+        {% endif %}
+        
+        <input 
+            {% if id %}id="{{ id }}"{% endif %}
+            {% if name %}name="{{ name }}"{% endif %}
+            class="{{ css_classes | join(' ') }}"
+            type="{{ type }}"
+            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            {% if value %}value="{{ value }}"{% endif %}
+            {% if default_value and not value %}value="{{ default_value }}"{% endif %}
+            {% if disabled %}disabled{% endif %}
+            {% if required %}required{% endif %}
+            {% if readonly %}readonly{% endif %}
+            {% if invalid %}aria-invalid="true"{% endif %}
+            {% if max_length %}maxlength="{{ max_length }}"{% endif %}
+            {% if validation == 'currency' %}
+                inputmode="numeric"
+                pattern="[0-9.,]*"
+            {% endif %}
+            {% if _component_context.get('@input') %}
+                {% if roos_htmx %}
+                    {% if _component_context['@input'].startswith('hx-') %}
+                        {{ _component_context['@input'] | safe }}
+                    {% else %}
+                        oninput="{{ _component_context['@input'] }}"
+                    {% endif %}
+                {% else %}
+                    oninput="{{ _component_context['@input'] }}"
+                {% endif %}
+            {% endif %}
+            {% if _component_context.get('@change') %}
+                {% if roos_htmx %}
+                    {% if _component_context['@change'].startswith('hx-') %}
+                        {{ _component_context['@change'] | safe }}
+                    {% else %}
+                        onchange="{{ _component_context['@change'] }}"
+                    {% endif %}
+                {% else %}
+                    onchange="{{ _component_context['@change'] }}"
+                {% endif %}
+            {% endif %}
+        />
+        
+        {% if suffix %}
+            <span class="rvo-textinput-suffix">{{ suffix }}</span>
+        {% endif %}
+    </div>
+{% else %}
+    <input 
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if name %}name="{{ name }}"{% endif %}
+        class="{{ css_classes | join(' ') }}"
+        type="{{ type }}"
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if value %}value="{{ value }}"{% endif %}
+        {% if default_value and not value %}value="{{ default_value }}"{% endif %}
+        {% if disabled %}disabled{% endif %}
+        {% if required %}required{% endif %}
+        {% if readonly %}readonly{% endif %}
+        {% if invalid %}aria-invalid="true"{% endif %}
+        {% if max_length %}maxlength="{{ max_length }}"{% endif %}
+        {% if validation == 'currency' %}
+            inputmode="numeric"
+            pattern="[0-9.,]*"
+        {% endif %}
+        data-roos-component="input"
+        {% if _component_context.get('@input') %}
+            {% if roos_htmx %}
+                {% if _component_context['@input'].startswith('hx-') %}
+                    {{ _component_context['@input'] | safe }}
+                {% else %}
+                    oninput="{{ _component_context['@input'] }}"
+                {% endif %}
+            {% else %}
+                oninput="{{ _component_context['@input'] }}"
+            {% endif %}
+        {% endif %}
+        {% if _component_context.get('@change') %}
+            {% if roos_htmx %}
+                {% if _component_context['@change'].startswith('hx-') %}
+                    {{ _component_context['@change'] | safe }}
+                {% else %}
+                    onchange="{{ _component_context['@change'] }}"
+                {% endif %}
+            {% else %}
+                onchange="{{ _component_context['@change'] }}"
+            {% endif %}
+        {% endif %}
+    />
+{% endif %}

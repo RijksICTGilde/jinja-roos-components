@@ -1,0 +1,124 @@
+{#
+  Layout Structure Reference
+  
+  This example demonstrates the basic page structure patterns used in RVO applications:
+  - Header with navigation
+  - Main content area with optional sidebar
+  - Footer
+  
+  Based on patterns from RVO demo pages like Aanvragen.tsx and Home.tsx
+#}
+
+<c-page title="RVO Layout Structure Reference" 
+        bodyClass="rvo-responsive"
+        lang="nl">
+    
+    {# Header Section #}
+    <header class="rvo-header">
+        {# Top navigation bar #}
+        <nav class="rvo-menubar rvo-menubar--lg">
+            <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+                <c-layout-flow row="true" justifyContent="space-between" alignItems="center">
+                    <div class="rvo-logo">
+                        <span>RVO Logo</span>
+                    </div>
+                    <c-layout-flow row="true" gap="md">
+                        <a href="#" class="rvo-link">Hulp & Contact</a>
+                        <a href="#" class="rvo-link">English</a>
+                        <a href="#" class="rvo-link rvo-link--active">Mijn RVO</a>
+                    </c-layout-flow>
+                </c-layout-flow>
+            </div>
+        </nav>
+        
+        {# Main navigation #}
+        <nav class="rvo-main-nav">
+            <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+                <c-layout-flow row="true" gap="lg">
+                    <a href="#" class="rvo-nav-link rvo-nav-link--active">Home</a>
+                    <a href="#" class="rvo-nav-link">Onderwerpen</a>
+                    <a href="#" class="rvo-nav-link">Subsidie- en financieringswijzer</a>
+                    <a href="#" class="rvo-nav-link">Over ons</a>
+                    <a href="#" class="rvo-nav-link">Contact</a>
+                </c-layout-flow>
+            </div>
+        </nav>
+    </header>
+    
+    {# Main Content Area #}
+    <main class="rvo-main-content">
+        <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+            
+            {# Standard single-column layout #}
+            <section class="rvo-content-section">
+                <c-layout-flow gap="xl">
+                    <h1 class="utrecht-heading-1">Page Title</h1>
+                    <p class="rvo-text--lg">This demonstrates the standard content layout pattern.</p>
+                    
+                    <c-card outline="true" padding="lg">
+                        <h2 class="utrecht-heading-2">Content Card</h2>
+                        <p>Cards are used to group related content and create visual hierarchy.</p>
+                    </c-card>
+                </c-layout-flow>
+            </section>
+            
+        </div>
+    </main>
+    
+    {# Footer Section #}
+    <footer class="rvo-footer">
+        <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+            <c-layout-flow gap="lg">
+                
+                {# Primary footer navigation #}
+                <c-grid columns="four" gap="lg">
+                    <div>
+                        <h3 class="utrecht-heading-3">Onderwerpen</h3>
+                        <ul class="rvo-footer-list">
+                            <li><a href="#" class="rvo-link">Klimaat & Energie</a></li>
+                            <li><a href="#" class="rvo-link">Bouwen & Wonen</a></li>
+                            <li><a href="#" class="rvo-link">Landbouw</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="utrecht-heading-3">Doelgroepen</h3>
+                        <ul class="rvo-footer-list">
+                            <li><a href="#" class="rvo-link">Bedrijven</a></li>
+                            <li><a href="#" class="rvo-link">Particulieren</a></li>
+                            <li><a href="#" class="rvo-link">Overheden</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="utrecht-heading-3">Over RVO</h3>
+                        <ul class="rvo-footer-list">
+                            <li><a href="#" class="rvo-link">Organisatie</a></li>
+                            <li><a href="#" class="rvo-link">Werken bij RVO</a></li>
+                            <li><a href="#" class="rvo-link">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="utrecht-heading-3">Service</h3>
+                        <ul class="rvo-footer-list">
+                            <li><a href="#" class="rvo-link">Klantenservice</a></li>
+                            <li><a href="#" class="rvo-link">Privacy</a></li>
+                            <li><a href="#" class="rvo-link">Toegankelijkheid</a></li>
+                        </ul>
+                    </div>
+                </c-grid>
+                
+                {# Secondary footer #}
+                <hr class="rvo-hr">
+                <c-layout-flow row="true" justifyContent="space-between" alignItems="center">
+                    <p class="rvo-text--sm">&copy; 2024 Rijksdienst voor Ondernemend Nederland</p>
+                    <c-layout-flow row="true" gap="md">
+                        <a href="#" class="rvo-link rvo-link--sm">Cookies</a>
+                        <a href="#" class="rvo-link rvo-link--sm">Privacy</a>
+                        <a href="#" class="rvo-link rvo-link--sm">Toegankelijkheid</a>
+                    </c-layout-flow>
+                </c-layout-flow>
+                
+            </c-layout-flow>
+        </div>
+    </footer>
+    
+</c-page>

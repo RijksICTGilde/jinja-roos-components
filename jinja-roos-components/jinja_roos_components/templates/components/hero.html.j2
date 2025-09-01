@@ -1,0 +1,60 @@
+{% set size = _component_context.size | default('md') %}
+{% set image = _component_context.image | default({}) %}
+{% set title = _component_context.title | default('') %}
+{% set subtitle = _component_context.subtitle | default('') %}
+{% set content = _component_context.content | default('') %}
+{% set overlay = _component_context.overlay | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set hero_classes = ['rvo-hero'] %}
+
+{% if size %}
+    {% set hero_classes = hero_classes + ['rvo-hero--' + size] %}
+{% endif %}
+
+{% if image.src %}
+    {% set hero_classes = hero_classes + ['rvo-hero--with-image'] %}
+{% endif %}
+
+{% if overlay %}
+    {% set hero_classes = hero_classes + ['rvo-hero--overlay'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set hero_classes = hero_classes + [additional_class] %}
+{% endif %}
+
+<section 
+    class="{{ hero_classes | join(' ') }}"
+    data-roos-component="hero"
+    data-roos-size="{{ size }}"
+    {% if image.src %}data-roos-has-image="true"{% endif %}>
+    
+    {% if image.src %}
+        <div class="rvo-hero__image-container">
+            <img src="{{ image.src }}" 
+                 alt="{{ image.alt | default('') }}"
+                 class="rvo-hero__image" />
+        </div>
+    {% endif %}
+    
+    {% if title or subtitle or content %}
+        <div class="rvo-hero__content">
+            {% if title %}
+                <h1 class="utrecht-heading-1 rvo-hero__title">{{ title }}</h1>
+            {% endif %}
+            
+            {% if subtitle %}
+                <p class="rvo-hero__subtitle rvo-text--lg">{{ subtitle }}</p>
+            {% endif %}
+            
+            {% if content %}
+                <div class="rvo-hero__text">
+                    {{ content | safe }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+</section>

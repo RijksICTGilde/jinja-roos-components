@@ -1,0 +1,59 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% set kind = _component_context.kind | default('primary') %}
+{% set size = _component_context.size | default('md') %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set busy = _component_context.busy | default(false) %}
+{% set active = _component_context.active | default(false) %}
+{% set focus = _component_context.focus | default(false) %}
+{% set hover = _component_context.hover | default(false) %}
+{% set button_type = _component_context.type | default('button') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set label = _component_context.label | default(_component_context.content) | default('') %}
+{% set show_icon = _component_context.showIcon | default('no') %}
+{% set icon = _component_context.icon | default('') %}
+{% set full_width = _component_context.fullWidth | default(false) %}
+
+{# Map RVO button kinds to Utrecht classes #}
+{% set appearance = '' %}
+{% if kind == 'primary' or kind == 'warning' %}
+    {% set appearance = 'primary-action-button' %}
+{% elif kind == 'secondary' %}
+    {% set appearance = 'secondary-action-button' %}
+{% elif kind == 'subtle' or kind == 'warning-subtle' %}
+    {% set appearance = 'subtle-button' %}
+{% endif %}
+
+{# Build CSS classes #}
+{% set css_classes = ['utrecht-button'] %}
+{% if kind == 'tertiary' %}
+    {% set css_classes = css_classes + ['utrecht-button--rvo-tertiary-action'] %}
+{% elif kind == 'quaternary' %}
+    {% set css_classes = css_classes + ['utrecht-button--rvo-quaternary-action'] %}
+{% endif %}
+
+{% if active %}{% set css_classes = css_classes + ['utrecht-button--active'] %}{% endif %}
+{% if busy %}{% set css_classes = css_classes + ['utrecht-button--busy'] %}{% endif %}
+{% if hover %}{% set css_classes = css_classes + ['utrecht-button--hover'] %}{% endif %}
+{% if focus %}{% set css_classes = css_classes + ['utrecht-button--focus', 'utrecht-button--focus-visible'] %}{% endif %}
+
+{% if size == 'xs' %}{% set css_classes = css_classes + ['utrecht-button--rvo-xs'] %}
+{% elif size == 'sm' %}{% set css_classes = css_classes + ['utrecht-button--rvo-sm'] %}
+{% elif size == 'md' %}{% set css_classes = css_classes + ['utrecht-button--rvo-md'] %}
+{% endif %}
+
+{% if full_width %}{% set css_classes = css_classes + ['utrecht-button--rvo-full-width'] %}{% endif %}
+{% if show_icon != 'no' %}{% set css_classes = css_classes + ['utrecht-button--icon-' + show_icon] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<button 
+    class="{{ css_classes | join(' ') }}"
+    type="{{ button_type }}"
+    {% if disabled or busy %}disabled{% endif %}
+    {% if busy %}aria-label="Loading..."{% endif %}
+    {% if appearance %}data-utrecht-button-appearance="{{ appearance }}"{% endif %}
+    {% if kind == 'warning' or kind == 'warning-subtle' %}data-utrecht-button-hint="warning"{% endif %}
+    data-roos-component="button"
+    data-roos-kind="{{ kind }}"
+    data-roos-size="{{ size }}"
+    {{ events.render_extra_attributes(_component_context) }}>{% if show_icon == 'before' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="{{ icon | title }}"></span>{% endif %}{% if busy %}<span class="utrecht-icon rvo-icon rvo-icon-spinner rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="Loading"></span>{% endif %}{{ label | safe }}{% if show_icon == 'after' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="{{ icon | title }}"></span>{% endif %}
+</button>

@@ -1,0 +1,69 @@
+{% set id = _component_context.id | default('') %}
+{% set name = _component_context.name | default('') %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set required = _component_context.required | default(false) %}
+{% set invalid = _component_context.invalid | default(false) %}
+{% set focus = _component_context.focus | default(false) %}
+{% set readonly = _component_context.readOnly | default(false) %}
+{% set placeholder = _component_context.placeholder | default('') %}
+{% set value = _component_context.value | default(_component_context.content) | default('') %}
+{% set rows = _component_context.rows | default(4) %}
+{% set cols = _component_context.cols | default('') %}
+{% set max_length = _component_context.maxLength | default('') %}
+{% set max_length_indicator = _component_context.maxLengthIndicator | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set css_classes = ['utrecht-textarea'] %}
+{% if disabled %}{% set css_classes = css_classes + ['utrecht-textarea--disabled'] %}{% endif %}
+{% if focus %}{% set css_classes = css_classes + ['utrecht-textarea--focus', 'utrecht-textarea--focus-visible'] %}{% endif %}
+{% if invalid %}{% set css_classes = css_classes + ['utrecht-textarea--invalid'] %}{% endif %}
+{% if readonly %}{% set css_classes = css_classes + ['utrecht-textarea--read-only'] %}{% endif %}
+{% if required %}{% set css_classes = css_classes + ['utrecht-textarea--required'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<div class="rvo-textarea-wrapper" data-roos-component="textarea">
+    <textarea 
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if name %}name="{{ name }}"{% endif %}
+        class="{{ css_classes | join(' ') }}"
+        rows="{{ rows }}"
+        {% if cols %}cols="{{ cols }}"{% endif %}
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if disabled %}disabled{% endif %}
+        {% if required %}required{% endif %}
+        {% if readonly %}readonly{% endif %}
+        {% if invalid %}aria-invalid="true"{% endif %}
+        {% if max_length %}maxlength="{{ max_length }}"{% endif %}
+        {% if _component_context.get('@input') %}
+            {% if roos_htmx %}
+                {% if _component_context['@input'].startswith('hx-') %}
+                    {{ _component_context['@input'] | safe }}
+                {% else %}
+                    oninput="{{ _component_context['@input'] }}"
+                {% endif %}
+            {% else %}
+                oninput="{{ _component_context['@input'] }}"
+            {% endif %}
+        {% endif %}
+        {% if _component_context.get('@change') %}
+            {% if roos_htmx %}
+                {% if _component_context['@change'].startswith('hx-') %}
+                    {{ _component_context['@change'] | safe }}
+                {% else %}
+                    onchange="{{ _component_context['@change'] }}"
+                {% endif %}
+            {% else %}
+                onchange="{{ _component_context['@change'] }}"
+            {% endif %}
+        {% endif %}
+    >{{ value }}</textarea>
+    
+    {% if max_length_indicator and max_length %}
+        <div class="rvo-max-length-indicator">
+            <span class="rvo-max-length-indicator__current">0</span>
+            <span class="rvo-max-length-indicator__separator">/</span>
+            <span class="rvo-max-length-indicator__max">{{ max_length }}</span>
+        </div>
+    {% endif %}
+</div>

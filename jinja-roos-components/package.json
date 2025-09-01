@@ -1,0 +1,59 @@
+{
+  "name": "jinja-roos-components",
+  "version": "0.1.0",
+  "description": "Modern, self-contained Jinja2 component library with built-in assets",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --watch --mode=development",
+    "build": "webpack --mode=development",
+    "build:dev": "webpack --mode=development",
+    "clean": "rm -rf jinja_roos_components/static/dist/*",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ts/",
+    "lint:fix": "eslint src/ts/ --fix",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jinja2",
+    "components",
+    "ui",
+    "web-components",
+    "fastapi",
+    "flask"
+  ],
+  "author": "RIG Cluster Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@types/node": "^20.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "globals": "^16.2.0",
+    "html-webpack-deploy-plugin": "^3.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "prettier": "3.5.3",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "sass": "^1.89.0",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@nl-rvo/assets": "1.0.0-alpha.360",
+    "@nl-rvo/component-library-css": "4.7.0",
+    "@nl-rvo/css-button": "^1.1.5",
+    "@nl-rvo/design-tokens": "1.8.0",
+    "htmx.org": "^1.9.12",
+    "reset-css": "^5.0.2"
+  },
+  "web-types": "./web-types.json"
+}

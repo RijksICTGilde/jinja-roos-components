@@ -1,0 +1,476 @@
+{#
+  Advanced Form Patterns
+  
+  This example demonstrates complex form patterns based on CMOR and I&R demo pages:
+  - Multi-step forms with progress indication
+  - Repeating form rows (table-like layouts)
+  - Conditional field visibility
+  - Complex validation scenarios
+  - Import/export data forms
+  
+  Based on ImportGegevens.tsx and Profiel.tsx patterns
+#}
+
+<c-page title="Advanced Form Patterns" 
+        bodyClass="rvo-theme rvo-responsive"
+        lang="nl">
+    
+    <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+        <c-layout-flow gap="3xl">
+            
+            {# Page Header #}
+            <header class="rvo-page-header">
+                <c-heading type="h1" textContent="Advanced Form Patterns" />
+                <p class="rvo-text--lg">
+                    Complex form patterns for data import, profile management, and multi-step processes.
+                </p>
+            </header>
+            
+            {# Multi-Step Form Example #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Multi-Step Form with Progress" />
+                
+                {# Progress Indicator #}
+                <div class="rvo-steps rvo-margin-block-end--xl">
+                    <ol class="rvo-steps__list">
+                        <li class="rvo-step rvo-step--completed">
+                            <span class="rvo-step__number">1</span>
+                            <span class="rvo-step__label">Basisgegevens</span>
+                        </li>
+                        <li class="rvo-step rvo-step--current">
+                            <span class="rvo-step__number">2</span>
+                            <span class="rvo-step__label">Importgegevens</span>
+                        </li>
+                        <li class="rvo-step rvo-step--pending">
+                            <span class="rvo-step__number">3</span>
+                            <span class="rvo-step__label">Controle</span>
+                        </li>
+                        <li class="rvo-step rvo-step--pending">
+                            <span class="rvo-step__number">4</span>
+                            <span class="rvo-step__label">Bevestiging</span>
+                        </li>
+                    </ol>
+                </div>
+                
+                <c-card title="Stap 2: Importgegevens" outline="true" padding="xl">
+                    <form>
+                        <c-layout-flow gap="xl">
+                            
+                            {# Import File Selection #}
+                            <c-fieldset legend="Bestand selectie">
+                                <c-layout-flow gap="lg">
+                                    
+                                    <c-alert kind="info" 
+                                             content="Upload een CSV-bestand met de diergegevens. Het bestand moet de juiste kolommen bevatten." />
+                                    
+                                    <div class="rvo-file-upload">
+                                        <div class="rvo-file-upload__dropzone">
+                                            <c-layout-flow gap="md" alignItems="center">
+                                                <c-icon icon="upload" size="2xl" />
+                                                <p class="rvo-text">Sleep uw CSV-bestand hierheen of klik om te uploaden</p>
+                                                <c-button kind="secondary" label="Bestand selecteren" />
+                                                <p class="rvo-text--sm rvo-text--subtle">
+                                                    Maximum bestandsgrootte: 10MB. Alleen CSV-bestanden toegestaan.
+                                                </p>
+                                            </c-layout-flow>
+                                        </div>
+                                    </div>
+                                    
+                                </c-layout-flow>
+                            </c-fieldset>
+                            
+                            {# Import Settings #}
+                            <c-fieldset legend="Import instellingen">
+                                <c-grid columns="two" gap="lg">
+                                    
+                                    <c-select-field 
+                                        id="import-type"
+                                        name="import-type"
+                                        label="Type import"
+                                        required="true"
+                                        options="[
+                                            {'label': 'Nieuwe dieren', 'value': 'new'},
+                                            {'label': 'Update bestaande dieren', 'value': 'update'},
+                                            {'label': 'Vervangen alle gegevens', 'value': 'replace'}
+                                        ]"
+                                        helperText="Kies hoe de geïmporteerde gegevens verwerkt moeten worden" />
+                                    
+                                    <c-date-input-field 
+                                        id="import-date"
+                                        name="import-date"
+                                        label="Ingangsdatum"
+                                        required="true"
+                                        helperText="Datum vanaf wanneer de gegevens van kracht zijn" />
+                                    
+                                </c-grid>
+                            </c-fieldset>
+                            
+                            {# Step Navigation #}
+                            <c-action-group 
+                                alignment="space-between"
+                                actions="[
+                                    {'type': 'button', 'kind': 'secondary', 'label': 'Vorige stap'},
+                                    {'type': 'button', 'kind': 'primary', 'label': 'Volgende stap'}
+                                ]" />
+                            
+                        </c-layout-flow>
+                    </form>
+                </c-card>
+            </section>
+            
+            {# Repeating Form Rows (Import Data Table) #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Data Import Table Form" />
+                
+                <c-card title="Diergegevens invoeren" outline="true" padding="lg">
+                    <c-layout-flow gap="lg">
+                        
+                        <p class="rvo-text">
+                            Voer de gegevens van de dieren handmatig in of gebruik de import functie hierboven.
+                        </p>
+                        
+                        {# Table Header #}
+                        <div class="rvo-import-table">
+                            <div class="rvo-import-table__header">
+                                <c-grid columns="eight" gap="sm">
+                                    <span class="rvo-table-header">#</span>
+                                    <span class="rvo-table-header">Landcode</span>
+                                    <span class="rvo-table-header">Levensnummer</span>
+                                    <span class="rvo-table-header">Werknummer</span>
+                                    <span class="rvo-table-header">Geboortedatum</span>
+                                    <span class="rvo-table-header">Geslacht</span>
+                                    <span class="rvo-table-header">Land van geboorte</span>
+                                    <span class="rvo-table-header">Acties</span>
+                                </c-grid>
+                            </div>
+                            
+                            {# Table Rows #}
+                            <div class="rvo-import-table__body">
+                                {% for i in range(3) %}
+                                    <div class="rvo-import-table__row">
+                                        <c-layout-flow row="true" alignItems="start" gap="sm">
+                                            
+                                            <span class="rvo-table-cell">{{ i + 1 }}</span>
+                                            
+                                            <c-text-input-field 
+                                                id="landcode-{{ i }}"
+                                                name="landcode-{{ i }}"
+                                                size="xs"
+                                                value="NL"
+                                                placeholder="NL" />
+                                            
+                                            <c-text-input-field 
+                                                id="levensnummer-{{ i }}"
+                                                name="levensnummer-{{ i }}"
+                                                size="sm"
+                                                placeholder="123456789012345"
+                                                required="true" />
+                                            
+                                            <c-text-input-field 
+                                                id="werknummer-{{ i }}"
+                                                name="werknummer-{{ i }}"
+                                                size="sm"
+                                                placeholder="12345" />
+                                            
+                                            <c-date-input-field 
+                                                id="geboortedatum-{{ i }}"
+                                                name="geboortedatum-{{ i }}"
+                                                size="sm"
+                                                required="true" />
+                                            
+                                            <c-select-field 
+                                                id="geslacht-{{ i }}"
+                                                name="geslacht-{{ i }}"
+                                                size="xs"
+                                                required="true"
+                                                options="[
+                                                    {'label': 'M', 'value': 'M'},
+                                                    {'label': 'V', 'value': 'V'}
+                                                ]" />
+                                            
+                                            <c-select-field 
+                                                id="land-geboorte-{{ i }}"
+                                                name="land-geboorte-{{ i }}"
+                                                size="sm"
+                                                options="[
+                                                    {'label': 'Nederland', 'value': 'NL'},
+                                                    {'label': 'België', 'value': 'BE'},
+                                                    {'label': 'Duitsland', 'value': 'DE'}
+                                                ]" />
+                                            
+                                            <button type="button" 
+                                                    class="rvo-button rvo-button--subtle rvo-button--sm"
+                                                    aria-label="Rij verwijderen">
+                                                <c-icon icon="kruis" size="sm" />
+                                            </button>
+                                            
+                                        </c-layout-flow>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            {# Add Row Button #}
+                            <div class="rvo-import-table__footer">
+                                <c-button kind="tertiary" label="Rij toevoegen" />
+                            </div>
+                        </div>
+                        
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+            {# Business Profile Form #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Business Profile Management" />
+                
+                <c-grid columns="two" gap="lg">
+                    
+                    {# Read-Only Business Information #}
+                    <c-card title="Bedrijfsgegevens (alleen-lezen)" outline="true" padding="lg">
+                        <c-layout-flow gap="lg">
+                            
+                            <c-data-list 
+                                items="[
+                                    {'term': 'Handelsnaam', 'value': 'Boer Overveen B.V.'},
+                                    {'term': 'KvK-nummer', 'value': '27378529'},
+                                    {'term': 'BTW-nummer', 'value': 'NL123456789B01'},
+                                    {'term': 'Rechtsvorm', 'value': 'Besloten Vennootschap'},
+                                    {'term': 'Oprichtingsdatum', 'value': '15 maart 2010'},
+                                    {'term': 'Status', 'value': 'Actief'}
+                                ]" />
+                            
+                            <c-alert kind="info" 
+                                     content="Deze gegevens komen uit het KvK-register en kunnen niet gewijzigd worden via dit portaal." />
+                            
+                        </c-layout-flow>
+                    </c-card>
+                    
+                    {# Editable Contact Information #}
+                    <c-card title="Contactgegevens" outline="true" padding="lg">
+                        <form>
+                            <c-layout-flow gap="lg">
+                                
+                                <c-fieldset legend="Adresgegevens">
+                                    <c-layout-flow gap="lg">
+                                        
+                                        <c-grid columns="two" gap="md">
+                                            <c-text-input-field 
+                                                id="street"
+                                                name="street"
+                                                label="Straatnaam"
+                                                value="Hoofdstraat"
+                                                required="true" />
+                                            
+                                            <c-text-input-field 
+                                                id="house-number"
+                                                name="house-number"
+                                                label="Huisnummer"
+                                                value="123"
+                                                size="sm"
+                                                required="true" />
+                                        </c-grid>
+                                        
+                                        <c-grid columns="two" gap="md">
+                                            <c-text-input-field 
+                                                id="postal-code"
+                                                name="postal-code"
+                                                label="Postcode"
+                                                value="1234 AB"
+                                                size="sm"
+                                                required="true" />
+                                            
+                                            <c-text-input-field 
+                                                id="city"
+                                                name="city"
+                                                label="Plaats"
+                                                value="Overveen"
+                                                required="true" />
+                                        </c-grid>
+                                        
+                                    </c-layout-flow>
+                                </c-fieldset>
+                                
+                                <c-fieldset legend="Contactinformatie">
+                                    <c-layout-flow gap="lg">
+                                        
+                                        {# Phone Number with Country Code #}
+                                        <div class="rvo-form-group">
+                                            <label for="phone" class="utrecht-form-label">Telefoonnummer</label>
+                                            <c-layout-flow row="true" alignItems="start" gap="sm">
+                                                <c-select-field 
+                                                    id="phone-country"
+                                                    name="phone-country"
+                                                    size="xs"
+                                                    value="+31"
+                                                    options="[
+                                                        {'label': '+31', 'value': '+31'},
+                                                        {'label': '+32', 'value': '+32'},
+                                                        {'label': '+49', 'value': '+49'}
+                                                    ]" />
+                                                
+                                                <c-text-input-field 
+                                                    id="phone"
+                                                    name="phone"
+                                                    type="tel"
+                                                    value="6 12345678"
+                                                    placeholder="6 12345678" />
+                                            </c-layout-flow>
+                                        </div>
+                                        
+                                        <c-text-input-field 
+                                            id="email"
+                                            name="email"
+                                            label="E-mailadres"
+                                            type="email"
+                                            value="info@boeroverveen.nl"
+                                            required="true"
+                                            helperText="Voor officiële correspondentie" />
+                                        
+                                        <c-text-input-field 
+                                            id="website"
+                                            name="website"
+                                            label="Website"
+                                            type="url"
+                                            value="https://www.boeroverveen.nl"
+                                            placeholder="https://www.voorbeeld.nl" />
+                                        
+                                    </c-layout-flow>
+                                </c-fieldset>
+                                
+                                <c-action-group 
+                                    alignment="end"
+                                    actions="[
+                                        {'type': 'button', 'kind': 'secondary', 'label': 'Annuleren'},
+                                        {'type': 'button', 'kind': 'primary', 'label': 'Wijzigingen opslaan'}
+                                    ]" />
+                                
+                            </c-layout-flow>
+                        </form>
+                    </c-card>
+                    
+                </c-grid>
+            </section>
+            
+            {# Conditional Fields Example #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Conditional Form Fields" />
+                
+                <c-card title="Certificate Application" outline="true" padding="lg">
+                    <form>
+                        <c-layout-flow gap="lg">
+                            
+                            <c-select-field 
+                                id="certificate-type"
+                                name="certificate-type"
+                                label="Type certificaat"
+                                required="true"
+                                placeholder="Selecteer certificaattype"
+                                options="[
+                                    {'label': 'Gezondheidscertificaat', 'value': 'health'},
+                                    {'label': 'Export certificaat', 'value': 'export'},
+                                    {'label': 'Import certificaat', 'value': 'import'}
+                                ]"
+                                helperText="Het type certificaat bepaalt welke extra gegevens benodigd zijn" />
+                            
+                            {# Conditional fields based on certificate type #}
+                            <div id="conditional-fields" class="rvo-conditional-fields" 
+                                 data-condition="certificate-type" 
+                                 data-value="health">
+                                
+                                <c-fieldset legend="Gezondheidscertificaat gegevens">
+                                    <c-layout-flow gap="lg">
+                                        
+                                        <c-text-input-field 
+                                            id="health-cert-number"
+                                            name="health-cert-number"
+                                            label="Nummer gezondheidscertificaat"
+                                            required="true"
+                                            placeholder="Intra.EU.BE.2021.0025455"
+                                            helperText="Het formaat van het certificaatnummer is INTRA(of Intra).EU.landcode.jaartal.7cijfers (bijvoorbeeld Intra.EU.BE.2021.0025455)" />
+                                        
+                                        <c-date-input-field 
+                                            id="health-cert-date"
+                                            name="health-cert-date"
+                                            label="Afgiftedatum certificaat"
+                                            required="true" />
+                                        
+                                        <c-select-field 
+                                            id="issuing-authority"
+                                            name="issuing-authority"
+                                            label="Afgevende instantie"
+                                            required="true"
+                                            options="[
+                                                {'label': 'NVWA Nederland', 'value': 'nvwa-nl'},
+                                                {'label': 'AFSCA België', 'value': 'afsca-be'},
+                                                {'label': 'BVL Duitsland', 'value': 'bvl-de'}
+                                            ]" />
+                                        
+                                    </c-layout-flow>
+                                </c-fieldset>
+                            </div>
+                            
+                            <c-action-group 
+                                alignment="end"
+                                actions="[
+                                    {'type': 'button', 'kind': 'secondary', 'label': 'Concept opslaan'},
+                                    {'type': 'button', 'kind': 'primary', 'label': 'Aanvraag indienen'}
+                                ]" />
+                            
+                        </c-layout-flow>
+                    </form>
+                </c-card>
+            </section>
+            
+            {# Form Validation Summary #}
+            <section class="rvo-content-section">
+                <c-heading type="h2" textContent="Form Validation Summary" />
+                
+                <c-card outline="true" padding="lg">
+                    <c-layout-flow gap="lg">
+                        
+                        <c-alert kind="error"
+                                 heading="Formulier bevat fouten"
+                                 content="Los de onderstaande fouten op voordat u het formulier kunt verzenden." />
+                        
+                        <ul class="rvo-validation-summary">
+                            <li class="rvo-validation-error">
+                                <a href="#project-name" class="rvo-link">Projectnaam</a>: Dit veld is verplicht
+                            </li>
+                            <li class="rvo-validation-error">
+                                <a href="#email" class="rvo-link">E-mailadres</a>: Voer een geldig e-mailadres in
+                            </li>
+                            <li class="rvo-validation-error">
+                                <a href="#birthdate" class="rvo-link">Geboortedatum</a>: Datum mag niet in de toekomst liggen
+                            </li>
+                        </ul>
+                        
+                        <c-action-group 
+                            alignment="start"
+                            actions="[
+                                {'type': 'button', 'kind': 'secondary', 'label': 'Fouten automatisch markeren'}
+                            ]" />
+                        
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+            {# Usage Guidelines #}
+            <section class="rvo-content-section">
+                <c-card background="color" backgroundColor="grijs-100" padding="lg">
+                    <c-heading type="h2" textContent="Advanced Form Pattern Guidelines" />
+                    <c-layout-flow gap="md">
+                        <p><strong>Multi-Step Forms:</strong> Use progress indicators and clear step navigation</p>
+                        <p><strong>Data Tables:</strong> For repeating data entry, use table-like layouts with consistent field sizing</p>
+                        <p><strong>Profile Forms:</strong> Combine read-only data lists with editable form fields</p>
+                        <p><strong>Conditional Fields:</strong> Show/hide fields based on user selections using JavaScript</p>
+                        <p><strong>File Upload:</strong> Provide clear upload areas with format and size restrictions</p>
+                        <p><strong>Validation Summary:</strong> Show all form errors in a summary with direct links to fields</p>
+                        <p><strong>Mixed Layouts:</strong> Use grids and layout-flow to create complex but accessible form layouts</p>
+                    </c-layout-flow>
+                </c-card>
+            </section>
+            
+        </c-layout-flow>
+    </div>
+    
+</c-page>

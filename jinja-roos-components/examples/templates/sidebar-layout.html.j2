@@ -1,0 +1,170 @@
+{#
+  Sidebar Layout Reference
+  
+  This example demonstrates the sidebar layout pattern used in RVO admin applications:
+  - Header with user navigation
+  - Sidebar navigation
+  - Main content area
+  - Footer
+  
+  Based on patterns from RVO demo pages like Aanvragen.tsx (CMOR system)
+#}
+
+<c-page title="RVO Sidebar Layout Reference" 
+        bodyClass="rvo-responsive"
+        lang="nl">
+    
+    {# Header with user info #}
+    <header class="rvo-header">
+        <nav class="rvo-menubar rvo-menubar--lg">
+            <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+                <c-layout-flow row="true" justifyContent="space-between" alignItems="center">
+                    <div class="rvo-logo">
+                        <span>RVO Admin</span>
+                    </div>
+                    <c-layout-flow row="true" gap="md">
+                        <a href="#" class="rvo-link">Hulp & Contact</a>
+                        <a href="#" class="rvo-link">English</a>
+                        <span class="rvo-user-info">Boer Overveen B.V</span>
+                    </c-layout-flow>
+                </c-layout-flow>
+            </div>
+        </nav>
+    </header>
+    
+    {# Main layout with sidebar #}
+    <main class="rvo-sidebar-layout__container">
+        <div class="rvo-sidebar-layout rvo-max-width-layout rvo-max-width-layout--lg">
+            
+            {# Sidebar Navigation #}
+            <aside class="rvo-sidebar-layout__sidebar rvo-sidebar-layout__sidebar--bg">
+                <nav class="rvo-sidebar-nav">
+                    <c-layout-flow gap="sm">
+                        <a href="#" class="rvo-sidebar-link">
+                            <span class="rvo-icon rvo-icon-home"></span>
+                            Overzicht
+                        </a>
+                        <a href="#" class="rvo-sidebar-link rvo-sidebar-link--active">
+                            <span class="rvo-icon rvo-icon-map"></span>
+                            Aanvragen
+                        </a>
+                        <a href="#" class="rvo-sidebar-link">
+                            <span class="rvo-icon rvo-icon-publicatie"></span>
+                            Mijn documenten
+                        </a>
+                        <a href="#" class="rvo-sidebar-link">
+                            <span class="rvo-icon rvo-icon-mail"></span>
+                            Mijn berichten
+                        </a>
+                        <a href="#" class="rvo-sidebar-link">
+                            <span class="rvo-icon rvo-icon-user"></span>
+                            Profiel & voorkeuren
+                        </a>
+                    </c-layout-flow>
+                </nav>
+            </aside>
+            
+            {# Main Content #}
+            <div class="rvo-sidebar-layout__content">
+                <c-layout-flow gap="xl">
+                    
+                    {# Page Header #}
+                    <header class="rvo-page-header">
+                        <h1 class="utrecht-heading-1">Aanvragen</h1>
+                        <p class="rvo-text--no-margins">
+                            Op deze pagina ziet u een overzicht van uw aanvragen vanuit een aantal RVO systemen. 
+                            Wij voegen regelmatig nieuwe systemen toe om het overzicht zo volledig mogelijk te maken.
+                        </p>
+                    </header>
+                    
+                    {# Tabs Section #}
+                    <div class="rvo-tabs">
+                        <nav class="rvo-tabs-nav">
+                            <a href="#" class="rvo-tab rvo-tab--active">Lopende aanvragen</a>
+                            <a href="#" class="rvo-tab">Archief</a>
+                        </nav>
+                    </div>
+                    
+                    {# Data Table #}
+                    <c-card outline="true" padding="lg">
+                        <div class="rvo-table--responsive">
+                            <table class="rvo-table">
+                                <thead class="rvo-table-head">
+                                    <tr class="rvo-table-row">
+                                        <th scope="col" class="rvo-table-header">Naam</th>
+                                        <th scope="col" class="rvo-table-header">Status</th>
+                                        <th scope="col" class="rvo-table-header">Referentienummer</th>
+                                        <th scope="col" class="rvo-table-header">Laatste wijziging</th>
+                                        <th scope="col" class="rvo-table-header"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="rvo-table-body">
+                                    <tr class="rvo-table-row">
+                                        <td class="rvo-table-cell">
+                                            <a href="#" class="rvo-link rvo-link--no-underline">LEADER 2023</a>
+                                        </td>
+                                        <td class="rvo-table-cell">
+                                            <c-layout-flow row="true" gap="sm" alignItems="center">
+                                                <span class="rvo-status-icon rvo-status-icon--warning"></span>
+                                                Actie nodig
+                                            </c-layout-flow>
+                                        </td>
+                                        <td class="rvo-table-cell">ERTKV23-04546009</td>
+                                        <td class="rvo-table-cell">14 dec 2023</td>
+                                        <td class="rvo-table-cell">
+                                            <a href="#" class="rvo-link">
+                                                <span class="rvo-icon rvo-icon-arrow-right"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="rvo-table-row">
+                                        <td class="rvo-table-cell">
+                                            <a href="#" class="rvo-link rvo-link--no-underline">Extra betaling jonge landbouwers GL..</a>
+                                        </td>
+                                        <td class="rvo-table-cell">In behandeling</td>
+                                        <td class="rvo-table-cell">ERTKV23-04546009</td>
+                                        <td class="rvo-table-cell">14 dec 2023</td>
+                                        <td class="rvo-table-cell">
+                                            <a href="#" class="rvo-link">
+                                                <span class="rvo-icon rvo-icon-arrow-right"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {# Pagination #}
+                        <nav class="rvo-pagination" aria-label="Paginanavigatie">
+                            <c-layout-flow row="true" gap="sm" justifyContent="center">
+                                <a href="#" class="rvo-pagination-link">‹ Vorige</a>
+                                <a href="#" class="rvo-pagination-link rvo-pagination-link--current">1</a>
+                                <a href="#" class="rvo-pagination-link">2</a>
+                                <a href="#" class="rvo-pagination-link">3</a>
+                                <a href="#" class="rvo-pagination-link">Volgende ›</a>
+                            </c-layout-flow>
+                        </nav>
+                    </c-card>
+                    
+                    {# Action Card #}
+                    <c-card background="color" backgroundColor="grijs-100" padding="xl">
+                        <h3 class="utrecht-heading-3 rvo-heading--no-margins">
+                            Wilt u een nieuwe regeling aanvragen?
+                        </h3>
+                        <c-button kind="primary" label="Start een nieuwe aanvraag" />
+                    </c-card>
+                    
+                </c-layout-flow>
+            </div>
+            
+        </div>
+    </main>
+    
+    {# Footer #}
+    <footer class="rvo-footer">
+        <div class="rvo-max-width-layout rvo-max-width-layout--lg">
+            <p class="rvo-text--sm">&copy; 2024 Rijksdienst voor Ondernemend Nederland</p>
+        </div>
+    </footer>
+    
+</c-page>

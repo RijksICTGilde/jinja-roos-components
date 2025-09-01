@@ -1,0 +1,62 @@
+{% set href = _component_context.href | default('#') %}
+{% set content = _component_context.content | default('') %}
+{% set target = _component_context.target | default('') %}
+{% set icon = _component_context.icon | default('') %}
+{% set show_icon = _component_context.showIcon | default('no') %}
+{% set icon_size = _component_context.iconSize | default('sm') %}
+{% set icon_color = _component_context.iconColor | default('') %}
+{% set no_underline = _component_context.noUnderline | default(false) %}
+{% set color = _component_context.color | default('') %}
+{% set weight = _component_context.weight | default('') %}
+{% set full_container = _component_context.fullContainer | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set link_classes = ['rvo-link'] %}
+
+{% if no_underline %}
+    {% set link_classes = link_classes + ['rvo-link--no-underline'] %}
+{% endif %}
+
+{% if show_icon != 'no' and icon %}
+    {% set link_classes = link_classes + ['rvo-link--with-icon'] %}
+{% endif %}
+
+{% if color %}
+    {% set link_classes = link_classes + ['rvo-link--' + color] %}
+{% endif %}
+
+{% if weight %}
+    {% set link_classes = link_classes + ['rvo-link--' + weight] %}
+{% endif %}
+
+{% if full_container %}
+    {% set link_classes = link_classes + ['rvo-link--full-container'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set link_classes = link_classes + [additional_class] %}
+{% endif %}
+
+<a href="{{ href }}"
+   class="{{ link_classes | join(' ') }}"
+   {% if target %}target="{{ target }}"{% endif %}
+   data-roos-component="link"
+   {% if icon %}data-roos-icon="{{ icon }}"{% endif %}
+   {% if show_icon != 'no' %}data-roos-show-icon="{{ show_icon }}"{% endif %}>
+   
+    {% if show_icon == 'before' and icon %}
+        <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ icon_size }}{% if icon_color %} rvo-icon--{{ icon_color }}{% endif %} rvo-link__icon--before"
+              role="img"
+              aria-label="{{ icon | title | replace('-', ' ') }}"></span>
+    {% endif %}
+    
+    {{ content | safe }}
+    
+    {% if show_icon == 'after' and icon %}
+        <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ icon_size }}{% if icon_color %} rvo-icon--{{ icon_color }}{% endif %} rvo-link__icon--after"
+              role="img"
+              aria-label="{{ icon | title | replace('-', ' ') }}"></span>
+    {% endif %}
+    
+</a>
