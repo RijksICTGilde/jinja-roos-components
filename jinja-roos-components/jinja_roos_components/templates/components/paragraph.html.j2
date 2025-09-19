@@ -1,0 +1,37 @@
+{% set text_content = _component_context.textContent | default('') %}
+{% set content = _component_context.content | default('') %}
+{% set size = _component_context.size | default('md') %}
+{% set color = _component_context.color | default('logoblauw') %}
+{% set no_spacing = _component_context.noSpacing | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+
+{# Build CSS classes #}
+{% set paragraph_classes = ['rvo-paragraph'] %}
+
+{% if color != 'logoblauw' %}
+    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--' + color] %}
+{% endif %}
+
+{% if size != 'md' %}
+    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--' + size] %}
+{% endif %}
+
+{% if no_spacing %}
+    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--no-spacing'] %}
+{% endif %}
+
+{% if additional_class %}
+    {% set paragraph_classes = paragraph_classes + [additional_class] %}
+{% endif %}
+
+{# Determine content to display #}
+{% set display_content = content or text_content %}
+
+<p 
+    class="{{ paragraph_classes | join(' ') }}"
+    data-roos-component="paragraph"
+    data-roos-size="{{ size }}"
+    data-roos-color="{{ color }}"
+    data-roos-no-spacing="{{ no_spacing }}">
+    {{ display_content | safe }}
+</p>

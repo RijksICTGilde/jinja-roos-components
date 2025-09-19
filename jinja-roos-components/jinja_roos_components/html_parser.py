@@ -286,41 +286,120 @@ def parse_component_attributes(attrs_str: str) -> Dict[str, str]:
 def convert_parsed_component(component: Dict[str, Any]) -> str:
     """
     Convert a parsed component to its Jinja2 include equivalent.
-    This replicates the component conversion logic from the original extension.
+    This is the consolidated component conversion logic used by both html_parser and extension.
     """
-    template_path = f"components/{component['component_name'].replace('-', '_')}.html.j2"
+    component_name = component['component_name']
+    attrs = component.get('attrs', {})
+    template_path = f"components/{component_name}.html.j2"
     
-    # Build context from attributes
+    if not attrs and not (component.get('content') and component['content'].strip()):
+        return f'{{% set _component_context = {{}} %}}{{% include "{template_path}" with context %}}'
+    
+    # Get component definition for attribute type checking
+    from .components.registry import ComponentRegistry, AttributeType
+    registry = ComponentRegistry()
+    component_def = registry.get_component(component_name)
+    
+    # Extract raw content if present
+    raw_content = None
+    if component.get('content') and component['content'].strip():
+        raw_content = component['content']
+    
+    # Build context dictionary
     context_items = []
+    event_templates = []
     
-    for key, value in component['attrs'].items():
+    for key, value in attrs.items():
         if key.startswith(':'):
-            # Binding attribute - pass as expression
-            attr_name = key[1:]  # Remove ':'
-            context_items.append(f'"{attr_name}": ({value})')
+            # Binding attribute - use the expression directly
+            clean_key = key[1:]  # Remove the : prefix
+            # Wrap in quotes to make it a valid Python expression
+            if value in ['true', 'false']:
+                # Boolean values
+                context_items.append(f'"{clean_key}": {value.capitalize()}')
+            else:
+                # Other expressions - pass through
+                context_items.append(f'"{clean_key}": {value}')
         elif key.startswith('@'):
-            # Event attribute - pass as string
-            context_items.append(f"'{key}': \"{value}\"")
+            # Event attribute - need to render Jinja variables if present
+            if '{{' in value or '{%' in value:
+                # Create a temporary variable to render the Jinja expressions
+                import random
+                import string
+                var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
+                temp_var = f'_event_attr_{var_suffix}'
+                # Create a template that renders the event attribute with current context
+                event_templates.append(f'{{% set {temp_var} %}}{value}{{% endset %}}')
+                context_items.append(f"'{key}': {temp_var}")
+            else:
+                # No Jinja syntax, pass as regular string
+                escaped_value = value.replace('"', '\\"')
+                context_items.append(f"'{key}': \"{escaped_value}\"")
         else:
             # Regular string attribute
-            escaped_value = value.replace('"', '\\"')
-            context_items.append(f'"{key}": "{escaped_value}"')
+            # Check attribute type for special handling
+            attr_def = component_def.get_attribute(key) if component_def else None
+            
+            if attr_def and attr_def.type == AttributeType.OBJECT:
+                # Object attribute - handle JSON string parsing
+                if '{{' in value or '{%' in value:
+                    # Contains Jinja expressions that should evaluate to JSON
+                    import random
+                    import string
+                    var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
+                    temp_var = f'_attr_{var_suffix}'
+                    parsed_var = f'_parsed_{var_suffix}'
+                    # First capture the rendered JSON string, then parse it
+                    event_templates.append(f'{{% set {temp_var} %}}{value}{{% endset %}}')
+                    event_templates.append(f'{{% set {parsed_var} = {temp_var} | from_json %}}')
+                    context_items.append(f'"{key}": {parsed_var}')
+                else:
+                    # Static JSON string - parse it directly
+                    try:
+                        import json
+                        # Try to parse as JSON to validate
+                        parsed_obj = json.loads(value)
+                        # If successful, use the from_json filter in template
+                        escaped_json = value.replace('"', '\\"')
+                        context_items.append(f'"{key}": "{escaped_json}" | from_json')
+                    except json.JSONDecodeError:
+                        # Invalid JSON, treat as regular string
+                        escaped_value = value.replace('"', '\\"')
+                        context_items.append(f'"{key}": "{escaped_value}"')
+            elif '{{' in value or '{%' in value:
+                # Regular attribute with Jinja expressions
+                import random
+                import string
+                var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
+                temp_var = f'_attr_{var_suffix}'
+                # Create a template that renders the attribute with current context
+                event_templates.append(f'{{% set {temp_var} %}}{value}{{% endset %}}')
+                context_items.append(f'"{key}": {temp_var}')
+            else:
+                # Regular string value
+                escaped_value = value.replace('"', '\\"')
+                context_items.append(f'"{key}": "{escaped_value}"')
     
-    # Handle content
-    if component.get('content') and component['content'].strip():
-        # Generate unique variable for content
+    # Build the event template processing parts
+    event_templates_str = ''.join(event_templates)
+    
+    # Handle raw content separately using capture block
+    if raw_content:
+        context_str = ', '.join(context_items) if context_items else ''
+        # Generate a unique variable name to avoid conflicts with nested components
         import random
         import string
         var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
         capture_var = f'_captured_content_{var_suffix}'
         
         content_part = f'"content": {capture_var}'
-        context_str = ', '.join(context_items) if context_items else ''
         full_context = context_str + (", " if context_str else "") + content_part
-        
-        return (f'{{% set {capture_var} %}}{component["content"]}{{% endset %}}'
+        return (f'{event_templates_str}'
+               f'{{% set {capture_var} %}}{raw_content}{{% endset %}}'
                f'{{% set _component_context = {{{full_context}}} %}}'
                f'{{% include "{template_path}" with context %}}')
     else:
         context_str = ', '.join(context_items)
-        return f'{{% set _component_context = {{{context_str}}} %}}{{% include "{template_path}" with context %}}'
+        return (f'{event_templates_str}'
+               f'{{% set _component_context = {{{context_str}}} %}}'
+               f'{{% include "{template_path}" with context %}}') 

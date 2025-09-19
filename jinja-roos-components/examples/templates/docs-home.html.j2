@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOS Components Documentation</title>
+    <link rel="stylesheet" href="/static/roos/dist/roos.css">
+</head>
+<body>
+
+<c-page title="ROOS Components Documentation">
+    
+    <c-layout-row gap="lg">
+        <c-layout-column size="12">
+            
+            <!-- Hero section -->
+            <c-hero 
+                title="ROOS Components Documentation" 
+                subtitle="Complete design system with live examples and interactive documentation"
+                style="margin-bottom: 3rem;"
+            />
+            
+            <!-- Main content grid -->
+            <c-layout-row gap="lg">
+                
+                <!-- Documentation Section -->
+                <c-layout-column size="6">
+                    <c-card padding="xl">
+                        <c-heading type="h2" textContent="📖 Live Documentation" style="margin-bottom: 1rem;" />
+                        <p style="color: #666; margin-bottom: 2rem;">Browse the complete design system with live examples and real-time rendering.</p>
+                        
+                        <c-layout-flow gap="sm">
+                            <c-link href="/docs/components" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                🧩 <strong>Components Reference</strong><br>
+                                <small style="color: #666;">Complete component library with attributes and examples</small>
+                            </c-link>
+                            
+                            <c-link href="/docs/colors" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                🎨 <strong>Colors Palette</strong><br>
+                                <small style="color: #666;">Brand colors organized by primary, accent, and neutral tones</small>
+                            </c-link>
+                            
+                            <c-link href="/docs/icons" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                🔸 <strong>Icons Library</strong><br>
+                                <small style="color: #666;">Complete icon set categorized and searchable</small>
+                            </c-link>
+                            
+                            <c-link href="/docs/spacing" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                📏 <strong>Spacing & Sizing</strong><br>
+                                <small style="color: #666;">Consistent spacing and sizing tokens</small>
+                            </c-link>
+                        </c-layout-flow>
+                    </c-card>
+                </c-layout-column>
+                
+                <!-- Examples Section -->
+                <c-layout-column size="6">
+                    <c-card padding="xl">
+                        <c-heading type="h2" textContent="🚀 Live Examples" style="margin-bottom: 1rem;" />
+                        <p style="color: #666; margin-bottom: 2rem;">See components in action with real templates and interactive examples.</p>
+                        
+                        <c-layout-flow gap="sm">
+                            <!-- This will be populated by template links -->
+                            <c-link href="/render?template=simple-page.html.j2" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                📄 <strong>Simple Page</strong><br>
+                                <small style="color: #666;">Basic page structure example</small>
+                            </c-link>
+                            
+                            <c-link href="/render?template=form-components.html.j2" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                📝 <strong>Form Components</strong><br>
+                                <small style="color: #666;">Complete form elements showcase</small>
+                            </c-link>
+                            
+                            <c-link href="/render?template=layout-structure.html.j2" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                🏗️ <strong>Layout Structure</strong><br>
+                                <small style="color: #666;">Grid and layout component examples</small>
+                            </c-link>
+                            
+                            <c-link href="/render?template=complete-website-example.html.j2" style="display: block; padding: 0.75rem; border: 1px solid #e1e4e8; border-radius: 6px; text-decoration: none;">
+                                🌐 <strong>Complete Website</strong><br>
+                                <small style="color: #666;">Full website example with all components</small>
+                            </c-link>
+                        </c-layout-flow>
+                    </c-card>
+                </c-layout-column>
+                
+            </c-layout-row>
+            
+            <!-- Features section -->
+            <c-layout-row gap="md" style="margin-top: 3rem;">
+                <c-layout-column size="4">
+                    <c-card padding="lg" style="text-align: center; height: 100%;">
+                        <c-icon icon="refresh" size="xl" style="margin-bottom: 1rem; color: #01689b;" />
+                        <c-heading type="h3" textContent="Live Updates" style="margin-bottom: 0.5rem;" />
+                        <p style="color: #666; font-size: 0.9rem;">Changes to components and tokens are reflected immediately without regeneration.</p>
+                    </c-card>
+                </c-layout-column>
+                
+                <c-layout-column size="4">
+                    <c-card padding="lg" style="text-align: center; height: 100%;">
+                        <c-icon icon="code" size="xl" style="margin-bottom: 1rem; color: #01689b;" />
+                        <c-heading type="h3" textContent="Interactive Examples" style="margin-bottom: 0.5rem;" />
+                        <p style="color: #666; font-size: 0.9rem;">See both rendered components and their source code side by side.</p>
+                    </c-card>
+                </c-layout-column>
+                
+                <c-layout-column size="4">
+                    <c-card padding="lg" style="text-align: center; height: 100%;">
+                        <c-icon icon="design" size="xl" style="margin-bottom: 1rem; color: #01689b;" />
+                        <c-heading type="h3" textContent="Design System" style="margin-bottom: 0.5rem;" />
+                        <p style="color: #666; font-size: 0.9rem;">Complete design tokens, components, and usage guidelines in one place.</p>
+                    </c-card>
+                </c-layout-column>
+            </c-layout-row>
+            
+        </c-layout-column>
+    </c-layout-row>
+    
+    <!-- Footer -->
+    <c-footer style="margin-top: 4rem; text-align: center;">
+        <p>ROOS Components v0.1.0 • Generated {{ generation_date }}</p>
+        <p style="margin-top: 0.5rem;">
+            <c-link href="https://github.com/robbertuittenbroek/jinja-roos-components">View on GitHub</c-link>
+        </p>
+    </c-footer>
+    
+</c-page>
+
+</body>
+</html>

@@ -310,6 +310,15 @@ def generate_documentation_html():
     <div class="container">
         <nav>
             <h2>Quick Navigation</h2>
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #fff3cd; border-radius: 6px; border: 1px solid #ffeaa7;">
+                <h3 style="margin: 0 0 0.5rem 0; color: #856404;">Design System References</h3>
+                <ul style="margin: 0; display: flex; flex-wrap: wrap; gap: 1rem;">
+                    <li><a href="colors-reference.html" style="font-weight: bold; color: #007bc7;">🎨 Colors Reference</a></li>
+                    <li><a href="icons-reference.html" style="font-weight: bold; color: #007bc7;">🔸 Icons Reference</a></li>
+                    <li><a href="spacing-reference.html" style="font-weight: bold; color: #007bc7;">📏 Spacing & Sizing</a></li>
+                </ul>
+            </div>
+            <h3>Components</h3>
             <ul>
                 {% for component in components %}
                 <li><a href="#{{ component.name }}">c-{{ component.name }}</a></li>
@@ -392,7 +401,7 @@ def generate_documentation_html():
     )
     
     # Write to file
-    output_path = Path(__file__).parent.parent / "examples" / "component-reference.html"
+    output_path = Path(__file__).parent.parent / "examples" / "static" / "component-reference.html"
     output_path.write_text(html_output, encoding='utf-8')
     
     print(f"Component documentation generated: {output_path}")
@@ -478,7 +487,7 @@ poetry run uvicorn examples.fastapi_app:app --reload</code></pre>
 </html>'''
     
     # Write index.html
-    index_path = Path(__file__).parent.parent / "examples" / "index.html"
+    index_path = Path(__file__).parent.parent / "examples" / "static" / "index.html"
     index_path.write_text(index_html, encoding='utf-8')
     print(f"Index page generated: {index_path}")
 

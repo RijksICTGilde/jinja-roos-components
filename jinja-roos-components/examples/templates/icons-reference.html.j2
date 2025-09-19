@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOS Icons Reference</title>
+    <link rel="stylesheet" href="/static/roos/dist/roos.css">
+</head>
+<body>
+<c-page title="ROOS Icons Reference" class="rvo-max-width-layout--lg">
+    
+    <div class="rvo-layout-row rvo-layout-gap--md">
+        <div class="rvo-layout-column rvo-layout-column--span-12">
+            
+            <c-link href="component-reference.html" class="rvo-link--back">
+                ← Back to Components Reference
+            </c-link>
+            
+            <c-heading type="h2" textContent="Icon Library" style="margin-top: 2rem;" />
+            <p>Essential icons organized by category. Available in 5 sizes.</p>
+            
+            {% set icon_groups = icons | groupby('category') %}
+            {% for category, category_icons in icon_groups %}
+            
+            <section style="margin-bottom: 2.5rem;">
+                <c-heading type="h3" textContent="{{ category_icons[0].category_display }}" style="margin-bottom: 1rem; color: #01689b;" />
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">{{ category_icons|length }} icons</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem;">
+                    {% for icon in category_icons %}
+                    <div style="background: white; border: 1px solid #e1e4e8; border-radius: 6px; padding: 0.75rem; text-align: center;">
+                        <div style="
+                            height: 50px; 
+                            display: flex; 
+                            align-items: center; 
+                            justify-content: center; 
+                            background: #f8f9fa; 
+                            border-radius: 4px; 
+                            margin-bottom: 0.5rem;
+                        ">
+                            <c-icon icon="{{ icon.name }}" size="lg"/>
+                        </div>
+                        
+                        <div style="font-weight: 600; margin-bottom: 0.25rem; color: #333; font-size: 0.8rem;">{{ icon.display_name }}</div>
+                        <div style="font-size: 0.7rem; color: #666; font-family: monospace; word-break: break-all;">{{ icon.template_name }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+            
+        </div>
+    </div>
+    
+    <footer style="margin-top: 3rem; padding: 2rem 0; border-top: 1px solid #e1e4e8; text-align: center; color: #666; font-size: 0.9rem;">
+        <p>ROOS Components v0.1.0 • {{ icons|length }} icons • Generated {{ generation_date }}</p>
+    </footer>
+    
+</c-page>
+</body>
+</html>

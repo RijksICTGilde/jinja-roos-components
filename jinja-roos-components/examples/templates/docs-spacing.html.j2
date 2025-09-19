@@ -1,0 +1,60 @@
+{% extends "docs-layout.html.j2" %}
+
+{% block title %}ROOS Spacing & Sizing Reference{% endblock %}
+{% block page_title %}Spacing & Sizing Reference{% endblock %}
+{% block footer_stats %}{{ spacing|length }} spacing & {{ sizing|length }} sizing tokens{% endblock %}
+
+{% block page_content %}
+
+<c-layout-flow gap="xl">
+
+    <!-- Spacing Section -->
+    <section>
+        <c-heading type="h2" textContent="Spacing Scale" />
+        <p>Consistent spacing for margins, padding, and gaps. Each spacing token represents a fixed value that can be used for consistent layout spacing.</p>
+        
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Example: Padding Demonstration" />
+            <p>This card shows how spacing tokens create consistent padding around content.</p>
+        </c-card>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            {% for space in spacing %}
+            <c-card padding="md">
+                <div style="margin-bottom: 0.75rem; border: 1px solid #ccc;">
+                    <div style="height: 30px; background: #007BC7; width: {{ space.value }}; color: white; text-align: center; line-height: 30px;">{{ space.value }}</div>
+                </div>
+                
+                <c-heading type="h5" textContent="{{ space.display_name }}" style="font-weight: 600; margin-bottom: 0.25rem;" />
+                <div style="font-size: 0.8rem; color: #666; font-family: monospace;">padding="{{ space.template_name }}"</div>
+            </c-card>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Sizing Section -->
+    <section>
+        <c-heading type="h2" textContent="Sizing Scale" />
+        <p>Consistent sizing for element dimensions. Each sizing token represents a fixed dimension that creates visual hierarchy and consistency.</p>
+        
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Example: Size Demonstration" />
+            <p>These squares show how sizing tokens create consistent element dimensions.</p>
+        </c-card>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            {% for size in sizing %}
+            <c-card padding="md" style="text-align: center;">
+                <div style="margin-bottom: 0.75rem; border: 1px solid #ccc; text-align: center; padding: 10px;">
+                    <div style="width: {{ size.value }}; height: {{ size.value }}; background: #007BC7; border: 1px solid #005a94; margin: 0 auto; color: white; text-align: center; line-height: {{ size.value }};">{{ size.value }}</div>
+                </div>
+                
+                <c-heading type="h5" textContent="{{ size.display_name }}" style="font-weight: 600; margin-bottom: 0.25rem;" />
+                <div style="font-size: 0.8rem; color: #666; font-family: monospace;">size="{{ size.template_name }}"</div>
+            </c-card>
+            {% endfor %}
+        </div>
+    </section>
+
+</c-layout-flow>
+{% endblock %}

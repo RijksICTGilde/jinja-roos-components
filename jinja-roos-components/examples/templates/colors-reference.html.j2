@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOS Colors Reference</title>
+    <link rel="stylesheet" href="/static/roos/dist/roos.css">
+</head>
+<body>
+<c-page title="ROOS Colors Reference" class="rvo-max-width-layout--lg">
+    
+    <div class="rvo-layout-row rvo-layout-gap--md">
+        <div class="rvo-layout-column rvo-layout-column--span-12">
+            
+            <c-link href="component-reference.html" class="rvo-link--back">
+                ← Back to Components Reference
+            </c-link>
+            
+            <c-heading type="h2" textContent="Color Palette" style="margin-top: 2rem;" />
+            <p>Essential colors organized by primary, accent, and neutral tones.</p>
+            
+            {% set color_groups = colors | groupby('base_color') %}
+            {% for base_color, color_list in color_groups %}
+            
+            <section style="margin-bottom: 2.5rem;">
+                <c-heading type="h3" textContent="{{ base_color.title() }}" style="margin-bottom: 1rem; color: #01689b;" />
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                    {% for color in color_list %}
+                    <div style="background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 1rem;">
+                        <div style="
+                            height: 60px; 
+                            background-color: {{ color.hex }}; 
+                            border-radius: 4px; 
+                            margin-bottom: 0.75rem;
+                            border: 1px solid rgba(0,0,0,0.1);
+                            position: relative;
+                        ">
+                            <span style="
+                                position: absolute;
+                                bottom: 4px;
+                                right: 6px;
+                                background: rgba(255,255,255,0.95); 
+                                padding: 2px 4px; 
+                                border-radius: 2px; 
+                                font-size: 0.7rem; 
+                                font-weight: 600;
+                                color: #333;
+                                font-family: monospace;
+                            ">{{ color.hex }}</span>
+                        </div>
+                        
+                        <div style="font-weight: 600; margin-bottom: 0.25rem; color: #333;">{{ color.display_name }}</div>
+                        <div style="font-size: 0.8rem; color: #666; font-family: monospace;">color="{{ color.template_name }}"</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+            
+        </div>
+    </div>
+    
+    <footer style="margin-top: 3rem; padding: 2rem 0; border-top: 1px solid #e1e4e8; text-align: center; color: #666; font-size: 0.9rem;">
+        <p>ROOS Components v0.1.0 • {{ colors|length }} colors • Generated {{ generation_date }}</p>
+    </footer>
+    
+</c-page>
+</body>
+</html>

@@ -1,39 +1,19 @@
-{% set type = _component_context.type | default('unordered') %}
 {% set items_value = _component_context.get('items', []) %}
-{% set bullet_type = _component_context.bulletType | default('disc') %}
-{% set bullet_icon = _component_context.bulletIcon | default('option-1') %}
-{% set no_margin = _component_context.noMargin | default(false) %}
-{% set no_padding = _component_context.noPadding | default(false) %}
 {% set additional_class = _component_context.class | default('') %}
 {% set content = _component_context.content | default('') %}
 
-{# Determine list tag #}
-{% set list_tag = 'ul' if type == 'unordered' else 'ol' %}
-
-{# Build CSS classes #}
-{% set css_classes = [] %}
-{% if type == 'unordered' %}
-    {% set css_classes = css_classes + ['rvo-ul'] %}
-    {% if no_margin %}{% set css_classes = css_classes + ['rvo-ul--no-margin'] %}{% endif %}
-    {% if no_padding %}{% set css_classes = css_classes + ['rvo-ul--no-padding'] %}{% endif %}
-    {% if bullet_type == 'none' %}{% set css_classes = css_classes + ['rvo-ul--none'] %}{% endif %}
-    {% if bullet_type == 'icon' %}{% set css_classes = css_classes + ['rvo-ul--icon', 'rvo-ul--icon-' + bullet_icon] %}{% endif %}
-{% elif type == 'ordered' %}
-    {% set css_classes = css_classes + ['rvo-ol'] %}
-    {% if no_margin %}{% set css_classes = css_classes + ['rvo-ol--no-margin'] %}{% endif %}
-    {% if no_padding %}{% set css_classes = css_classes + ['rvo-ol--no-padding'] %}{% endif %}
-{% endif %}
-
+{# Build CSS classes for item list #}
+{% set css_classes = ['rvo-item-list'] %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
-<{{ list_tag }} class="{{ css_classes | join(' ') }}" data-roos-component="list" data-roos-type="{{ type }}">
+<ul class="{{ css_classes | join(' ') }}" data-roos-component="list">
     {% if content %}
         {# Render nested content (e.g., c-list-item components) #}
         {{ content | safe }}
     {% else %}
         {# Render items from array attribute #}
         {% for item in items_value %}
-            <li>{{ item | safe }}</li>
+            <li class="rvo-item-list__item">{{ item | safe }}</li>
         {% endfor %}
     {% endif %}
-</{{ list_tag }}>
+</ul>

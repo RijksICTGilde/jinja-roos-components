@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOS Spacing & Sizing Reference</title>
+    <link rel="stylesheet" href="/static/roos/dist/roos.css">
+</head>
+<body>
+<c-page title="ROOS Spacing & Sizing Reference" class="rvo-max-width-layout--lg">
+    
+    <div class="rvo-layout-row rvo-layout-gap--md">
+        <div class="rvo-layout-column rvo-layout-column--span-12">
+            
+            <c-link href="component-reference.html" class="rvo-link--back">
+                ← Back to Components Reference
+            </c-link>
+            
+            <!-- Spacing Section -->
+            <section style="margin-top: 2rem;">
+                <c-heading type="h2" textContent="Spacing Scale" />
+                <p>Consistent spacing for margins, padding, and gaps.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                    {% for space in spacing %}
+                    <div style="background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 1rem;">
+                        <div style="margin-bottom: 0.75rem;">
+                            <div style="
+                                height: 30px; 
+                                background: #007BC7;
+                                border-radius: 2px;
+                                width: {{ space.value }};
+                                max-width: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-size: 0.7rem;
+                                font-weight: 600;
+                                font-family: monospace;
+                            ">{{ space.value }}</div>
+                        </div>
+                        
+                        <div style="font-weight: 600; margin-bottom: 0.25rem; color: #333;">{{ space.display_name }}</div>
+                        <div style="font-size: 0.8rem; color: #666; font-family: monospace;">padding="{{ space.template_name }}"</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <!-- Sizing Section -->
+            <section style="margin-top: 3rem;">
+                <c-heading type="h2" textContent="Sizing Scale" />
+                <p>Consistent sizing for element dimensions.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                    {% for size in sizing %}
+                    <div style="background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 1rem; text-align: center;">
+                        <div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; height: 60px;">
+                            <div style="
+                                width: {{ size.value }}; 
+                                height: {{ size.value }}; 
+                                background: #007BC7;
+                                border-radius: 2px;
+                                max-width: 100%;
+                                max-height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-size: 0.7rem;
+                                font-weight: 600;
+                                font-family: monospace;
+                            ">{{ size.value }}</div>
+                        </div>
+                        
+                        <div style="font-weight: 600; margin-bottom: 0.25rem; color: #333;">{{ size.display_name }}</div>
+                        <div style="font-size: 0.8rem; color: #666; font-family: monospace;">size="{{ size.template_name }}"</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    
+    <footer style="margin-top: 3rem; padding: 2rem 0; border-top: 1px solid #e1e4e8; text-align: center; color: #666; font-size: 0.9rem;">
+        <p>ROOS Components v0.1.0 • {{ spacing|length }} spacing & {{ sizing|length }} sizing tokens • Generated {{ generation_date }}</p>
+    </footer>
+    
+</c-page>
+</body>
+</html>

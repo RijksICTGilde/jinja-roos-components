@@ -220,8 +220,8 @@ class ComponentExtension(Extension):
             
             # Parse attributes - handle both HTML parser format (dict) and regex format (string)
             if isinstance(component.get('attrs'), dict):
-                # HTML parser format - attributes already parsed but need case correction
-                attrs = self._fix_attribute_casing(component['attrs'], component['component_name'])
+                # HTML parser format - attributes already parsed, but don't fix casing yet
+                attrs = component['attrs']
             elif 'attrs_str' in component:
                 # Regex parser format - need to parse string
                 attrs = self._parse_attributes(component['attrs_str'])
@@ -229,17 +229,27 @@ class ComponentExtension(Extension):
                 # No attributes
                 attrs = {}
             
-            # Validate attributes against component definition
-            self._validate_component_attributes(component['component_name'], attrs, component['tag'])
+            # Resolve alias if needed
+            actual_component_name = component_name
+            final_attrs = attrs
             
-            # Process content if not self-closing
-            if not component['self_closing'] and component.get('content'):
-                # The content has already been processed (bottom-up approach)
-                # so we just need to capture it
-                attrs['_raw_content'] = component['content']
+            if self.registry.has_alias(component_name):
+                logger.debug(f"Resolving alias: {component_name}")
+                actual_component_name, final_attrs = self.registry.resolve_alias(component_name, attrs)
+                logger.debug(f"Resolved alias {component_name} -> {actual_component_name} with attributes: {final_attrs}")
+            
+            # Now fix attribute casing using the actual component name
+            final_attrs = self._fix_attribute_casing(final_attrs, actual_component_name)
+            
+            # Validate attributes against component definition (use actual component name)
+            self._validate_component_attributes(actual_component_name, final_attrs, component['tag'])
             
             # Build and return the include statement
-            result = self._build_include(component['component_name'], attrs)
+            result = convert_parsed_component({
+                'component_name': actual_component_name,
+                'attrs': final_attrs,
+                'content': component.get('content', '') if not component['self_closing'] else ''
+            })
             logger.debug(f"Generated include: {result[:100]}...")
             return result
             
@@ -510,69 +520,6 @@ class ComponentExtension(Extension):
         # If we get here, we didn't find a closing quote
         return ''.join(value_chars), pos
     
-    def _build_include(self, component_name: str, attrs: Dict[str, Any]) -> str:
-        """Build the Jinja2 include statement from component name and attributes."""
-        template_path = f"components/{component_name}.html.j2"
-        
-        if not attrs:
-            return f'{{% set _component_context = {{}} %}}{{% include "{template_path}" with context %}}'
-        
-        # Extract raw content if present
-        raw_content = attrs.pop('_raw_content', None)
-        
-        # Build context dictionary
-        context_items = []
-        for key, value in attrs.items():
-            if key.startswith(':'):
-                # Binding attribute - use the expression directly
-                clean_key = key[1:]  # Remove the : prefix
-                # Wrap in quotes to make it a valid Python expression
-                if value in ['true', 'false']:
-                    # Boolean values
-                    context_items.append(f'"{clean_key}": {value.capitalize()}')
-                else:
-                    # Other expressions - pass through
-                    context_items.append(f'"{clean_key}": {value}')
-            elif key.startswith('@'):
-                # Event attribute - pass as string
-                context_items.append(f"'{key}': \"{value}\"")
-            else:
-                # Regular string attribute
-                # Check if the value contains Jinja2 template variables/expressions
-                if '{{' in value or '{%' in value:
-                    # This is a Jinja2 expression, pass it through without quotes
-                    # Extract the expression from {{ ... }}
-                    import re
-                    match = re.search(r'{{\s*(.+?)\s*}}', value)
-                    if match:
-                        expr = match.group(1)
-                        context_items.append(f'"{key}": {expr}')
-                    else:
-                        # Fallback to string if we can't parse it
-                        escaped_value = value.replace('"', '\\"')
-                        context_items.append(f'"{key}": "{escaped_value}"')
-                else:
-                    # Regular string value
-                    escaped_value = value.replace('"', '\\"')
-                    context_items.append(f'"{key}": "{escaped_value}"')
-        
-        # Handle raw content separately using capture block
-        if raw_content:
-            context_str = ', '.join(context_items) if context_items else ''
-            # Generate a unique variable name to avoid conflicts with nested components
-            import random
-            import string
-            var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
-            capture_var = f'_captured_content_{var_suffix}'
-            
-            content_part = f'"content": {capture_var}'
-            full_context = context_str + (", " if context_str else "") + content_part
-            return (f'{{% set {capture_var} %}}{raw_content}{{% endset %}}'
-                   f'{{% set _component_context = {{{full_context}}} %}}'
-                   f'{{% include "{template_path}" with context %}}')
-        else:
-            context_str = ', '.join(context_items)
-            return f'{{% set _component_context = {{{context_str}}} %}}{{% include "{template_path}" with context %}}'
 
 
 def setup_components(
@@ -640,6 +587,19 @@ def setup_components(
     )
     jinja_env.globals['roos_theme'] = theme or 'default'
     jinja_env.globals['roos_htmx'] = htmx
+    
+    # Add filters for component functionality
+    def from_json_filter(value):
+        """Parse JSON string into Python object."""
+        import json
+        if isinstance(value, str):
+            try:
+                return json.loads(value)
+            except json.JSONDecodeError:
+                return value
+        return value
+    
+    jinja_env.filters['from_json'] = from_json_filter
     
     return jinja_env
 

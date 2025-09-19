@@ -3,7 +3,7 @@
 
 {% macro render_events(component_context) -%}
     {# Mouse events #}
-    {% if component_context.get('@click') %}onclick="{{ component_context['@click'] }}"{% endif %}
+    {% if component_context.get('@click') %}onclick="{{ component_context['@click'] | safe }}"{% endif %}
     {% if component_context.get('@dblclick') %}ondblclick="{{ component_context['@dblclick'] }}"{% endif %}
     {% if component_context.get('@mousedown') %}onmousedown="{{ component_context['@mousedown'] }}"{% endif %}
     {% if component_context.get('@mouseup') %}onmouseup="{{ component_context['@mouseup'] }}"{% endif %}

@@ -1,0 +1,10 @@
+{% set additional_class = _component_context.class | default('') %}
+{% set content = _component_context.content | default('') %}
+
+{# Build CSS classes for list item #}
+{% set css_classes = [] %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<li{% if css_classes %} class="{{ css_classes | join(' ') }}"{% endif %} data-roos-component="li">
+    {{ content | safe }}
+</li>

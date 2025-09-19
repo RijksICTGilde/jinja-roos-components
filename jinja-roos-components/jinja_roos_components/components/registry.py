@@ -2,7 +2,7 @@
 Component registry for managing component metadata and validation.
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -31,6 +31,15 @@ class AttributeDefinition:
             raise ValueError("Enum attributes must specify enum_values")
 
 
+@dataclass
+class ComponentAlias:
+    """Definition of a component alias."""
+    name: str  # Alias name (e.g., "h1")
+    target_component: str  # Target component name (e.g., "header")
+    default_attributes: Dict[str, Any] = field(default_factory=dict)  # Pre-filled attributes
+    description: str = ""
+
+
 @dataclass 
 class ComponentDefinition:
     """Definition of a component."""
@@ -39,6 +48,9 @@ class ComponentDefinition:
     attributes: List[AttributeDefinition] = field(default_factory=list)
     slots: List[str] = field(default_factory=list)
     examples: List[str] = field(default_factory=list)
+    allow_preview: bool = True  # Whether this component can be shown in preview
+    requires_children: bool = False  # Whether this component needs child content
+    preview_example: Optional[str] = None  # Specific example for preview (if different from main example)
     
     def get_attribute(self, name: str) -> Optional[AttributeDefinition]:
         """Get attribute definition by name."""
@@ -57,7 +69,9 @@ class ComponentRegistry:
     
     def __init__(self) -> None:
         self._components: Dict[str, ComponentDefinition] = {}
+        self._aliases: Dict[str, ComponentAlias] = {}
         self._register_default_components()
+        self._register_default_aliases()
     
     def register_component(self, component: ComponentDefinition) -> None:
         """Register a new component."""
@@ -65,15 +79,24 @@ class ComponentRegistry:
     
     def has_component(self, name: str) -> bool:
         """Check if a component is registered."""
-        return name in self._components
+        return name in self._components or name in self._aliases
     
     def get_component(self, name: str) -> Optional[ComponentDefinition]:
         """Get component definition by name."""
-        return self._components.get(name)
+        # First check direct components
+        if name in self._components:
+            return self._components[name]
+        
+        # Then check if it's an alias
+        if name in self._aliases:
+            alias = self._aliases[name]
+            return self._components.get(alias.target_component)
+        
+        return None
     
     def list_components(self) -> List[str]:
-        """List all registered component names."""
-        return list(self._components.keys())
+        """List all registered component names (including aliases)."""
+        return list(self._components.keys()) + list(self._aliases.keys())
     
     def get_all_component_names(self) -> List[str]:
         """Get all registered component names (alias for list_components)."""
@@ -101,7 +124,42 @@ class ComponentRegistry:
             ],
             'slots': component.slots,
             'examples': component.examples,
+            'allow_preview': component.allow_preview,
+            'requires_children': component.requires_children,
+            'preview_example': component.preview_example,
         }
+    
+    def register_alias(self, alias: ComponentAlias) -> None:
+        """Register a component alias."""
+        self._aliases[alias.name] = alias
+    
+    def has_alias(self, name: str) -> bool:
+        """Check if a name is an alias."""
+        return name in self._aliases
+    
+    def get_alias(self, name: str) -> Optional[ComponentAlias]:
+        """Get alias definition by name."""
+        return self._aliases.get(name)
+    
+    def resolve_alias(self, alias_name: str, user_attributes: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+        """Resolve an alias to its target component name and merged attributes.
+        
+        Args:
+            alias_name: Name of the alias
+            user_attributes: Attributes provided by user
+            
+        Returns:
+            Tuple of (target_component_name, merged_attributes)
+        """
+        alias = self.get_alias(alias_name)
+        if not alias:
+            raise ValueError(f"Alias '{alias_name}' not found")
+        
+        # Merge default attributes with user attributes (user attributes take precedence)
+        merged_attributes = alias.default_attributes.copy()
+        merged_attributes.update(user_attributes)
+        
+        return alias.target_component, merged_attributes
     
     def _register_default_components(self) -> None:
         """Register the default RVO-based components."""
@@ -433,7 +491,8 @@ class ComponentRegistry:
             examples=[
                 '<c-page title="My App"><c-button label="Click me" /></c-page>',
                 '<c-page title="Dashboard" bodyClass="dashboard" htmx="false">Page content</c-page>',
-            ]
+            ],
+            allow_preview=False  # Page component generates full HTML structure
         )
         
         # New hyphenated form components (adding the missing ones)
@@ -492,8 +551,8 @@ class ComponentRegistry:
                 AttributeDefinition(name="placeholder", type=AttributeType.STRING, description="Placeholder option text"),
             ],
             examples=[
-                '<c-select-field id="country" name="country" label="Country" :options="countries" />',
-                '<c-select-field id="cpu" name="cpu_limit" label="CPU Limit" :options="cpuOptions" :expandableHelperText="true" expandableHelperTextTitle="More info about CPU limits" />'
+                '<c-select-field id="country" name="country" label="Country" options=\'[{"label": "Netherlands", "value": "nl"}, {"label": "Germany", "value": "de"}, {"label": "Belgium", "value": "be"}]\' />',
+                '<c-select-field id="cpu" name="cpu_limit" label="CPU Limit" options=\'[{"label": "1 Core", "value": "1"}, {"label": "2 Cores", "value": "2"}, {"label": "4 Cores", "value": "4"}]\' expandableHelperText="true" expandableHelperTextTitle="More info about CPU limits" />'
             ]
         )
         
@@ -545,7 +604,7 @@ class ComponentRegistry:
                                   default="horizontal", description="Layout direction"),
             ],
             slots=["content"],
-            examples=['<c-action-group :actions="actionButtons" alignment="end" />']
+            examples=['<c-action-group actions=\'[{"label": "Save", "type": "button", "kind": "primary", "buttonType": "submit"}, {"label": "Cancel", "type": "button", "kind": "secondary"}]\' alignment="end" />']
         )
         
         data_list = ComponentDefinition(
@@ -555,7 +614,7 @@ class ComponentRegistry:
                 AttributeDefinition(name="items", type=AttributeType.OBJECT, description="Array of term/value objects"),
             ],
             slots=["content"],
-            examples=['<c-data-list :items="businessInfo" />']
+            examples=['<c-data-list items=\'[{"term": "Company Name", "value": "Acme Corp"}, {"term": "Founded", "value": "2020"}]\' />']
         )
         
         # Navigation and layout components
@@ -582,7 +641,7 @@ class ComponentRegistry:
                                   enum_values=["sm", "md", "lg"], description="Maximum width"),
                 AttributeDefinition(name="payOff", type=AttributeType.STRING, description="Footer payoff text"),
             ],
-            examples=['<c-footer :primaryMenu="footerMenus" maxWidth="lg" />']
+            examples=['<c-footer primaryMenu=\'[{"label": "Privacy", "link": "/privacy"}, {"label": "Terms", "link": "/terms"}]\' maxWidth="lg" />']
         )
         
         menubar = ComponentDefinition(
@@ -604,7 +663,10 @@ class ComponentRegistry:
                                   enum_values=["donkerblauw", "hemelblauw", "logoblauw", "grijs-700", "zwart"], 
                                   default="logoblauw", description="Link color"),
             ],
-            examples=['<c-menubar :items="navItems" size="lg" useIcons="true" />']
+            examples=[
+                '<c-menubar items=\'[{"label": "Home", "link": "/home"}, {"label": "About", "link": "/about"}]\' size="md" />',
+                '<c-menubar items=\'[{"label": "Products", "link": "/products", "icon": "document-met-lijnen"}, {"label": "Contact", "link": "/contact", "icon": "telefoon"}]\' useIcons="true" iconPlacement="before" />'
+            ]
         )
         
         icon = ComponentDefinition(
@@ -661,7 +723,7 @@ class ComponentRegistry:
                 AttributeDefinition(name="activeTab", type=AttributeType.NUMBER, default=0, description="Active tab index"),
             ],
             slots=["content"],
-            examples=['<c-tabs :tabs="tabItems" :activeTab="0" />']
+            examples=['<c-tabs tabs=\'[{"label": "Overview", "content": "Overview content"}, {"label": "Details", "content": "Details content"}]\' activeTab="0" />']
         )
         
         link = ComponentDefinition(
@@ -716,7 +778,7 @@ class ComponentRegistry:
                 AttributeDefinition(name="required", type=AttributeType.BOOLEAN, default=False, description="Required field"),
                 AttributeDefinition(name="disabled", type=AttributeType.BOOLEAN, default=False, description="Disabled state"),
             ],
-            examples=['<c-radio-button-field name="choice" label="Choose option" :options="radioOptions" />']
+            examples=['<c-radio-button-field name="choice" label="Choose option" options=\'[{"label": "Option 1", "value": "opt1"}, {"label": "Option 2", "value": "opt2"}]\' />']
         )
         
         checkbox_field = ComponentDefinition(
@@ -734,7 +796,7 @@ class ComponentRegistry:
                 AttributeDefinition(name="required", type=AttributeType.BOOLEAN, default=False, description="Required field"),
                 AttributeDefinition(name="disabled", type=AttributeType.BOOLEAN, default=False, description="Disabled state"),
             ],
-            examples=['<c-checkbox-field name="preferences" label="Select preferences" :options="checkboxOptions" />']
+            examples=['<c-checkbox-field name="preferences" label="Select preferences" options=\'[{"label": "Email notifications", "value": "email"}, {"label": "SMS notifications", "value": "sms"}]\' />']
         )
         
         textarea_field = ComponentDefinition(
@@ -817,22 +879,50 @@ class ComponentRegistry:
             examples=['<c-layout-column size="md-6">Column content</c-layout-column>']
         )
 
-        # List component (based on RVO ordered-unordered-list)
-        list_component = ComponentDefinition(
-            name="list",
-            description="RVO list component supporting both ordered and unordered lists with styling options",
+        # Ordered List component (based on RVO ordered-unordered-list)
+        ol_component = ComponentDefinition(
+            name="ol",
+            description="RVO ordered list component with proper ol element and styling",
             attributes=[
-                AttributeDefinition(
-                    name="type",
-                    type=AttributeType.ENUM,
-                    enum_values=["unordered", "ordered"],
-                    default="unordered",
-                    description="List type - unordered (ul) or ordered (ol)"
-                ),
                 AttributeDefinition(
                     name="items",
                     type=AttributeType.OBJECT,
-                    description="Array of list items (strings) - used when not using nested c-list-item components"
+                    description="Array of list items (strings) - used when not using nested c-li components"
+                ),
+                AttributeDefinition(
+                    name="noPadding",
+                    type=AttributeType.BOOLEAN,
+                    default=False,
+                    description="Remove default padding"
+                ),
+                AttributeDefinition(
+                    name="noMargin",
+                    type=AttributeType.BOOLEAN,
+                    default=False,
+                    description="Remove default margins"
+                ),
+                AttributeDefinition(
+                    name="class",
+                    type=AttributeType.STRING,
+                    description="Additional CSS classes"
+                ),
+            ],
+            slots=["content"],
+            examples=[
+                '<c-ol><c-li>First item</c-li><c-li>Second item</c-li></c-ol>',
+            ],
+            requires_children=True
+        )
+        
+        # Unordered List component (based on RVO ordered-unordered-list)
+        ul_component = ComponentDefinition(
+            name="ul",
+            description="RVO unordered list component with proper ul element and styling options",
+            attributes=[
+                AttributeDefinition(
+                    name="items",
+                    type=AttributeType.OBJECT,
+                    description="Array of list items (strings) - used when not using nested c-li components"
                 ),
                 AttributeDefinition(
                     name="bulletType",
@@ -868,11 +958,47 @@ class ComponentRegistry:
             ],
             slots=["content"],
             examples=[
-                '<c-list type="unordered" :items="[\'Item 1\', \'Item 2\', \'Item 3\']" />',
-                '<c-list type="ordered" :items="[\'First\', \'Second\', \'Third\']" />',
-                '<c-list type="unordered" bulletType="icon" bulletIcon="option-2" :items="items" />',
-                '<c-list type="unordered" bulletType="none" :noMargin="true" :noPadding="true" :items="simpleList" />',
-                '<c-list type="unordered"><c-list-item>Custom content</c-list-item><c-list-item>Another item</c-list-item></c-list>'
+                '<c-ul><c-li>First item</c-li><c-li>Second item</c-li></c-ul>',
+            ],
+            requires_children=True
+        )
+        
+        # List Item component 
+        li_component = ComponentDefinition(
+            name="li",
+            description="RVO list item component for use within c-ol or c-ul",
+            attributes=[
+                AttributeDefinition(
+                    name="class",
+                    type=AttributeType.STRING,
+                    description="Additional CSS classes"
+                ),
+            ],
+            slots=["content"],
+            examples=[
+                '<c-li>List item content</c-li>',
+            ]
+        )
+
+        # Item List component (based on RVO item-list)
+        list_component = ComponentDefinition(
+            name="list",
+            description="RVO item list component with specialized item styling (rvo-item-list)",
+            attributes=[
+                AttributeDefinition(
+                    name="items",
+                    type=AttributeType.OBJECT,
+                    description="Array of list items (strings or ReactNode) - used when not using nested c-list-item components"
+                ),
+                AttributeDefinition(
+                    name="class",
+                    type=AttributeType.STRING,
+                    description="Additional CSS classes"
+                ),
+            ],
+            slots=["content"],
+            examples=[
+                '<c-list><c-list-item>Item 1</c-list-item><c-list-item>Item 2</c-list-item></c-list>',
             ]
         )
 
@@ -913,6 +1039,20 @@ class ComponentRegistry:
             # Grid layout components
             layout_row, layout_column,
             # List components
-            list_component, list_item
+            ol_component, ul_component, li_component, list_component, list_item
         ]:
             self.register_component(component)
+    
+    def _register_default_aliases(self) -> None:
+        """Register the default component aliases."""
+        
+        # Header aliases (c-h1 to c-h6) -> header component with pre-set type
+        for level in range(1, 7):
+            alias = ComponentAlias(
+                name=f"h{level}",
+                target_component="heading",  # Use the heading component instead of header
+                default_attributes={"type": f"h{level}"},
+                description=f"Heading level {level} (alias for c-heading type=\"h{level}\")"
+            )
+            self.register_alias(alias)
+        

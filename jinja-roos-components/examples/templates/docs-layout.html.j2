@@ -1,0 +1,64 @@
+{#
+  Documentation Layout Template - ROOS Components
+  
+  Clean layout based on RIG-Cluster pattern using proper RVO components.
+#}
+
+{% set page_title_value %}{% block title %}ROOS Components Documentation{% endblock %}{% endset %}
+<c-page title="{{ page_title_value }}" lang="en" bodyClass="rvo-theme rvo-responsive">
+    
+    <div>
+        {# Header #}
+        <c-header 
+            text="ROOS Components Documentation"
+            subtitle="Rijksorganisatie voor Ontwikkeling, Digitalisering en Innovatie"
+            link="/" />
+        
+        <c-layout-flow gap="xl" size="lg">
+            {# Main Navigation MenuBar #}
+            {% set menu_items = [
+                {'label': 'Components', 'link': '/docs/components', 'icon': 'document-met-lijnen'},
+                {'label': 'Colors', 'link': '/docs/colors', 'icon': 'kleurenwaaier'},
+                {'label': 'Icons', 'link': '/docs/icons', 'icon': 'ster'},
+                {'label': 'Spacing', 'link': '/docs/spacing', 'icon': 'plus'}
+            ] %}
+            <c-menubar 
+                size="md"
+                useIcons="true"
+                iconPlacement="before"
+                maxWidth="lg"
+                items="{{ menu_items | tojson }}" />
+            
+            {# Page-specific breadcrumbs or sub-navigation #}
+            {% block sub_navigation %}
+            <div style="margin-bottom: 1rem;">
+                <c-link href="/" style="color: #666;">← Back to Documentation Home</c-link>
+            </div>
+            {% endblock %}
+            
+            {# Main Content Area #}
+            <main>
+                {% block page_content %}
+                {# Default content - override in child templates #}
+                <c-layout-flow gap="lg">
+                    <c-heading type="h1" textContent="{% block page_title %}Documentation{% endblock %}" />
+                    <p>Welcome to the ROOS Components documentation.</p>
+                </c-layout-flow>
+                {% endblock %}
+            </main>
+            
+            {# Simple Footer #}
+            <div style="margin-top: 3rem; padding: 2rem 0; text-align: center; border-top: 1px solid #e1e4e8; color: #666;">
+                <p>ROOS Components v0.1.0 • {% block footer_stats %}{% endblock %} • Generated {{ generation_date }}</p>
+            </div>
+        </c-layout-flow>
+
+        {% block additional_styles %}
+        {# Additional CSS can be added here by child templates #}
+        {% endblock %}
+        
+        {% block additional_scripts %}
+        {# Additional JavaScript can be added here by child templates #}
+        {% endblock %}
+    </div>
+</c-page>

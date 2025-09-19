@@ -1,0 +1,34 @@
+{% extends "docs-layout.html.j2" %}
+
+{% block title %}ROOS Icons Reference{% endblock %}
+{% block page_title %}Icon Library{% endblock %}
+{% block footer_stats %}{{ icons|length }} icons{% endblock %}
+
+{% block page_content %}
+<c-heading type="h2" textContent="Icon Library" />
+<p>Essential icons organized by category. Available in 5 sizes.</p>
+
+<c-layout-flow gap="xl" style="margin-top: 2rem;">
+    {% set icon_groups = icons | groupby('category') %}
+    {% for category, category_icons in icon_groups %}
+    
+    <section>
+        <c-heading type="h3" textContent="{{ category_icons[0].category_display }}" style="margin-bottom: 1rem; color: #01689b;" />
+        <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">{{ category_icons|length }} icons</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem;">
+            {% for icon in category_icons %}
+            <c-card padding="md" style="text-align: center;">
+                <div style="margin-bottom: 0.5rem;">
+                    <c-icon icon="{{ icon.name }}" size="3xl"/>
+                </div>
+                
+                <c-heading type="h6" textContent="{{ icon.display_name }}" style="font-weight: 600; margin-bottom: 0.25rem; font-size: 0.8rem;" />
+                <div style="font-size: 0.7rem; color: #666; font-family: monospace; word-break: break-all;">{{ icon.template_name }}</div>
+            </c-card>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</c-layout-flow>
+{% endblock %}

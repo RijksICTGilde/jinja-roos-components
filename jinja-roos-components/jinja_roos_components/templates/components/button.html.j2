@@ -13,7 +13,7 @@
 {% set icon = _component_context.icon | default('') %}
 {% set full_width = _component_context.fullWidth | default(false) %}
 
-{# Map RVO button kinds to Utrecht classes #}
+{# Map RVO button kinds to Utrecht appearances - mirrors RVO base project logic #}
 {% set appearance = '' %}
 {% if kind == 'primary' or kind == 'warning' %}
     {% set appearance = 'primary-action-button' %}
@@ -23,9 +23,19 @@
     {% set appearance = 'subtle-button' %}
 {% endif %}
 
-{# Build CSS classes #}
+{# Build CSS classes - add appropriate classes per button kind #}
 {% set css_classes = ['utrecht-button'] %}
-{% if kind == 'tertiary' %}
+{% if kind == 'primary' %}
+    {% set css_classes = css_classes + ['utrecht-button--primary-action'] %}
+{% elif kind == 'secondary' %}
+    {% set css_classes = css_classes + ['utrecht-button--secondary-action'] %}
+{% elif kind == 'subtle' %}
+    {% set css_classes = css_classes + ['utrecht-button--subtle'] %}
+{% elif kind == 'warning' %}
+    {% set css_classes = css_classes + ['utrecht-button--primary-action', 'utrecht-button--warning'] %}
+{% elif kind == 'warning-subtle' %}
+    {% set css_classes = css_classes + ['utrecht-button--subtle', 'utrecht-button--warning'] %}
+{% elif kind == 'tertiary' %}
     {% set css_classes = css_classes + ['utrecht-button--rvo-tertiary-action'] %}
 {% elif kind == 'quaternary' %}
     {% set css_classes = css_classes + ['utrecht-button--rvo-quaternary-action'] %}
@@ -51,7 +61,6 @@
     {% if disabled or busy %}disabled{% endif %}
     {% if busy %}aria-label="Loading..."{% endif %}
     {% if appearance %}data-utrecht-button-appearance="{{ appearance }}"{% endif %}
-    {% if kind == 'warning' or kind == 'warning-subtle' %}data-utrecht-button-hint="warning"{% endif %}
     data-roos-component="button"
     data-roos-kind="{{ kind }}"
     data-roos-size="{{ size }}"

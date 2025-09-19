@@ -84,6 +84,9 @@ class ComponentValidator:
     
     def _validate_attribute_value(self, component_name: str, attr_name: str, attr_value: Any, attr_def) -> None:
         """Validate attribute value based on its type definition."""
+        # Skip validation for jinja template expressions
+        if isinstance(attr_value, str) and ('{{' in attr_value or '{%' in attr_value):
+            return
         if attr_def.type == AttributeType.ENUM:
             # For enum types, validate the value is in allowed values
             if attr_def.enum_values and attr_value not in attr_def.enum_values:

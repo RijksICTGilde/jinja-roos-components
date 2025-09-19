@@ -224,14 +224,37 @@ class ComponentExtensionDOM(Extension):
                 else:
                     context_items.append(f'"{clean_key}": {value}')
             elif key.startswith('@'):
-                # Event attribute - pass as string
-                context_items.append(f"'{key}': \"{value}\"")
+                # Event attribute - render Jinja variables in the string then pass as string
+                # This allows: @click="func('{{ var }}')" to become onclick="func('actual_value')"
+                if '{{' in value or '{%' in value:
+                    # Use a captured template variable to render the Jinja expressions
+                    var_suffix = self._generate_id()
+                    temp_var = f'_event_attr_{var_suffix}'
+                    # Create a template that renders the event attribute with current context
+                    template_content = f'{{% set {temp_var} %}}{value}{{% endset %}}'
+                    context_items.append(f"'{key}': {temp_var}")
+                    # We need to inject this template before the context setup
+                    # Store it to be added to the final include
+                    if not hasattr(self, '_event_templates'):
+                        self._event_templates = []
+                    self._event_templates.append(template_content)
+                else:
+                    # No Jinja syntax, pass as regular string
+                    escaped_value = value.replace('"', '\\"')
+                    context_items.append(f"'{key}': \"{escaped_value}\"")
             else:
                 # Regular string attribute
                 # Convert value to string and escape quotes
                 str_value = str(value) if value is not None else ""
                 escaped_value = str_value.replace('"', '\\"')
                 context_items.append(f'"{key}": "{escaped_value}"')
+        
+        # Build the event template processing parts
+        event_templates = ""
+        if hasattr(self, '_event_templates') and self._event_templates:
+            event_templates = ''.join(self._event_templates)
+            # Clear for next component
+            self._event_templates = []
         
         # Handle content if present
         if content:
@@ -243,12 +266,15 @@ class ComponentExtensionDOM(Extension):
             context_str = ', '.join(context_items) if context_items else ''
             full_context = context_str + (", " if context_str else "") + content_part
             
-            return (f'{{% set {capture_var} %}}{content}{{% endset %}}'
+            return (f'{event_templates}'
+                   f'{{% set {capture_var} %}}{content}{{% endset %}}'
                    f'{{% set _component_context = {{{full_context}}} %}}'
                    f'{{% include "{template_path}" with context %}}')
         else:
             context_str = ', '.join(context_items)
-            return f'{{% set _component_context = {{{context_str}}} %}}{{% include "{template_path}" with context %}}'
+            return (f'{event_templates}'
+                   f'{{% set _component_context = {{{context_str}}} %}}'
+                   f'{{% include "{template_path}" with context %}}') 
     
     def _generate_id(self) -> str:
         """Generate a unique ID for variable names."""

@@ -1,0 +1,122 @@
+{% extends "docs-layout.html.j2" %}
+
+{% block title %}ROOS Components Reference{% endblock %}
+{% block page_title %}Components Reference{% endblock %}
+{% block footer_stats %}{{ components|length }} components{% endblock %}
+
+{% block page_content %}
+<c-heading type="h2" textContent="Components Reference" />
+<p>Complete reference for all available components with attributes and usage examples.</p>
+
+<!-- Quick Navigation -->
+<c-card padding="lg" style="margin: 2rem 0;">
+    <c-heading type="h3" textContent="Quick Navigation" style="margin-bottom: 1rem;" />
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;">
+        {% for component in components %}
+        <c-link href="#{{ component.name }}" style="padding: 0.5rem; display: block; border-radius: 4px; border: 1px solid {% if component.is_alias %}#007bc7{% else %}#e1e4e8{% endif %}; {% if component.is_alias %}background: #f8fbff;{% endif %}">
+            c-{{ component.name }}
+            {% if component.is_alias %}
+            <span style="background: #007bc7; color: white; padding: 1px 4px; border-radius: 2px; font-size: 0.6rem; margin-left: 4px;">ALIAS</span>
+            {% endif %}
+        </c-link>
+        {% endfor %}
+    </div>
+</c-card>
+
+<!-- Components List -->
+<c-layout-flow gap="lg">
+
+{% for component in components %}
+<c-card id="{{ component.name }}" padding="xl" style="margin-bottom: 2rem; {% if component.is_alias %}border-left: 4px solid #007bc7; background: #f8fbff;{% endif %}">
+    <c-heading type="h3" style="color: #01689b; margin-bottom: 0.5rem;">
+        &lt;c-{{ component.name }}&gt;
+        {% if component.is_alias %}
+        <span style="background: #007bc7; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 8px; font-weight: normal;">ALIAS</span>
+        {% endif %}
+    </c-heading>
+    <p style="color: #666; margin-bottom: 1.5rem;">{{ component.description or "No description available" }}</p>
+    
+    {% if component.is_alias %}
+    <c-alert kind="info" padding="sm" style="margin-bottom: 1.5rem;">
+        <strong>Alias Information:</strong> This is an alias for <code>c-{{ component.alias_target }}</code>. 
+        {% if component.alias_defaults %}
+        It pre-sets these attributes: 
+        {% for key, value in component.alias_defaults.items() %}
+        <code>{{ key }}="{{ value }}"</code>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+        {% endif %}
+    </c-alert>
+    {% endif %}
+    
+    <c-heading type="h4" textContent="Attributes" style="margin-top: 1.5rem; margin-bottom: 1rem;" />
+    {% if component.attributes %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;">
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #dee2e6; font-weight: 600;">Attribute</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #dee2e6; font-weight: 600;">Type</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #dee2e6; font-weight: 600;">Description</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #dee2e6; font-weight: 600;">Default</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #dee2e6; font-weight: 600;">Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attr in component.attributes %}
+                <tr {% if component.is_alias and attr.preset_by_alias %}style="background: #e3f2fd;"{% endif %}>
+                    <td style="padding: 0.75rem; border: 1px solid #dee2e6;">
+                        <code style="font-family: 'Courier New', monospace; font-weight: 600; color: #d73502;">{{ attr.name }}</code>
+                        {% if component.is_alias and attr.preset_by_alias %}
+                        <span style="background: #007bc7; color: white; padding: 1px 4px; border-radius: 2px; font-size: 0.6rem; margin-left: 4px;">PRESET</span>
+                        {% endif %}
+                        {% if attr.enum_values %}
+                        <br><small style="font-family: 'Courier New', monospace; background: #fff3cd; padding: 2px 4px; border-radius: 3px; margin-top: 4px; display: inline-block; font-size: 0.8rem;">{{ attr.enum_values|join(' | ') }}</small>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.75rem; border: 1px solid #dee2e6;">
+                        <code style="font-family: 'Courier New', monospace; background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-size: 0.9rem;">{{ attr.type }}</code>
+                    </td>
+                    <td style="padding: 0.75rem; border: 1px solid #dee2e6;">{{ (attr.description or "-") | e }}</td>
+                    <td style="padding: 0.75rem; border: 1px solid #dee2e6;">
+                        {% if attr.default is not none %}
+                        <code style="font-family: 'Courier New', monospace; color: #0969da; {% if component.is_alias and attr.preset_by_alias %}font-weight: bold;{% endif %}">{{ attr.default }}</code>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.75rem; border: 1px solid #dee2e6;">
+                        {% if attr.required %}
+                        <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.8rem;">required</span>
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="color: #666; font-style: italic;">This component has no configurable attributes.</p>
+    {% endif %}
+    
+    <c-heading type="h4" textContent="Example Usage" style="margin-top: 1.5rem; margin-bottom: 1rem;" />
+    
+    <!-- Code Example -->
+    <div style="margin-bottom: 1rem;">
+        <c-heading type="h5" textContent="Code" style="margin-bottom: 0.5rem; color: #666; font-size: 0.9rem;" />
+        <pre style="background: #f6f8fa; padding: 1rem; border-radius: 6px; overflow-x: auto; border: 1px solid #d1d5da; margin: 0;"><code>{{ component.example | e }}</code></pre>
+    </div>
+    
+    <!-- Live Preview -->
+    <div>
+        <c-heading type="h5" textContent="Preview" style="margin-bottom: 0.5rem; color: #666; font-size: 0.9rem;" />
+        <c-card padding="md" style="background: #fff; border: 1px solid #e1e4e8;">
+            {{ component.rendered_example | safe }}
+        </c-card>
+    </div>
+</c-card>
+{% endfor %}
+
+</c-layout-flow>
+{% endblock %}
