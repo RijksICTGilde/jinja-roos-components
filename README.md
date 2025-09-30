@@ -431,7 +431,7 @@ Configure ROOS Components in a Jinja2 environment.
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+EUROPEAN UNION PUBLIC LICENSE v1.2 - see [LICENSE](LICENSE) file for details.
 
 ## 🔗 Related Projects
 
