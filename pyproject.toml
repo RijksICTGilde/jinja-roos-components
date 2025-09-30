@@ -7,7 +7,7 @@ name = "jinja-roos-components"
 version = "0.1.0"
 description = "Modern, self-contained Jinja2 component library with built-in assets"
 readme = "README.md"
-license = {text = "MIT"}
+license = {text = "EUPL"}
 authors = [
     {name = "RIG Cluster Team"}
 ]
