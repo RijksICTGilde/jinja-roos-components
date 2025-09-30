@@ -17,6 +17,7 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: FastAPI",
     "Framework :: Flask",
+    "Framework :: Django",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -56,9 +57,9 @@ flask = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/jinja-roos-components"
-Repository = "https://github.com/your-org/jinja-roos-components.git"
-Issues = "https://github.com/your-org/jinja-roos-components/issues"
+Homepage = "https://github.com/RijksICTGilde/jinja-roos-components"
+Repository = "https://github.com/RijksICTGilde/jinja-roos-components.git"
+Issues = "https://github.com/RijksICTGilde/jinja-roos-components/issues"
 
 [tool.setuptools]
 include-package-data = true

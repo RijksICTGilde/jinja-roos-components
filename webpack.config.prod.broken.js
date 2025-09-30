@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: 'production',
-  entry: './src/ts/roos.ts',
+  entry: './fe_src/ts/roos.ts',
   output: {
     filename: 'roos.js',
     path: path.resolve(__dirname, 'jinja_roos_components/static/dist'),

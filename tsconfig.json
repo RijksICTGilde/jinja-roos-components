@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "ES2020",
     "moduleResolution": "node",
-    "rootDir": "./src/ts",
+    "rootDir": "fe_src/ts",
     "outDir": "./dist/js",
     "strict": true,
     "esModuleInterop": true,
@@ -20,7 +20,7 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/ts/**/*"
+    "fe_src/ts/**/*"
   ],
   "exclude": [
     "node_modules",
