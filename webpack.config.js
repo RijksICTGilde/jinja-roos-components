@@ -6,7 +6,7 @@ const ReplaceInFileWebpackPlugin = require("replace-in-file-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: './src/ts/roos.ts',
+  entry: './fe_src/ts/roos.ts',
   output: {
     filename: 'roos.js',
     path: path.resolve(__dirname, 'jinja_roos_components/static/dist'),

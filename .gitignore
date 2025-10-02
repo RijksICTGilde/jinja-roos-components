@@ -48,3 +48,4 @@ htmlcov/
 
 # TypeScript
 *.tsbuildinfo
+uv.lock

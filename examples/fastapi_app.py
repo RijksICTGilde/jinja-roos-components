@@ -23,6 +23,8 @@ Usage (from root directory):
     - http://localhost:8000/render?template=simple-page.html.j2 - Live template rendering
 """
 
+from pathlib import Path
+
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -42,7 +44,7 @@ from docs_service import (
 app = FastAPI()
 
 # Setup Jinja2 environment with templates from templates subfolder
-template_dir = os.path.join(os.path.dirname(__file__), "templates")
+template_dir = Path(__file__).parent / "templates"
 env = Environment(
     loader=FileSystemLoader(template_dir),
     undefined=DebugUndefined  # This will show helpful debug info for undefined variables
@@ -52,12 +54,12 @@ env = Environment(
 setup_components(env)
 
 # Mount static files for CSS/JS assets at the expected path
-css_static_dir = os.path.join(os.path.dirname(__file__), "..", "jinja_roos_components", "static")
+css_static_dir = Path(__file__).parent.parent / 'src' / "jinja_roos_components" / "static"
 if os.path.exists(css_static_dir):
     app.mount("/static/roos", StaticFiles(directory=css_static_dir), name="roos_static")
 
 # Mount documentation static files
-docs_static_dir = os.path.join(os.path.dirname(__file__), "static")
+docs_static_dir = Path(__file__).parent  / "static"
 if os.path.exists(docs_static_dir):
     app.mount("/static", StaticFiles(directory=docs_static_dir), name="docs_static")
 
