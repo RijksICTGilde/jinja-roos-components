@@ -22,10 +22,11 @@ class ComponentExtension(Extension):
     -> {% include "components/button.html.j2" with context %}
     """
     
-    def __init__(self, environment: Environment, strict_validation: bool = False) -> None:
+    def __init__(self, environment: Environment) -> None:
         super().__init__(environment)
         self.registry = ComponentRegistry()
-        self.strict_validation = strict_validation
+        # Read strict_validation from environment globals if set
+        self.strict_validation = environment.globals.get('_roos_strict_validation', False)
         
         # Patterns for different attribute types (with DOTALL flag for multiline)
         # Updated to handle nested quotes and complex content
@@ -65,52 +66,59 @@ class ComponentExtension(Extension):
         """
         Process all component tags in the HTML.
         Process from innermost to outermost to handle nesting correctly.
+
+        Optimized: Single scan per depth level instead of per component
         """
         import logging
         logger = logging.getLogger(__name__)
-        
+
         result = html
-        max_iterations = 500  # Increased limit for templates with many components
-        iteration = 0
-        
-        while iteration < max_iterations:
-            # Find all component tags
+        max_depth = 100  # Safety limit
+        current_depth = 0
+
+        while current_depth < max_depth:
+            # Find all components at current scan
             components = self._find_component_tags(result)
-            
+
             if not components:
                 break
-            
+
             # Sort by depth (deepest first) and then by position (last first)
             # This ensures we process innermost components first
             components.sort(key=lambda x: (-x.get('depth', 0), -x['start']))
-            
-            # Process the deepest, rightmost component
-            # This ensures we don't have position conflicts
-            comp = components[0]
-            
-            logger.debug(f"Iteration {iteration}: Processing {comp['tag']} at position {comp['start']} (depth {comp.get('depth', 0)})")
-            
-            # First recursively process the content if it has any
-            if not comp['self_closing'] and comp.get('content'):
-                processed_content = self._process_components(comp['content'])
-                comp['content'] = processed_content
-                logger.debug(f"Processed content for {comp['tag']}")
-            
-            # Now process this component
-            replacement = self._process_single_component(comp, result)
-            
-            # Replace in the result
-            start = comp['start']
-            end = comp.get('end', comp['tag_end'])
-            
-            result = result[:start] + replacement + result[end:]
-            logger.debug(f"Replaced {comp['tag']} with include")
-            
-            iteration += 1
-        
-        if iteration >= max_iterations:
-            logger.warning(f"Hit maximum iterations ({max_iterations}) while processing components - some components may not be processed.")
-        
+
+            # Get the deepest depth
+            deepest_depth = components[0].get('depth', 0)
+
+            # Get all components at the deepest level
+            deepest_components = [c for c in components if c.get('depth', 0) == deepest_depth]
+
+            logger.debug(f"Depth {current_depth}: Processing {len(deepest_components)} components at depth level {deepest_depth}")
+
+            # Process content recursively for non-self-closing components
+            for comp in deepest_components:
+                if not comp['self_closing'] and comp.get('content'):
+                    processed_content = self._process_components(comp['content'])
+                    comp['content'] = processed_content
+
+            # Sort by position (last first) to preserve positions during replacement
+            deepest_components.sort(key=lambda x: -x['start'])
+
+            # Process all components at this depth level
+            for comp in deepest_components:
+                replacement = self._process_single_component(comp, result)
+
+                start = comp['start']
+                end = comp.get('end', comp['tag_end'])
+
+                result = result[:start] + replacement + result[end:]
+                logger.debug(f"Replaced {comp['tag']} at position {start}")
+
+            current_depth += 1
+
+        if current_depth >= max_depth:
+            logger.warning(f"Hit maximum depth ({max_depth}) while processing components")
+
         return result
     
     def _find_component_tags(self, html: str) -> List[Dict[str, Any]]:
@@ -523,7 +531,7 @@ class ComponentExtension(Extension):
 
 
 def setup_components(
-    jinja_env: Environment, 
+    jinja_env: Environment,
     theme: Optional[str] = None,
     htmx: bool = False,
     user_css_files: Optional[list[str]] = None,
@@ -533,27 +541,27 @@ def setup_components(
 ) -> Environment:
     """
     Setup ROOS Components in a Jinja2 environment.
-    
+
     Args:
         jinja_env: The Jinja2 environment to configure
         theme: Optional theme name to use
         htmx: Whether to include HTMX library
         user_css_files: List of additional CSS files to include
-        user_js_files: List of additional JS files to include  
+        user_js_files: List of additional JS files to include
         static_url_prefix: URL prefix for static assets
         strict_validation: Whether to enable strict component validation
-        
+
     Returns:
         Configured Jinja2 environment
-        
+
     Example:
         ```python
         from jinja2 import Environment, FileSystemLoader
         from jinja_roos_components import setup_components
-        
+
         env = Environment(loader=FileSystemLoader('templates'))
         setup_components(
-            env, 
+            env,
             theme="operations",
             htmx=True,
             user_css_files=['/static/custom.css'],
@@ -562,10 +570,9 @@ def setup_components(
         ```
     """
     # Add the component extension with validation settings
-    extension = ComponentExtension(jinja_env, strict_validation=strict_validation)
-    if not hasattr(jinja_env, 'extensions'):
-        jinja_env.extensions = {}
-    jinja_env.extensions[ComponentExtension.identifier] = extension
+    # Store strict_validation in the environment before adding extension
+    jinja_env.globals['_roos_strict_validation'] = strict_validation
+    jinja_env.add_extension(ComponentExtension)
     
     # Add component templates directory to loader paths
     import os

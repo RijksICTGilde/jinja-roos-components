@@ -6,9 +6,51 @@
 
 {% block page_content %}
 <c-heading type="h2" textContent="Icon Library" />
-<p>Essential icons organized by category. Available in 5 sizes.</p>
+<p>Essential icons organized by category. Available in 9 sizes - see <a href="spacing-reference.html" style="color: #01689b;">spacing reference</a> for size details.</p>
 
 <c-layout-flow gap="xl" style="margin-top: 2rem;">
+    
+    <!-- Icon Usage Guide -->
+    <section>
+        <c-heading type="h3" textContent="Usage Examples" style="margin-bottom: 1rem; color: #01689b;" />
+        <c-card padding="lg" style="margin-bottom: 2rem;">
+            <c-heading type="h4" textContent="Icon Sizes" style="margin-bottom: 1rem;" />
+            <p style="margin-bottom: 1rem; color: #666;">Icons support 9 different sizes:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                {% set sizes = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'] %}
+                {% for size in sizes %}
+                <div style="text-align: center; padding: 0.5rem; border: 1px solid #e1e4e8; border-radius: 4px;">
+                    <c-icon icon="home" size="{{ size }}" style="margin-bottom: 0.5rem;" />
+                    <div style="font-size: 0.7rem; font-family: monospace; color: #666;">{{ size }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <c-heading type="h4" textContent="Color Examples" style="margin-bottom: 1rem;" />
+            <p style="margin-bottom: 1rem; color: #666;">Icons support named colors and custom hex colors:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                {% set colors = ['hemelblauw', 'oranje', 'groen', 'rood', 'zwart'] %}
+                {% for color in colors %}
+                <div style="text-align: center; padding: 0.5rem; border: 1px solid #e1e4e8; border-radius: 4px;">
+                    <c-icon icon="hart" size="2xl" color="{{ color }}" style="margin-bottom: 0.5rem;" />
+                    <div style="font-size: 0.7rem; font-family: monospace; color: #666;">{{ color }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <c-heading type="h4" textContent="Usage Code Examples" style="margin-bottom: 1rem;" />
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem;">
+                <div style="margin-bottom: 0.5rem;">&lt;c-icon icon="home" size="lg" /&gt;</div>
+                <div style="margin-bottom: 0.5rem;">&lt;c-icon icon="hart" size="xl" color="rood" /&gt;</div>
+                <div style="margin-bottom: 0.5rem;">&lt;c-icon icon="info" size="md" color="#007BC7" /&gt;</div>
+                <div>&lt;c-icon icon="check" size="sm" color="groen" ariaLabel="Success" /&gt;</div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Icon Categories -->
     {% set icon_groups = icons | groupby('category') %}
     {% for category, category_icons in icon_groups %}
     
@@ -16,19 +58,81 @@
         <c-heading type="h3" textContent="{{ category_icons[0].category_display }}" style="margin-bottom: 1rem; color: #01689b;" />
         <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">{{ category_icons|length }} icons</p>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem;">
             {% for icon in category_icons %}
-            <c-card padding="md" style="text-align: center;">
+            <c-card padding="md" style="text-align: center; position: relative;">
                 <div style="margin-bottom: 0.5rem;">
                     <c-icon icon="{{ icon.name }}" size="3xl"/>
                 </div>
                 
                 <c-heading type="h6" textContent="{{ icon.display_name }}" style="font-weight: 600; margin-bottom: 0.25rem; font-size: 0.8rem;" />
-                <div style="font-size: 0.7rem; color: #666; font-family: monospace; word-break: break-all;">{{ icon.template_name }}</div>
+                
+                <!-- Icon name with copy functionality -->
+                <div style="position: relative;">
+                    <div style="font-size: 0.7rem; color: #666; font-family: monospace; word-break: break-all; padding: 0.25rem; background: #f8f9fa; border-radius: 2px; margin-bottom: 0.5rem;" 
+                         data-copy-text="{{ icon.template_name }}" 
+                         onclick="copyToClipboard(this)"
+                         title="Click to copy icon name">{{ icon.template_name }}</div>
+                </div>
+                
+                <!-- Usage example -->
+                <div style="font-size: 0.65rem; color: #999; font-family: monospace; background: #f0f0f0; padding: 0.25rem; border-radius: 2px;" 
+                     data-copy-text='&lt;c-icon icon="{{ icon.template_name }}" size="lg" /&gt;'
+                     onclick="copyToClipboard(this)"
+                     title="Click to copy usage example">&lt;c-icon icon="{{ icon.template_name }}" size="lg" /&gt;</div>
             </c-card>
             {% endfor %}
         </div>
     </section>
     {% endfor %}
 </c-layout-flow>
+
+<script>
+function copyToClipboard(element) {
+    const text = element.getAttribute('data-copy-text');
+    
+    // Create a temporary textarea to copy the text
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Visual feedback
+    const originalBg = element.style.backgroundColor;
+    element.style.backgroundColor = '#d4edda';
+    element.style.transition = 'background-color 0.2s';
+    
+    setTimeout(() => {
+        element.style.backgroundColor = originalBg;
+    }, 1000);
+    
+    // Show tooltip-like feedback
+    const feedback = document.createElement('div');
+    feedback.textContent = 'Copied!';
+    feedback.style.cssText = `
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        z-index: 1000;
+        pointer-events: none;
+    `;
+    
+    element.style.position = 'relative';
+    element.appendChild(feedback);
+    
+    setTimeout(() => {
+        if (feedback.parentNode) {
+            feedback.parentNode.removeChild(feedback);
+        }
+    }, 1500);
+}
+</script>
 {% endblock %}
