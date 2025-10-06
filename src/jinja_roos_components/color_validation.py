@@ -67,8 +67,8 @@ class ColorValidator:
         # Try to find it relative to this module
         current_dir = Path(__file__).parent
         possible_paths = [
-            current_dir / 'components' / 'definitions.json',
-            current_dir / '..' / 'components' / 'definitions.json',
+            current_dir / 'definitions.json',
+            current_dir / '..' / 'definitions.json',
         ]
 
         for path in possible_paths:

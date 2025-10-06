@@ -19,7 +19,7 @@ from typing import Dict, List, Any, Optional
 def load_definitions() -> Dict[str, Any]:
     """Load component definitions from definitions.json."""
     root_dir = Path(__file__).parent.parent
-    definitions_path = root_dir / "src" / "jinja_roos_components" / "components" / "definitions.json"
+    definitions_path = root_dir / "src" / "jinja_roos_components" / "definitions.json"
 
     with open(definitions_path, 'r', encoding='utf-8') as f:
         return json.load(f)

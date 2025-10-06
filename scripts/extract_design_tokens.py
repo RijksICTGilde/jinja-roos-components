@@ -216,7 +216,7 @@ def generate_design_tokens_file():
     print(f"✓ Generated design_tokens.json with {len(spacing_sizing_data['spacing'])} spacing tokens")
     print(f"✓ Generated design_tokens.json with {len(spacing_sizing_data['sizing'])} sizing tokens")
     print(f"\n📄 Output file: {output_path}")
-    print("   Review and manually merge into src/jinja_roos_components/components/definitions.json")
+    print("   Review and manually merge into src/jinja_roos_components/definitions.json")
     return True
 
 
