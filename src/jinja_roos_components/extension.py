@@ -594,6 +594,10 @@ def setup_components(
     )
     jinja_env.globals['roos_theme'] = theme or 'default'
     jinja_env.globals['roos_htmx'] = htmx
+
+    # Add RVO color names for template use
+    from .color_validation import get_available_colors
+    jinja_env.globals['rvo_color_names'] = get_available_colors()
     
     # Add filters for component functionality
     def from_json_filter(value):
