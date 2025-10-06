@@ -166,7 +166,7 @@ class ComponentRegistry:
     def _register_default_components(self) -> None:
         """Register the default RVO-based components from JSON definitions."""
         # Load definitions from JSON file
-        definitions_path = Path(__file__).parent.parent / "definitions.json"
+        definitions_path = Path(__file__).parent / "definitions.json"
         with open(definitions_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
@@ -201,7 +201,7 @@ class ComponentRegistry:
     def _register_default_aliases(self) -> None:
         """Register the default component aliases from JSON definitions."""
         # Load definitions from JSON file
-        definitions_path = Path(__file__).parent.parent / "definitions.json"
+        definitions_path = Path(__file__).parent / "definitions.json"
         with open(definitions_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 

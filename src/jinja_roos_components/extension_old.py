@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 from jinja2 import Environment
 from jinja2.ext import Extension
 
-from .components.registry import ComponentRegistry
+from .registry import ComponentRegistry
 
 
 class ComponentExtension(Extension):

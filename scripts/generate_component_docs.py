@@ -13,7 +13,7 @@ from datetime import datetime
 # Add parent directory to path to import jinja_roos_components
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from jinja_roos_components.components.registry import ComponentRegistry, AttributeType
+from jinja_roos_components.registry import ComponentRegistry, AttributeType
 from jinja2 import Environment, FileSystemLoader
 from jinja_roos_components import setup_components
 

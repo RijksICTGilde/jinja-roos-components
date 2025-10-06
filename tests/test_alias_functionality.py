@@ -89,7 +89,7 @@ def test_registry_functionality():
     """Test that the registry correctly handles aliases."""
     print("\nTesting registry functionality...")
     
-    from jinja_roos_components.components.registry import ComponentRegistry
+    from jinja_roos_components.registry import ComponentRegistry
     
     registry = ComponentRegistry()
     

@@ -9,7 +9,7 @@ import os
 # Add the package to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'jinja-roos-components'))
 
-from jinja_roos_components.components.registry import ComponentRegistry
+from jinja_roos_components.registry import ComponentRegistry
 
 def test_registry_aliases():
     """Test that the registry correctly handles aliases."""

@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional, List, Tuple
 from jinja2 import Environment
 from jinja2.ext import Extension
 
-from .components.registry import ComponentRegistry
+from .registry import ComponentRegistry
 from .html_parser import ComponentHTMLParser, parse_component_attributes, convert_parsed_component
 
 

@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 import random
 import string
 
-from .components.registry import ComponentRegistry
+from .registry import ComponentRegistry
 
 logger = logging.getLogger(__name__)
 

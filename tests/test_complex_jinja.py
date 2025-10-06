@@ -5,7 +5,7 @@ Test complex Jinja expressions in regular attributes.
 """
 
 from jinja_roos_components.html_parser import ComponentHTMLParser, convert_parsed_component
-from jinja_roos_components.components.registry import ComponentRegistry, ComponentDefinition, AttributeDefinition, AttributeType
+from jinja_roos_components.registry import ComponentRegistry, ComponentDefinition, AttributeDefinition, AttributeType
 
 def test_complex_jinja_attributes():
     """Test that complex Jinja expressions in regular attributes are handled properly."""

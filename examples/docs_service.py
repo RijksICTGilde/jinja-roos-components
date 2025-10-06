@@ -12,7 +12,7 @@ from datetime import datetime
 # Add parent directory to path to import jinja_roos_components
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from jinja_roos_components.components.registry import ComponentRegistry, AttributeType
+from jinja_roos_components.registry import ComponentRegistry, AttributeType
 
 
 def get_attribute_type_string(attr_type: AttributeType) -> str:
@@ -31,7 +31,7 @@ def generate_example_code(component_name: str, attributes: List[Dict]) -> str:
     """Generate realistic example HTML code for a component."""
     
     # Get examples from the component registry
-    from jinja_roos_components.components.registry import ComponentRegistry
+    from jinja_roos_components.registry import ComponentRegistry
     registry = ComponentRegistry()
     component_def = registry.get_component(component_name)
     
