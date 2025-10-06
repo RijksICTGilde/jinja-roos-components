@@ -1,0 +1,2178 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "c-button",
+      "description": "RVO button component with Utrecht styling and comprehensive variants",
+      "attributes": [
+        {
+          "name": "kind",
+          "description": "Visual style variant of the button (default: `primary`)",
+          "values": [
+            {
+              "name": "primary"
+            },
+            {
+              "name": "secondary"
+            },
+            {
+              "name": "tertiary"
+            },
+            {
+              "name": "quaternary"
+            },
+            {
+              "name": "subtle"
+            },
+            {
+              "name": "warning-subtle"
+            },
+            {
+              "name": "warning"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "Size of the button (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "label",
+          "description": "Button text label"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether the button is disabled (default: `false`)"
+        },
+        {
+          "name": "busy",
+          "description": "Whether the button shows a loading/busy state (default: `false`)"
+        },
+        {
+          "name": "show-icon",
+          "description": "Icon placement in button (default: `no`)",
+          "values": [
+            {
+              "name": "no"
+            },
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
+            }
+          ]
+        },
+        {
+          "name": "icon",
+          "description": "Icon name from RVO icon set"
+        },
+        {
+          "name": "full-width",
+          "description": "Whether button takes full width (default: `false`)"
+        },
+        {
+          "name": "type",
+          "description": "HTML button type (default: `button`)",
+          "values": [
+            {
+              "name": "button"
+            },
+            {
+              "name": "submit"
+            },
+            {
+              "name": "reset"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "click",
+          "description": "JavaScript function to call on click event"
+        },
+        {
+          "name": "mousedown",
+          "description": "JavaScript function to call on mousedown event"
+        },
+        {
+          "name": "mouseup",
+          "description": "JavaScript function to call on mouseup event"
+        },
+        {
+          "name": "focus",
+          "description": "JavaScript function to call on focus event"
+        },
+        {
+          "name": "blur",
+          "description": "JavaScript function to call on blur event"
+        },
+        {
+          "name": "keydown",
+          "description": "JavaScript function to call on keydown event"
+        },
+        {
+          "name": "keyup",
+          "description": "JavaScript function to call on keyup event"
+        }
+      ]
+    },
+    {
+      "name": "c-card",
+      "description": "RVO card component with comprehensive styling and layout options",
+      "attributes": [
+        {
+          "name": "title",
+          "description": "Card title (displayed in header)"
+        },
+        {
+          "name": "content",
+          "description": "Card content text"
+        },
+        {
+          "name": "link",
+          "description": "Card link URL"
+        },
+        {
+          "name": "full-card-link",
+          "description": "Make entire card clickable (default: `false`)"
+        },
+        {
+          "name": "show-link-indicator",
+          "description": "Show arrow indicator for links (default: `false`)"
+        },
+        {
+          "name": "outline",
+          "description": "Add card outline/border (default: `false`)"
+        },
+        {
+          "name": "padding",
+          "description": "Card padding size (default: `md`)",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            }
+          ]
+        },
+        {
+          "name": "background",
+          "description": "Card background type (default: `none`)",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "color"
+            },
+            {
+              "name": "image"
+            }
+          ]
+        },
+        {
+          "name": "background-color",
+          "description": "Background color from RVO color system (default: `none`)"
+        },
+        {
+          "name": "background-image",
+          "description": "Background image URL"
+        },
+        {
+          "name": "layout",
+          "description": "Card layout direction (default: `column`)",
+          "values": [
+            {
+              "name": "column"
+            },
+            {
+              "name": "row"
+            }
+          ]
+        },
+        {
+          "name": "image",
+          "description": "Card image URL"
+        },
+        {
+          "name": "image-alt",
+          "description": "Image alt text"
+        },
+        {
+          "name": "image-size",
+          "description": "Image size (default: `md`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "inline-image",
+          "description": "Render image inline with content (default: `false`)"
+        },
+        {
+          "name": "inverted-colors",
+          "description": "Use inverted color scheme (default: `false`)"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-checkbox",
+      "description": "RVO checkbox input with validation support",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Checkbox label text"
+        },
+        {
+          "name": "checked",
+          "description": "Whether checkbox is checked (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether checkbox is disabled (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Whether checkbox is required (default: `false`)"
+        },
+        {
+          "name": "invalid",
+          "description": "Whether checkbox has validation error (default: `false`)"
+        },
+        {
+          "name": "value",
+          "description": "Checkbox value"
+        }
+      ]
+    },
+    {
+      "name": "c-select",
+      "description": "RVO select dropdown with option support",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "options",
+          "description": "Array of options"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether select is disabled (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Whether select is required (default: `false`)"
+        },
+        {
+          "name": "invalid",
+          "description": "Whether select has validation error (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-radio",
+      "description": "RVO radio button input",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Radio button label"
+        },
+        {
+          "name": "checked",
+          "description": "Whether radio is selected (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether radio is disabled (default: `false`)"
+        },
+        {
+          "name": "value",
+          "description": "Radio button value"
+        }
+      ]
+    },
+    {
+      "name": "c-textarea",
+      "description": "RVO multiline text input",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text"
+        },
+        {
+          "name": "rows",
+          "description": "Number of visible text lines (default: `4`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether textarea is disabled (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Whether textarea is required (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-input",
+      "description": "RVO text input with various types and validation",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "type",
+          "description": "Input type (default: `text`)",
+          "values": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "password"
+            },
+            {
+              "name": "tel"
+            },
+            {
+              "name": "url"
+            },
+            {
+              "name": "search"
+            },
+            {
+              "name": "number"
+            }
+          ]
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text"
+        },
+        {
+          "name": "disabled",
+          "description": "Whether input is disabled (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Whether input is required (default: `false`)"
+        },
+        {
+          "name": "size",
+          "description": "Input size (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "max"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-layout-flow",
+      "description": "RVO flexible layout container for organizing content",
+      "attributes": [
+        {
+          "name": "gap",
+          "description": "Space between elements (default: `md`)",
+          "values": [
+            {
+              "name": "0"
+            },
+            {
+              "name": "3xs"
+            },
+            {
+              "name": "2xs"
+            },
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            },
+            {
+              "name": "4xl"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "Maximum width layout size (default: `lg`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "uncentered"
+            }
+          ]
+        },
+        {
+          "name": "row",
+          "description": "Use row layout instead of column (default: `false`)"
+        },
+        {
+          "name": "wrap",
+          "description": "Allow items to wrap (default: `false`)"
+        },
+        {
+          "name": "align-items",
+          "description": "Cross-axis alignment",
+          "values": [
+            {
+              "name": ""
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "end"
+            }
+          ]
+        },
+        {
+          "name": "justify-content",
+          "description": "Main-axis alignment",
+          "values": [
+            {
+              "name": ""
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "space-between"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-grid",
+      "description": "RVO CSS Grid layout container with comprehensive column support",
+      "attributes": [
+        {
+          "name": "gap",
+          "description": "Grid gap (default: `md`)",
+          "values": [
+            {
+              "name": "3xs"
+            },
+            {
+              "name": "2xs"
+            },
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            },
+            {
+              "name": "4xl"
+            }
+          ]
+        },
+        {
+          "name": "columns",
+          "description": "Number of columns",
+          "values": [
+            {
+              "name": "one"
+            },
+            {
+              "name": "two"
+            },
+            {
+              "name": "three"
+            },
+            {
+              "name": "four"
+            },
+            {
+              "name": "five"
+            },
+            {
+              "name": "six"
+            },
+            {
+              "name": "seven"
+            },
+            {
+              "name": "eight"
+            },
+            {
+              "name": "nine"
+            },
+            {
+              "name": "ten"
+            },
+            {
+              "name": "eleven"
+            },
+            {
+              "name": "twelve"
+            }
+          ]
+        },
+        {
+          "name": "division",
+          "description": "Custom grid template columns (e.g., '2fr 1fr')"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-tag",
+      "description": "RVO visual tag/badge component",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Tag content text"
+        },
+        {
+          "name": "type",
+          "description": "Tag type for semantic coloring",
+          "values": [
+            {
+              "name": "info"
+            },
+            {
+              "name": "success"
+            },
+            {
+              "name": "error"
+            },
+            {
+              "name": "warning"
+            }
+          ]
+        },
+        {
+          "name": "is-pill",
+          "description": "Use pill (rounded) styling (default: `false`)"
+        },
+        {
+          "name": "url",
+          "description": "Make tag clickable with URL"
+        }
+      ]
+    },
+    {
+      "name": "c-page",
+      "description": "Complete HTML page with RVO styling and ROOS components support",
+      "attributes": [
+        {
+          "name": "title",
+          "description": "Page title for <title> tag (default: `ROOS Page`)"
+        },
+        {
+          "name": "lang",
+          "description": "HTML language attribute (default: `nl`)"
+        },
+        {
+          "name": "charset",
+          "description": "Character encoding (default: `utf-8`)"
+        },
+        {
+          "name": "viewport",
+          "description": "Viewport meta tag content (default: `width=device-width, initial-scale=1.0`)"
+        },
+        {
+          "name": "description",
+          "description": "Page description for meta tag"
+        },
+        {
+          "name": "additional-css",
+          "description": "Additional CSS files or inline styles"
+        },
+        {
+          "name": "additional-js",
+          "description": "Additional JavaScript files or inline scripts"
+        },
+        {
+          "name": "body-class",
+          "description": "CSS classes for body element"
+        },
+        {
+          "name": "htmx",
+          "description": "Include HTMX library (default: `true`)"
+        },
+        {
+          "name": "no-index",
+          "description": "Add noindex meta tag (default: `false`)"
+        },
+        {
+          "name": "favicon",
+          "description": "Favicon URL"
+        }
+      ]
+    },
+    {
+      "name": "c-text-input-field",
+      "description": "Complete text input field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "type",
+          "description": "Input type (default: `text`)",
+          "values": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "email"
+            },
+            {
+              "name": "password"
+            },
+            {
+              "name": "tel"
+            },
+            {
+              "name": "url"
+            },
+            {
+              "name": "search"
+            },
+            {
+              "name": "number"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "description": "Field value"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text"
+        },
+        {
+          "name": "pattern",
+          "description": "Regular expression pattern for input validation"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        },
+        {
+          "name": "readonly",
+          "description": "Read-only state (default: `false`)"
+        },
+        {
+          "name": "size",
+          "description": "Field width (default: `lg`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "expandable-helper-text",
+          "description": "Make helper text expandable (default: `false`)"
+        },
+        {
+          "name": "expandable-helper-text-title",
+          "description": "Title for expandable helper text (default: `More info`)"
+        },
+        {
+          "name": "error-text",
+          "description": "Error text with icon"
+        },
+        {
+          "name": "warning-text",
+          "description": "Warning text with icon"
+        },
+        {
+          "name": "invalid",
+          "description": "Invalid state (default: `false`)"
+        },
+        {
+          "name": "error-message",
+          "description": "Error message (legacy)"
+        },
+        {
+          "name": "has-error",
+          "description": "Error state (legacy) (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-select-field",
+      "description": "Complete select field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "options",
+          "description": "Array of options"
+        },
+        {
+          "name": "value",
+          "description": "Selected value"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        },
+        {
+          "name": "size",
+          "description": "Field width (default: `lg`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "expandable-helper-text",
+          "description": "Whether helper text is expandable (default: `false`)"
+        },
+        {
+          "name": "expandable-helper-text-title",
+          "description": "Title for expandable helper text section"
+        },
+        {
+          "name": "error-message",
+          "description": "Error message"
+        },
+        {
+          "name": "has-error",
+          "description": "Error state (default: `false`)"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder option text"
+        }
+      ]
+    },
+    {
+      "name": "c-date-input-field",
+      "description": "Complete date input field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "value",
+          "description": "Date value"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        },
+        {
+          "name": "readonly",
+          "description": "Read-only state (default: `false`)"
+        },
+        {
+          "name": "size",
+          "description": "Field width (default: `lg`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "error-message",
+          "description": "Error message"
+        },
+        {
+          "name": "has-error",
+          "description": "Error state (default: `false`)"
+        },
+        {
+          "name": "min-date",
+          "description": "Minimum date"
+        },
+        {
+          "name": "max-date",
+          "description": "Maximum date"
+        }
+      ]
+    },
+    {
+      "name": "c-fieldset",
+      "description": "Form fieldset grouping with legend",
+      "attributes": [
+        {
+          "name": "legend",
+          "description": "Fieldset legend text"
+        }
+      ]
+    },
+    {
+      "name": "c-action-group",
+      "description": "Button layout and organization component",
+      "attributes": [
+        {
+          "name": "actions",
+          "description": "Array of action objects"
+        },
+        {
+          "name": "alignment",
+          "description": "Action alignment (default: `start`)",
+          "values": [
+            {
+              "name": "start"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "space-between"
+            }
+          ]
+        },
+        {
+          "name": "gap",
+          "description": "Gap between actions (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            }
+          ]
+        },
+        {
+          "name": "direction",
+          "description": "Layout direction (default: `horizontal`)",
+          "values": [
+            {
+              "name": "horizontal"
+            },
+            {
+              "name": "vertical"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-data-list",
+      "description": "Read-only information display using definition lists",
+      "attributes": [
+        {
+          "name": "items",
+          "description": "Array of term/value objects"
+        }
+      ]
+    },
+    {
+      "name": "c-header",
+      "description": "Site header with logo and navigation content",
+      "attributes": [
+        {
+          "name": "link",
+          "description": "Logo link URL (default: `#`)"
+        },
+        {
+          "name": "text",
+          "description": "Site title text displayed in header (default: `Rijksorganisatie voor Ontwikkeling, Digitalisering en Innovatie`)"
+        },
+        {
+          "name": "subtitle",
+          "description": "Site subtitle text displayed below title (default: `Ministerie van Binnenlandse Zaken en Koninkrijksrelaties`)"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-footer",
+      "description": "Site footer with menu columns",
+      "attributes": [
+        {
+          "name": "primary-menu",
+          "description": "Primary menu columns"
+        },
+        {
+          "name": "secondary-menu",
+          "description": "Secondary menu items"
+        },
+        {
+          "name": "max-width",
+          "description": "Maximum width",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "pay-off",
+          "description": "Footer payoff text"
+        }
+      ]
+    },
+    {
+      "name": "c-menubar",
+      "description": "Navigation menu bar component",
+      "attributes": [
+        {
+          "name": "size",
+          "description": "Menu size (default: `md`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "direction",
+          "description": "Layout direction (default: `horizontal`)",
+          "values": [
+            {
+              "name": "horizontal"
+            },
+            {
+              "name": "vertical"
+            }
+          ]
+        },
+        {
+          "name": "items",
+          "description": "Menu items array"
+        },
+        {
+          "name": "use-icons",
+          "description": "Enable icons (default: `false`)"
+        },
+        {
+          "name": "icon-placement",
+          "description": "Icon placement (default: `before`)",
+          "values": [
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
+            }
+          ]
+        },
+        {
+          "name": "max-width",
+          "description": "Maximum width (default: `none`)",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "horizontal-rule",
+          "description": "Show bottom border (default: `true`)"
+        },
+        {
+          "name": "link-color",
+          "description": "Link color (default: `logoblauw`)",
+          "values": [
+            {
+              "name": "donkerblauw"
+            },
+            {
+              "name": "hemelblauw"
+            },
+            {
+              "name": "logoblauw"
+            },
+            {
+              "name": "grijs-700"
+            },
+            {
+              "name": "zwart"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-icon",
+      "description": "Icon component with sizing and coloring",
+      "attributes": [
+        {
+          "name": "icon",
+          "description": "Icon name"
+        },
+        {
+          "name": "size",
+          "description": "Icon size (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            },
+            {
+              "name": "4xl"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "description": "Icon color from RVO color system"
+        },
+        {
+          "name": "aria-label",
+          "description": "Aria label for accessibility"
+        }
+      ]
+    },
+    {
+      "name": "c-alert",
+      "description": "Alert/notification component",
+      "attributes": [
+        {
+          "name": "kind",
+          "description": "Alert type (default: `info`)",
+          "values": [
+            {
+              "name": "info"
+            },
+            {
+              "name": "warning"
+            },
+            {
+              "name": "error"
+            },
+            {
+              "name": "success"
+            }
+          ]
+        },
+        {
+          "name": "heading",
+          "description": "Alert heading"
+        },
+        {
+          "name": "content",
+          "description": "Alert content"
+        },
+        {
+          "name": "closable",
+          "description": "Closable alert (default: `false`)"
+        },
+        {
+          "name": "padding",
+          "description": "Padding size (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            }
+          ]
+        },
+        {
+          "name": "max-width",
+          "description": "Maximum width",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-hero",
+      "description": "Hero banner section",
+      "attributes": [
+        {
+          "name": "size",
+          "description": "Hero size (default: `md`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "image",
+          "description": "Hero image object"
+        },
+        {
+          "name": "title",
+          "description": "Hero title"
+        },
+        {
+          "name": "subtitle",
+          "description": "Hero subtitle"
+        },
+        {
+          "name": "overlay",
+          "description": "Text overlay on image (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-tabs",
+      "description": "Tab navigation component",
+      "attributes": [
+        {
+          "name": "tabs",
+          "description": "Array of tab objects"
+        },
+        {
+          "name": "active-tab",
+          "description": "Active tab index (default: `0`)"
+        }
+      ]
+    },
+    {
+      "name": "c-link",
+      "description": "Enhanced link component with icons",
+      "attributes": [
+        {
+          "name": "href",
+          "description": "Link URL (default: `#`)"
+        },
+        {
+          "name": "content",
+          "description": "Link text content"
+        },
+        {
+          "name": "target",
+          "description": "Link target"
+        },
+        {
+          "name": "icon",
+          "description": "Icon name"
+        },
+        {
+          "name": "show-icon",
+          "description": "Icon placement (default: `no`)",
+          "values": [
+            {
+              "name": "no"
+            },
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
+            }
+          ]
+        },
+        {
+          "name": "icon-size",
+          "description": "Icon size (default: `sm`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "icon-color",
+          "description": "Icon color"
+        },
+        {
+          "name": "no-underline",
+          "description": "Remove underline (default: `false`)"
+        },
+        {
+          "name": "color",
+          "description": "Link color"
+        },
+        {
+          "name": "weight",
+          "description": "Font weight"
+        },
+        {
+          "name": "full-container",
+          "description": "Full container link (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-heading",
+      "description": "Typography heading component",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h1`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-radio-button-field",
+      "description": "Complete radio button field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "options",
+          "description": "Array of radio options"
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "expandable-helper-text",
+          "description": "Make helper text expandable (default: `false`)"
+        },
+        {
+          "name": "expandable-helper-text-title",
+          "description": "Title for expandable helper text (default: `More info`)"
+        },
+        {
+          "name": "error-text",
+          "description": "Error message"
+        },
+        {
+          "name": "warning-text",
+          "description": "Warning message"
+        },
+        {
+          "name": "invalid",
+          "description": "Invalid state (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-checkbox-field",
+      "description": "Complete checkbox field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "options",
+          "description": "Array of checkbox options"
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "error-text",
+          "description": "Error message"
+        },
+        {
+          "name": "warning-text",
+          "description": "Warning message"
+        },
+        {
+          "name": "invalid",
+          "description": "Invalid state (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-textarea-field",
+      "description": "Complete textarea field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "value",
+          "description": "Field value"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text"
+        },
+        {
+          "name": "rows",
+          "description": "Number of rows (default: `4`)"
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "expandable-helper-text",
+          "description": "Make helper text expandable (default: `false`)"
+        },
+        {
+          "name": "expandable-helper-text-title",
+          "description": "Title for expandable helper text (default: `More info`)"
+        },
+        {
+          "name": "error-text",
+          "description": "Error message"
+        },
+        {
+          "name": "warning-text",
+          "description": "Warning message"
+        },
+        {
+          "name": "has-error",
+          "description": "Error state (default: `false`)"
+        },
+        {
+          "name": "invalid",
+          "description": "Invalid state (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        },
+        {
+          "name": "readonly",
+          "description": "Read-only state (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-file-input-field",
+      "description": "Complete file input field with label, validation, and help text",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "label",
+          "description": "Field label"
+        },
+        {
+          "name": "accept",
+          "description": "Accepted file types"
+        },
+        {
+          "name": "multiple",
+          "description": "Allow multiple files (default: `false`)"
+        },
+        {
+          "name": "helper-text",
+          "description": "Help text below field"
+        },
+        {
+          "name": "error-text",
+          "description": "Error message"
+        },
+        {
+          "name": "warning-text",
+          "description": "Warning message"
+        },
+        {
+          "name": "has-error",
+          "description": "Error state (default: `false`)"
+        },
+        {
+          "name": "invalid",
+          "description": "Invalid state (default: `false`)"
+        },
+        {
+          "name": "required",
+          "description": "Required field (default: `false`)"
+        },
+        {
+          "name": "disabled",
+          "description": "Disabled state (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-layout-row",
+      "description": "RVO layout row component for grid layouts",
+      "attributes": [
+        {
+          "name": "gap",
+          "description": "Gap between columns (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            }
+          ]
+        },
+        {
+          "name": "vertical-spacing",
+          "description": "Vertical spacing/margin around the row or alignment (default: `lg`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            },
+            {
+              "name": "center"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-layout-column",
+      "description": "RVO layout column component for grid layouts",
+      "attributes": [
+        {
+          "name": "size",
+          "description": "Column size (e.g. 'md-6', 'lg-4', 'sm-12')"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-ol",
+      "description": "RVO ordered list component with proper ol element and styling",
+      "attributes": [
+        {
+          "name": "items",
+          "description": "Array of list items (strings) - used when not using nested c-li components"
+        },
+        {
+          "name": "no-padding",
+          "description": "Remove default padding (default: `false`)"
+        },
+        {
+          "name": "no-margin",
+          "description": "Remove default margins (default: `false`)"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-ul",
+      "description": "RVO unordered list component with proper ul element and styling options",
+      "attributes": [
+        {
+          "name": "items",
+          "description": "Array of list items (strings) - used when not using nested c-li components"
+        },
+        {
+          "name": "bullet-type",
+          "description": "Bullet type for unordered lists (default: `disc`)",
+          "values": [
+            {
+              "name": "disc"
+            },
+            {
+              "name": "none"
+            },
+            {
+              "name": "icon"
+            }
+          ]
+        },
+        {
+          "name": "bullet-icon",
+          "description": "Icon type when bulletType is 'icon' (default: `option-1`)",
+          "values": [
+            {
+              "name": "option-1"
+            },
+            {
+              "name": "option-2"
+            },
+            {
+              "name": "option-3"
+            }
+          ]
+        },
+        {
+          "name": "no-margin",
+          "description": "Remove default margins (default: `false`)"
+        },
+        {
+          "name": "no-padding",
+          "description": "Remove default padding (default: `false`)"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-li",
+      "description": "RVO list item component for use within c-ol or c-ul",
+      "attributes": [
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-list",
+      "description": "RVO item list component with specialized item styling (rvo-item-list)",
+      "attributes": [
+        {
+          "name": "items",
+          "description": "Array of list items (strings or ReactNode) - used when not using nested c-list-item components"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-list-item",
+      "description": "Individual list item component for use within c-list",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "List item content"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        }
+      ]
+    },
+    {
+      "name": "c-h1",
+      "description": "Heading level 1 (alias for c-heading type=\"h1\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h1`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-h2",
+      "description": "Heading level 2 (alias for c-heading type=\"h2\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h2`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-h3",
+      "description": "Heading level 3 (alias for c-heading type=\"h3\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h3`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-h4",
+      "description": "Heading level 4 (alias for c-heading type=\"h4\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h4`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-h5",
+      "description": "Heading level 5 (alias for c-heading type=\"h5\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h5`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    },
+    {
+      "name": "c-h6",
+      "description": "Heading level 6 (alias for c-heading type=\"h6\")",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Heading level (default: `h6`)",
+          "values": [
+            {
+              "name": "h1"
+            },
+            {
+              "name": "h2"
+            },
+            {
+              "name": "h3"
+            },
+            {
+              "name": "h4"
+            },
+            {
+              "name": "h5"
+            },
+            {
+              "name": "h6"
+            }
+          ]
+        },
+        {
+          "name": "text-content",
+          "description": "Heading text"
+        },
+        {
+          "name": "no-margins",
+          "description": "Remove margins (default: `false`)"
+        }
+      ]
+    }
+  ]
+}
