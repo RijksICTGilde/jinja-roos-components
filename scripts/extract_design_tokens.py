@@ -177,17 +177,14 @@ def extract_icons_from_types() -> List[Dict[str, str]]:
     return icons
 
 
-def update_definitions_file():
-    """Update the definitions.json file with extracted design token data."""
-    # Get paths
-    definitions_path = Path(__file__).parent / "design_tokens.json"
+def generate_design_tokens_file():
+    """Generate a design_tokens.json file with extracted data (for manual review)."""
+    # Get paths - write to scripts directory
+    base_path = Path(__file__).parent
+    output_path = base_path / "design_tokens.json"
 
-    if not definitions_path.exists():
-        definitions = {}
-    else:
-        # Load existing definitions
-        with open(definitions_path, 'r', encoding='utf-8') as f:
-            definitions = json.load(f)
+    # Start with empty structure
+    definitions = {}
 
     # Extract colors from design tokens
     colors_data = extract_colors_from_tokens()
@@ -201,16 +198,25 @@ def update_definitions_file():
         print("❌ No icons found in types. Make sure @nl-rvo/assets is installed.")
         return False
 
-    # Update the colors and icons sections with full metadata
+    # Extract spacing and sizing
+    spacing_sizing_data = extract_spacing_and_sizing()
+
+    # Build the complete structure
     definitions['colors'] = colors_data
     definitions['icons'] = icons_data
+    definitions['spacing'] = spacing_sizing_data['spacing']
+    definitions['sizing'] = spacing_sizing_data['sizing']
 
-    # Write back to file
-    with open(definitions_path, 'w', encoding='utf-8') as f:
+    # Write to file
+    with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(definitions, f, indent=2, ensure_ascii=False)
 
-    print(f"✓ Updated definitions.json with {len(colors_data)} colors")
-    print(f"✓ Updated definitions.json with {len(icons_data)} icons")
+    print(f"✓ Generated design_tokens.json with {len(colors_data)} colors")
+    print(f"✓ Generated design_tokens.json with {len(icons_data)} icons")
+    print(f"✓ Generated design_tokens.json with {len(spacing_sizing_data['spacing'])} spacing tokens")
+    print(f"✓ Generated design_tokens.json with {len(spacing_sizing_data['sizing'])} sizing tokens")
+    print(f"\n📄 Output file: {output_path}")
+    print("   Review and manually merge into src/jinja_roos_components/components/definitions.json")
     return True
 
 
@@ -230,15 +236,13 @@ if __name__ == '__main__':
     print(f"✓ Extracted {len(icons)} icons")
 
     print("\n" + "=" * 60)
-    print("Updating definitions.json with design token metadata...")
+    print("Generating design_tokens.json file...")
     print("=" * 60)
 
-    if update_definitions_file():
-        print("\n✅ Successfully updated definitions.json!")
-        print("   - Colors: hex values, display names, and sorting")
-        print("   - Icons: names, categories, and display names")
-        print("   The @nl-rvo packages are no longer needed at runtime.")
+    if generate_design_tokens_file():
+        print("\n✅ Successfully generated design_tokens.json!")
+        print("   Review the file and manually merge into definitions.json as needed.")
     else:
-        print("\n❌ Failed to update definitions.json")
+        print("\n❌ Failed to generate design_tokens.json")
 
     print("\nDone!")
