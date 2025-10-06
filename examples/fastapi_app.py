@@ -32,14 +32,14 @@ from jinja2 import Environment, FileSystemLoader, TemplateNotFound, DebugUndefin
 from jinja_roos_components import setup_components
 import os
 import sys
+
+# Add paths for local imports
 sys.path.append(os.path.dirname(__file__))
-from docs_service import (
-    extract_colors_from_tokens, 
-    extract_icons_from_types, 
-    extract_spacing_and_sizing,
-    get_components_data,
-    get_generation_date
-)
+
+from docs_service import get_components_data, get_generation_date
+from scripts.extract_design_tokens import extract_spacing_and_sizing
+from jinja_roos_components.color_validation import get_colors_metadata
+from jinja_roos_components.icon_validation import get_icons_metadata
 
 app = FastAPI(debug=True)
 
@@ -80,7 +80,7 @@ async def render_template(template: str = Query(..., description="Template name 
 async def docs_colors():
     """Live colors documentation."""
     try:
-        colors = extract_colors_from_tokens()
+        colors = get_colors_metadata()
         template = env.get_template("docs-colors.html.j2")
         html = template.render(
             colors=colors,
@@ -95,7 +95,7 @@ async def docs_colors():
 async def docs_icons():
     """Live icons documentation."""
     try:
-        icons = extract_icons_from_types()
+        icons = get_icons_metadata()
         template = env.get_template("docs-icons.html.j2")
         html = template.render(
             icons=icons,

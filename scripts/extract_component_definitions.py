@@ -113,8 +113,9 @@ def extract_component_definition(component_name:str, component_dir: Path) -> Dic
 
 def main():
     """Main entry point for the script."""
+    # TODO: check which rvo to take, other script takes from node_modules?
     components_dir = Path(__file__).parent.parent / "rvo" / "components"
-    output_file = Path(__file__).parent.parent / "component-definitions.json"
+    output_file = Path(__file__).parent / "component-definitions.json"
 
     # Collect all component definitions
     definitions = []

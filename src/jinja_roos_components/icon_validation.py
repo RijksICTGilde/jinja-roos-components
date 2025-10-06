@@ -1,12 +1,12 @@
 """
 Icon validation system for ROOS components.
 
-This module reads icon definitions from the types.ts file
+This module reads icon definitions from the definitions.json file
 and provides validation for icon attributes.
 """
 
-import os
-import re
+import json
+from pathlib import Path
 from typing import Set, Optional
 import logging
 
@@ -18,61 +18,64 @@ class IconValidator:
     
     def __init__(self):
         self._icons: Optional[Set[str]] = None
-        self._types_file_path = None
-        
+        self._definitions_path: Optional[Path] = None
+
     def _load_icons(self) -> Set[str]:
-        """Load icons from the types.ts file."""
+        """Load icons from the definitions.json file."""
         if self._icons is not None:
             return self._icons
-            
+
         icons = set()
-        
-        # Find the types.ts file
-        types_file = self._find_types_file()
-        if not types_file:
-            logger.warning("Could not find types.ts file, skipping icon validation")
+
+        # Find the definitions file
+        definitions_file = self._find_definitions_file()
+        if not definitions_file:
+            logger.warning("Could not find definitions.json file, skipping icon validation")
             return icons
-            
+
         try:
-            with open(types_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-                
-            # Extract icon names from TypeScript union type
-            # Pattern matches: | 'icon-name'
-            pattern = r"\|\s*'([^']+)'"
-            matches = re.findall(pattern, content)
-            
-            icons.update(matches)
-            
+            with open(definitions_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+
+            # Extract icon names from the JSON
+            # Icons can be either an array of strings or an array of objects
+            icon_list = data.get("icons", [])
+            if isinstance(icon_list, list) and icon_list:
+                if isinstance(icon_list[0], dict):
+                    # New format: array of icon objects with metadata
+                    icons.update(icon['name'] for icon in icon_list)
+                else:
+                    # Old format: array of icon name strings
+                    icons.update(icon_list)
+
             # Also allow empty string (default/no icon)
             icons.add("")
-            
-            logger.debug(f"Loaded {len(icons)} icons from {types_file}")
-            
+
+            logger.debug(f"Loaded {len(icons)} icons from {definitions_file}")
+
         except Exception as e:
-            logger.warning(f"Failed to load icons from {types_file}: {e}")
-            
+            logger.warning(f"Failed to load icons from {definitions_file}: {e}")
+
         self._icons = icons
         return icons
-        
-    def _find_types_file(self) -> Optional[str]:
-        """Find the types.ts file."""
-        if self._types_file_path:
-            return self._types_file_path
-            
+
+    def _find_definitions_file(self) -> Optional[Path]:
+        """Find the definitions.json file."""
+        if self._definitions_path:
+            return self._definitions_path
+
         # Try to find it relative to this module
-        current_dir = os.path.dirname(__file__)
+        current_dir = Path(__file__).parent
         possible_paths = [
-            os.path.join(current_dir, 'static', 'dist', '@nl-rvo', 'assets', 'icons', 'types.ts'),
-            os.path.join(current_dir, '..', 'static', 'dist', '@nl-rvo', 'assets', 'icons', 'types.ts'),
-            os.path.join(current_dir, 'static', 'dist', '@nl-rvo', 'assets', 'icons', 'types.ts'),
+            current_dir / 'components' / 'definitions.json',
+            current_dir / '..' / 'components' / 'definitions.json',
         ]
-        
+
         for path in possible_paths:
-            if os.path.exists(path):
-                self._types_file_path = path
+            if path.exists():
+                self._definitions_path = path
                 return path
-                
+
         return None
         
     def is_valid_icon(self, icon: str) -> bool:
@@ -160,3 +163,20 @@ def get_available_icons() -> Set[str]:
 def get_icon_suggestions(invalid_icon: str) -> list[str]:
     """Get suggestions for an invalid icon."""
     return _icon_validator.get_icon_suggestions(invalid_icon)
+
+
+def get_icons_metadata() -> list[dict]:
+    """
+    Get full icon metadata for documentation purposes.
+    Returns list of icon objects with name, category, display_name, etc.
+    """
+    definitions_file = _icon_validator._find_definitions_file()
+    if not definitions_file:
+        return []
+
+    try:
+        with open(definitions_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data.get("icons", [])
+    except Exception:
+        return []
