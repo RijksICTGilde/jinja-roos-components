@@ -46,12 +46,12 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'jinja_roos_components/templates/layouts/base.html.j2.webpack',
+      template: 'src/jinja_roos_components/templates/layouts/base.html.j2.webpack',
       filename: path.resolve(__dirname, 'jinja_roos_components/templates/layouts/base.html.j2'),
       inject: false
     }),
     new HtmlWebpackPlugin({
-      template: 'jinja_roos_components/templates/components/page.html.j2.webpack',
+      template: 'src/jinja_roos_components/templates/components/page.html.j2.webpack',
       filename: path.resolve(__dirname, 'jinja_roos_components/templates/components/page.html.j2'),
       inject: false
     }),

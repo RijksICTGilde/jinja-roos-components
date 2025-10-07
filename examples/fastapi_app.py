@@ -45,9 +45,8 @@ app = FastAPI(debug=True)
 
 # Setup Jinja2 environment with templates from templates subfolder and ROOS components
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
-roos_template_dir = os.path.join(os.path.dirname(__file__), "..", "jinja_roos_components", "templates")
 env = Environment(
-    loader=FileSystemLoader([template_dir, roos_template_dir]),
+    loader=FileSystemLoader([template_dir]),
     undefined=DebugUndefined  # This will show helpful debug info for undefined variables
 )
 
