@@ -4,7 +4,7 @@ Test the new HTML parsing based extension
 
 from jinja2 import Environment
 from jinja_roos_components.extension_v2 import ComponentExtension as ComponentExtensionV2
-from jinja_roos_components.components.registry import ComponentRegistry
+from jinja_roos_components.registry import ComponentRegistry
 
 # Create environment with the new extension
 env = Environment()

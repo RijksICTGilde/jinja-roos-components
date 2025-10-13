@@ -5,7 +5,7 @@ Test Jinja syntax handling in regular attributes after the fix.
 """
 
 from jinja_roos_components.html_parser import ComponentHTMLParser, convert_parsed_component
-from jinja_roos_components.components.registry import ComponentRegistry, ComponentDefinition, AttributeDefinition, AttributeType
+from jinja_roos_components.registry import ComponentRegistry, ComponentDefinition, AttributeDefinition, AttributeType
 
 def test_jinja_in_regular_attributes():
     """Test that regular attributes with Jinja syntax are handled properly."""

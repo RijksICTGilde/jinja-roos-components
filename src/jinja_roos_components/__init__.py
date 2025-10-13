@@ -10,7 +10,7 @@ This package provides a complete component system for Jinja2 templates with:
 
 from .extension import ComponentExtension, setup_components
 from .extension_dom import ComponentExtensionDOM, setup_components_dom
-from .components.registry import ComponentRegistry
+from .registry import ComponentRegistry
 
 __version__ = "0.1.0"
 __all__ = ["ComponentExtension", "setup_components", "ComponentRegistry", "ComponentExtensionDOM", "setup_components_dom"]

@@ -4,14 +4,11 @@
 {% set aria_label = _component_context.ariaLabel | default('') %}
 {% set additional_class = _component_context.class | default('') %}
 
-{# Import shared color configuration #}
-{% from 'shared/colors.html.j2' import rvo_colors %}
-
-{# Check if color is a named color or hex (case insensitive) #}
+{# Check if color is a named RVO color or hex color #}
 {% set color_lower = color.lower() if color else '' %}
-{% set is_named_color = rvo_colors.get(color_lower) is not none %}
+{% set is_named_color = color_lower in rvo_color_names %}
 {% set is_hex_color = color.startswith('#') if color else false %}
-{% set resolved_color = rvo_colors.get(color_lower, color) %}
+{% set resolved_color = 'var(--rvo-color-' + color_lower + ')' if is_named_color else color %}
 
 {# Build icon name from complex icon names (e.g., "Category > Icon Name") #}
 {% set icon_name = icon %}

@@ -296,7 +296,7 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
         return f'{{% set _component_context = {{}} %}}{{% include "{template_path}" with context %}}'
     
     # Get component definition for attribute type checking
-    from .components.registry import ComponentRegistry, AttributeType
+    from .registry import ComponentRegistry, AttributeType
     registry = ComponentRegistry()
     component_def = registry.get_component(component_name)
     

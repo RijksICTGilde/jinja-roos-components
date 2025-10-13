@@ -20,14 +20,11 @@
 {% set has_link_indicator = show_link_indicator and link and full_card_link %}
 {% set has_background_image = background_image %}
 
-{# Import shared color configuration #}
-{% from 'shared/colors.html.j2' import rvo_colors %}
-
-{# Check if backgroundColor is a named color or hex (case insensitive) #}
+{# Check if backgroundColor is a named RVO color or hex color #}
 {% set background_color_lower = background_color.lower() if background_color != 'none' else 'none' %}
-{% set is_named_color = rvo_colors.get(background_color_lower) is not none %}
+{% set is_named_color = background_color_lower in rvo_color_names %}
 {% set is_hex_color = background_color.startswith('#') if background_color != 'none' else false %}
-{% set resolved_color = rvo_colors.get(background_color_lower, background_color) %}
+{% set resolved_color = 'var(--rvo-color-' + background_color_lower + ')' if is_named_color else background_color %}
 
 {# Build CSS classes #}
 {% set css_classes = ['rvo-card'] %}

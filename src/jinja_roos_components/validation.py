@@ -7,7 +7,7 @@ including unknown components, invalid attributes, and enum value validation.
 
 import logging
 from typing import Dict, Any, List, Optional
-from .components.registry import ComponentRegistry, AttributeType
+from .registry import ComponentRegistry, AttributeType
 
 logger = logging.getLogger(__name__)
 
