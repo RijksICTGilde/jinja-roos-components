@@ -35,6 +35,11 @@ npm run build
 
 ## Quick Setup
 
+You can find demo implementations in these repos:
+- [Django example](https://github.com/RijksICTGilde/jrc-django-demo)
+- [Fast API example](https://github.com/RijksICTGilde/jrc-fastapi-demo)
+- [Flask example](https://github.com/RijksICTGilde/jrc-flask-demo)
+
 ### FastAPI Integration
 
 ```python
