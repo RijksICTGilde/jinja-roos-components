@@ -9,7 +9,7 @@ module.exports = {
   entry: './fe_src/ts/roos.ts',
   output: {
     filename: 'roos.js',
-    path: path.resolve(__dirname, 'jinja_roos_components/static/dist'),
+    path: path.resolve(__dirname, 'src/jinja_roos_components/static/roos/dist'),
     publicPath: '/static/roos/dist/',
     library: 'roos',
     libraryTarget: 'umd',
@@ -47,12 +47,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/jinja_roos_components/templates/layouts/base.html.j2.webpack',
-      filename: path.resolve(__dirname, 'jinja_roos_components/templates/layouts/base.html.j2'),
+      filename: path.resolve(__dirname, 'src/jinja_roos_components/templates/layouts/base.html.j2'),
       inject: false
     }),
     new HtmlWebpackPlugin({
       template: 'src/jinja_roos_components/templates/components/page.html.j2.webpack',
-      filename: path.resolve(__dirname, 'jinja_roos_components/templates/components/page.html.j2'),
+      filename: path.resolve(__dirname, 'src/jinja_roos_components/templates/components/page.html.j2'),
       inject: false
     }),
     new HtmlWebpackDeployPlugin({
@@ -106,7 +106,7 @@ module.exports = {
       chunkFilename: "[id].css",
     }),
     new ReplaceInFileWebpackPlugin([{
-      dir: 'jinja_roos_components/static/dist/@nl-rvo/assets/icons/',
+      dir: 'src/jinja_roos_components/static/roos/dist/@nl-rvo/assets/icons/',
       files: ['index.css'],
       rules: [{
         search: /url\("(?!\/)/ig,
