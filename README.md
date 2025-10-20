@@ -141,7 +141,7 @@ This creates `examples/component-reference.html` with complete documentation for
 
 1. **Create Component Template**
 
-Create a new Jinja2 template in `jinja_roos_components/templates/components/`:
+Create a new Jinja2 template in `src/jinja_roos_components/templates/components/`:
 
 ```html
 <!-- jinja_roos_components/templates/components/input.html.j2 -->
@@ -177,46 +177,84 @@ Create a new Jinja2 template in `jinja_roos_components/templates/components/`:
 
 2. **Register Component Definition**
 
-Add to `jinja_roos_components/components/registry.py`:
+Add to `src/jinja_roos_components/definitions.json` under `components` key:
 
-```python
-# In _register_default_components method
-input_component = ComponentDefinition(
-    name="input",
-    description="Form input field with validation support",
-    attributes=[
-        AttributeDefinition(
-            name="type",
-            type=AttributeType.ENUM,
-            enum_values=["text", "email", "password", "number", "tel"],
-            default="text",
-            description="HTML input type"
-        ),
-        AttributeDefinition(
-            name="label",
-            type=AttributeType.STRING,
-            description="Field label text"
-        ),
-        AttributeDefinition(
-            name="placeholder",
-            type=AttributeType.STRING,
-            description="Placeholder text"
-        ),
-        AttributeDefinition(
-            name="required",
-            type=AttributeType.BOOLEAN,
-            default=False,
-            description="Whether field is required"
-        ),
-        # ... more attributes
-    ],
-    examples=[
-        '<c-input label="Email" type="email" required />',
-        '<c-input label="Name" placeholder="Enter your name" />',
-    ]
-)
-
-self.register_component(input_component)
+```json
+    {
+      "name": "input",
+      "description": "RVO text input with various types and validation",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "HTML id attribute"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "HTML name attribute"
+        },
+        {
+          "name": "type",
+          "type": "enum",
+          "enum_values": [
+            "text",
+            "email",
+            "password",
+            "tel",
+            "url",
+            "search",
+            "number"
+          ],
+          "default": "text",
+          "required": false,
+          "description": "Input type"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Placeholder text"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether input is disabled"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether input is required"
+        },
+        {
+          "name": "size",
+          "type": "enum",
+          "enum_values": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "max"
+          ],
+          "default": "md",
+          "required": false,
+          "description": "Input size"
+        }
+      ],
+      "slots": [],
+      "examples": [
+        "<c-input name=\"email\" type=\"email\" placeholder=\"Enter email\" />"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    }
 ```
 
 3. **Create TypeScript Component** (Optional)
