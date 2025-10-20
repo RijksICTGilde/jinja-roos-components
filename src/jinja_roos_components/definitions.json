@@ -648,6 +648,13 @@
           "description": "Whether the button is disabled"
         },
         {
+          "name": "active",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether the button shows an active state"
+        },
+        {
           "name": "busy",
           "type": "boolean",
           "default": false,
