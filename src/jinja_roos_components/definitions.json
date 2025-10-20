@@ -911,7 +911,7 @@
           "description": "Additional CSS classes"
         },
         {
-          "name": "@click",
+          "name": "click",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on click event"
@@ -992,7 +992,7 @@
           "description": "Checkbox value"
         },
         {
-          "name": "@change",
+          "name": "change",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on change event"
@@ -1097,7 +1097,7 @@
           "description": "Whether select has validation error"
         },
         {
-          "name": "@change",
+          "name": "change",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on change event"
@@ -1179,7 +1179,7 @@
           "description": "Radio button value"
         },
         {
-          "name": "@change",
+          "name": "change",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on change event"
@@ -1278,13 +1278,13 @@
           "description": "Whether textarea is required"
         },
         {
-          "name": "@change",
+          "name": "change",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on change event"
         },
         {
-          "name": "@input",
+          "name": "input",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on input event"
@@ -1423,13 +1423,13 @@
           "description": "Input size"
         },
         {
-          "name": "@change",
+          "name": "change",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on change event"
         },
         {
-          "name": "@input",
+          "name": "input",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on input event"
@@ -1744,7 +1744,7 @@
           "description": "Make tag clickable with URL"
         },
         {
-          "name": "@click",
+          "name": "click",
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on click event"
