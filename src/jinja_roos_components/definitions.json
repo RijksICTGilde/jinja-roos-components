@@ -669,7 +669,7 @@
             "before",
             "after"
           ],
-          "default": "no",
+          "default": "before",
           "required": false,
           "description": "Icon placement in button"
         },
@@ -1777,6 +1777,7 @@
             "after"
           ],
           "required": false,
+          "default": "before",
           "description": "Icon placement relative to content"
         },
         {
@@ -2887,7 +2888,7 @@
             "before",
             "after"
           ],
-          "default": "no",
+          "default": "before",
           "required": false,
           "description": "Icon placement"
         },

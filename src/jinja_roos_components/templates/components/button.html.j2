@@ -9,7 +9,7 @@
 {% set button_type = _component_context.type | default('button') %}
 {% set additional_class = _component_context.class | default('') %}
 {% set label = _component_context.label | default(_component_context.content) | default('') %}
-{% set icon_placement = _component_context.iconPlacement | default('no') %}
+{% set icon_placement = _component_context.iconPlacement | default('before') %}
 {% set icon = _component_context.icon | default('') %}
 {% set full_width = _component_context.fullWidth | default(false) %}
 
