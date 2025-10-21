@@ -1126,11 +1126,18 @@
           "type": "string",
           "required": false,
           "description": "Selected value"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "HTML content for option elements (used when options attribute is not set)"
         }
       ],
       "slots": [],
       "examples": [
-        "<c-select name=\"country\" :options=\"['Netherlands', 'Germany']\" />"
+        "<c-select name=\"country\" :options=\"['Netherlands', 'Germany']\" />",
+        "<c-select name=\"status\"><option value=\"active\">Active</option><option value=\"inactive\">Inactive</option></c-select>"
       ],
       "allow_preview": true,
       "requires_children": false,

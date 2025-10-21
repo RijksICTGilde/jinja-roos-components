@@ -5,6 +5,7 @@
 {% set invalid = _component_context.invalid | default(false) %}
 {% set focus = _component_context.focus | default(false) %}
 {% set options = _component_context.options | default([]) %}
+{% set content = _component_context.content | default('') %}
 {% set default_value = _component_context.defaultValue | default('') %}
 {% set value = _component_context.value | default('') %}
 {% set additional_class = _component_context.class | default('') %}
@@ -45,19 +46,25 @@
                 {{ placeholder }}
             </option>
         {% endif %}
-        
-        {% for option in options %}
-            {% if option is string %}
-                <option value="{{ option }}" 
-                    {% if option == value or (option == default_value and not value) %}selected{% endif %}>
-                    {{ option }}
-                </option>
-            {% else %}
-                <option value="{{ option.value }}" 
-                    {% if option.value == value or (option.value == default_value and not value) %}selected{% endif %}>
-                    {{ option.label | default(option.value) }}
-                </option>
-            {% endif %}
-        {% endfor %}
+
+        {% if options %}
+            {# Options attribute takes precedence over content #}
+            {% for option in options %}
+                {% if option is string %}
+                    <option value="{{ option }}"
+                        {% if option == value or (option == default_value and not value) %}selected{% endif %}>
+                        {{ option }}
+                    </option>
+                {% else %}
+                    <option value="{{ option.value }}"
+                        {% if option.value == value or (option.value == default_value and not value) %}selected{% endif %}>
+                        {{ option.label | default(option.value) }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        {% elif content %}
+            {# Render content block (e.g., <option> elements) #}
+            {{ content | safe }}
+        {% endif %}
     </select>
 </div>
