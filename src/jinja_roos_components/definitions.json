@@ -679,6 +679,13 @@
           "description": "Icon name from RVO icon set"
         },
         {
+          "name": "iconColor",
+          "type": "string",
+          "default": "hemelblauw",
+          "required": false,
+          "description": "Icon color from RVO color system"
+        },
+        {
           "name": "fullWidth",
           "type": "boolean",
           "default": false,
@@ -2907,6 +2914,7 @@
           "name": "iconColor",
           "type": "string",
           "required": false,
+          "default": "logoblauw",
           "description": "Icon color"
         },
         {
