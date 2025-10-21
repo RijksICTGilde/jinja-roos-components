@@ -49,6 +49,10 @@ def create_attribute_definition(attr: Dict[str, Any]) -> Dict[str, Any]:
         vscode_attr["values"] = [
             {"name": value} for value in attr['enum_values']
         ]
+    elif attr_type == 'boolean':
+        vscode_attr["values"] = [
+            {"name": value} for value in ('true', 'false')
+        ]
 
     # Add default value in description if present
     default = attr.get('default')

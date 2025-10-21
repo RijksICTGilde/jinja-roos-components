@@ -648,6 +648,13 @@
           "description": "Whether the button is disabled"
         },
         {
+          "name": "active",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether the button shows an active state"
+        },
+        {
           "name": "busy",
           "type": "boolean",
           "default": false,
@@ -655,14 +662,13 @@
           "description": "Whether the button shows a loading/busy state"
         },
         {
-          "name": "showIcon",
+          "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "no",
             "before",
             "after"
           ],
-          "default": "no",
+          "default": "before",
           "required": false,
           "description": "Icon placement in button"
         },
@@ -671,6 +677,13 @@
           "type": "string",
           "required": false,
           "description": "Icon name from RVO icon set"
+        },
+        {
+          "name": "iconColor",
+          "type": "string",
+          "default": "hemelblauw",
+          "required": false,
+          "description": "Icon color from RVO color system"
         },
         {
           "name": "fullWidth",
@@ -738,6 +751,19 @@
           "type": "string",
           "required": false,
           "description": "JavaScript function to call on keyup event"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Button content (slot)"
+        },
+        {
+          "name": "hover",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether the button shows hover state"
         }
       ],
       "slots": [
@@ -889,6 +915,18 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "click",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on click event"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "HTML id attribute"
         }
       ],
       "slots": [
@@ -958,6 +996,52 @@
           "type": "string",
           "required": false,
           "description": "Checkbox value"
+        },
+        {
+          "name": "change",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether checkbox shows active state"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "focus",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether checkbox shows focus state"
+        },
+        {
+          "name": "helperTextId",
+          "type": "string",
+          "required": false,
+          "description": "ID of helper text element for aria-describedby"
+        },
+        {
+          "name": "hover",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether checkbox shows hover state"
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether checkbox shows indeterminate state"
         }
       ],
       "slots": [],
@@ -1017,11 +1101,49 @@
           "default": false,
           "required": false,
           "description": "Whether select has validation error"
+        },
+        {
+          "name": "change",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Default selected value"
+        },
+        {
+          "name": "focus",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether select shows focus state"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Selected value"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "HTML content for option elements (used when options attribute is not set)"
         }
       ],
       "slots": [],
       "examples": [
-        "<c-select name=\"country\" :options=\"['Netherlands', 'Germany']\" />"
+        "<c-select name=\"country\" :options=\"['Netherlands', 'Germany']\" />",
+        "<c-select name=\"status\"><option value=\"active\">Active</option><option value=\"inactive\">Inactive</option></c-select>"
       ],
       "allow_preview": true,
       "requires_children": false,
@@ -1068,6 +1190,53 @@
           "type": "string",
           "required": false,
           "description": "Radio button value"
+        },
+        {
+          "name": "change",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether radio shows active state"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "focus",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether radio shows focus state"
+        },
+        {
+          "name": "hover",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether radio shows hover state"
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether radio has validation error"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether radio is required"
         }
       ],
       "slots": [],
@@ -1120,6 +1289,76 @@
           "default": false,
           "required": false,
           "description": "Whether textarea is required"
+        },
+        {
+          "name": "change",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "input",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on input event"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "cols",
+          "type": "number",
+          "required": false,
+          "description": "Number of visible columns"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Textarea content (slot)"
+        },
+        {
+          "name": "focus",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether textarea shows focus state"
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether textarea has validation error"
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": "Maximum number of characters"
+        },
+        {
+          "name": "maxLengthIndicator",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Show character count indicator"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether textarea is read-only"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Textarea value"
         }
       ],
       "slots": [],
@@ -1195,6 +1434,86 @@
           "default": "md",
           "required": false,
           "description": "Input size"
+        },
+        {
+          "name": "change",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "input",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on input event"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Default input value"
+        },
+        {
+          "name": "focus",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether input shows focus state"
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether input has validation error"
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": "Maximum number of characters"
+        },
+        {
+          "name": "prefix",
+          "type": "string",
+          "required": false,
+          "description": "Text prefix before input"
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Whether input is read-only"
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "required": false,
+          "description": "Text suffix after input"
+        },
+        {
+          "name": "validation",
+          "type": "enum",
+          "enum_values": [
+            "none",
+            "currency"
+          ],
+          "default": "none",
+          "required": false,
+          "description": "Type of validation to apply"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Input value"
         }
       ],
       "slots": [],
@@ -1280,6 +1599,42 @@
           ],
           "required": false,
           "description": "Main-axis alignment"
+        },
+        {
+          "name": "alignContent",
+          "type": "enum",
+          "enum_values": [
+            "",
+            "start",
+            "center",
+            "end"
+          ],
+          "required": false,
+          "description": "Multi-line alignment"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Layout content (slot)"
+        },
+        {
+          "name": "justifyItems",
+          "type": "enum",
+          "enum_values": [
+            "",
+            "start",
+            "center",
+            "end"
+          ],
+          "required": false,
+          "description": "Grid item alignment"
         }
       ],
       "slots": [
@@ -1347,6 +1702,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Grid content (slot)"
         }
       ],
       "slots": [
@@ -1394,6 +1755,42 @@
           "type": "string",
           "required": false,
           "description": "Make tag clickable with URL"
+        },
+        {
+          "name": "click",
+          "type": "string",
+          "required": false,
+          "description": "JavaScript function to call on click event"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Icon name from RVO icon set"
+        },
+        {
+          "name": "iconPlacement",
+          "type": "enum",
+          "enum_values": [
+            "before",
+            "after"
+          ],
+          "required": false,
+          "default": "before",
+          "description": "Icon placement relative to content"
+        },
+        {
+          "name": "urlTarget",
+          "type": "string",
+          "default": "_self",
+          "required": false,
+          "description": "Link target attribute"
         }
       ],
       "slots": [],
@@ -1480,6 +1877,12 @@
           "type": "string",
           "required": false,
           "description": "Favicon URL"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Page body content (slot)"
         }
       ],
       "slots": [
@@ -1634,6 +2037,12 @@
           "default": false,
           "required": false,
           "description": "Error state (legacy)"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -1744,6 +2153,12 @@
           "type": "string",
           "required": false,
           "description": "Placeholder option text"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -1847,6 +2262,12 @@
           "type": "string",
           "required": false,
           "description": "Maximum date"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -1866,6 +2287,18 @@
           "type": "string",
           "required": false,
           "description": "Fieldset legend text"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Fieldset content (slot)"
         }
       ],
       "slots": [
@@ -1925,6 +2358,18 @@
           "default": "horizontal",
           "required": false,
           "description": "Layout direction"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Action group content (slot)"
         }
       ],
       "slots": [
@@ -2033,6 +2478,18 @@
           "type": "string",
           "required": false,
           "description": "Footer payoff text"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Footer content (slot)"
         }
       ],
       "slots": [],
@@ -2127,6 +2584,32 @@
           "default": "logoblauw",
           "required": false,
           "description": "Link color"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Menubar content (slot)"
+        },
+        {
+          "name": "grid",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Use grid layout for menubar"
+        },
+        {
+          "name": "useBackgroundColor",
+          "type": "boolean",
+          "default": false,
+          "required": false,
+          "description": "Apply background color to menubar"
         }
       ],
       "slots": [],
@@ -2169,13 +2652,20 @@
           "name": "color",
           "type": "string",
           "required": false,
-          "description": "Icon color from RVO color system"
+          "description": "Icon color from RVO color system",
+          "default": "logoblauw"
         },
         {
           "name": "ariaLabel",
           "type": "string",
           "required": false,
           "description": "Aria label for accessibility"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -2247,6 +2737,12 @@
           ],
           "required": false,
           "description": "Maximum width"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -2297,6 +2793,18 @@
           "default": false,
           "required": false,
           "description": "Text overlay on image"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Hero content (slot)"
         }
       ],
       "slots": [
@@ -2325,6 +2833,18 @@
           "default": 0,
           "required": false,
           "description": "Active tab index"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Tabs content (slot)"
         }
       ],
       "slots": [
@@ -2367,14 +2887,13 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
+          "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "no",
             "before",
             "after"
           ],
-          "default": "no",
+          "default": "before",
           "required": false,
           "description": "Icon placement"
         },
@@ -2395,6 +2914,7 @@
           "name": "iconColor",
           "type": "string",
           "required": false,
+          "default": "logoblauw",
           "description": "Icon color"
         },
         {
@@ -2422,6 +2942,12 @@
           "default": false,
           "required": false,
           "description": "Full container link"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
         }
       ],
       "slots": [],
@@ -2463,6 +2989,18 @@
           "default": false,
           "required": false,
           "description": "Remove margins"
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "required": false,
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Heading content (slot)"
         }
       ],
       "slots": [
@@ -2748,6 +3286,20 @@
           "default": false,
           "required": false,
           "description": "Read-only state"
+        },
+        {
+          "name": "size",
+          "type": "enum",
+          "enum_values": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "max"
+          ],
+          "default": "md",
+          "required": false,
+          "description": "Textarea size"
         }
       ],
       "slots": [],
@@ -2890,6 +3442,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Row content (slot)"
         }
       ],
       "slots": [
@@ -2917,6 +3475,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Column content (slot)"
         }
       ],
       "slots": [
@@ -2958,6 +3522,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Ordered list content (slot)"
         }
       ],
       "slots": [
@@ -3023,6 +3593,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Unordered list content (slot)"
         }
       ],
       "slots": [
@@ -3044,6 +3620,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "List item content (slot)"
         }
       ],
       "slots": [
@@ -3071,6 +3653,12 @@
           "type": "string",
           "required": false,
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "List content (slot)"
         }
       ],
       "slots": [

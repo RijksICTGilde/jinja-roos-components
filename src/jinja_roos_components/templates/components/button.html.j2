@@ -9,8 +9,9 @@
 {% set button_type = _component_context.type | default('button') %}
 {% set additional_class = _component_context.class | default('') %}
 {% set label = _component_context.label | default(_component_context.content) | default('') %}
-{% set show_icon = _component_context.showIcon | default('no') %}
+{% set icon_placement = _component_context.iconPlacement | default('before') %}
 {% set icon = _component_context.icon | default('') %}
+{% set icon_color = _component_context.iconColor | default('hemelblauw') %}
 {% set full_width = _component_context.fullWidth | default(false) %}
 
 {# Map RVO button kinds to Utrecht appearances - mirrors RVO base project logic #}
@@ -52,7 +53,7 @@
 {% endif %}
 
 {% if full_width %}{% set css_classes = css_classes + ['utrecht-button--rvo-full-width'] %}{% endif %}
-{% if show_icon != 'no' %}{% set css_classes = css_classes + ['utrecht-button--icon-' + show_icon] %}{% endif %}
+{% if icon %}{% set css_classes = css_classes + ['utrecht-button--icon-' + icon_placement] %}{% endif %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
 <button 
@@ -64,5 +65,5 @@
     data-roos-component="button"
     data-roos-kind="{{ kind }}"
     data-roos-size="{{ size }}"
-    {{ events.render_extra_attributes(_component_context) }}>{% if show_icon == 'before' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="{{ icon | title }}"></span>{% endif %}{% if busy %}<span class="utrecht-icon rvo-icon rvo-icon-spinner rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="Loading"></span>{% endif %}{{ label | safe }}{% if show_icon == 'after' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw" role="img" aria-label="{{ icon | title }}"></span>{% endif %}
+    {{ events.render_extra_attributes(_component_context) }}>{% if icon_placement == 'before' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ icon_color }}" role="img" aria-label="{{ icon | title }}"></span>{% endif %}{% if busy %}<span class="utrecht-icon rvo-icon rvo-icon-spinner rvo-icon--{{ size }} rvo-icon--{{ icon_color }}" role="img" aria-label="Loading"></span>{% endif %}{{ label | safe }}{% if icon_placement == 'after' and icon %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ icon_color }}" role="img" aria-label="{{ icon | title }}"></span>{% endif %}
 </button>
