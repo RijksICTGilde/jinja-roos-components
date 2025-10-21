@@ -2115,7 +2115,7 @@
         },
         {
           "name": "color",
-          "description": "Icon color from RVO color system"
+          "description": "Icon color from RVO color system (default: `logoblauw`)"
         },
         {
           "name": "ariaLabel",
