@@ -88,7 +88,7 @@
           ]
         },
         {
-          "name": "showIcon",
+          "name": "icon-placement",
           "description": "Icon placement in button (default: `no`)",
           "values": [
             {
@@ -2316,7 +2316,7 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
+          "name": "icon-placement",
           "description": "Icon placement (default: `no`)",
           "values": [
             {
