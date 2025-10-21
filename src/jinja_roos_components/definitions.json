@@ -662,7 +662,7 @@
           "description": "Whether the button shows a loading/busy state"
         },
         {
-          "name": "showIcon",
+          "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
             "no",
@@ -2880,7 +2880,7 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
+          "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
             "no",
