@@ -18,7 +18,7 @@
     {% set link_classes = link_classes + ['rvo-link--no-underline'] %}
 {% endif %}
 
-{% if icon_placement != 'no' and icon %}
+{% if icon %}
     {% set link_classes = link_classes + ['rvo-link--with-icon'] %}
 {% endif %}
 
@@ -44,10 +44,10 @@
    {% if target %}target="{{ target }}"{% endif %}
    data-roos-component="link"
    {% if icon %}data-roos-icon="{{ icon }}"{% endif %}
-   {% if icon_placement != 'no' %}data-roos-show-icon="{{ icon_placement }}"{% endif %}
+   {% if icon %}data-roos-show-icon="{{ icon_placement }}"{% endif %}
    {{ events.render_extra_attributes(_component_context) }}>
    
-    {% if show_icon == 'before' and icon %}
+    {% if icon_placement == 'before' and icon %}
         <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ icon_size }}{% if icon_color %} rvo-icon--{{ icon_color }}{% endif %} rvo-link__icon--before"
               role="img"
               aria-label="{{ icon | title | replace('-', ' ') }}"></span>

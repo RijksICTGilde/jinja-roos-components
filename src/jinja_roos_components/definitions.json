@@ -665,7 +665,6 @@
           "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "no",
             "before",
             "after"
           ],
@@ -1772,7 +1771,6 @@
           "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "",
             "before",
             "after"
           ],
@@ -2884,7 +2882,6 @@
           "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "no",
             "before",
             "after"
           ],
