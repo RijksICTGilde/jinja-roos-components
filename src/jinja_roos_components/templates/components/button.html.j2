@@ -52,7 +52,7 @@
 {% endif %}
 
 {% if full_width %}{% set css_classes = css_classes + ['utrecht-button--rvo-full-width'] %}{% endif %}
-{% if icon_placement != 'no' %}{% set css_classes = css_classes + ['utrecht-button--icon-' + icon_placement] %}{% endif %}
+{% if icon %}{% set css_classes = css_classes + ['utrecht-button--icon-' + icon_placement] %}{% endif %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
 <button 
