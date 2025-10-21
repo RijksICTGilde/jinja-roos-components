@@ -53,11 +53,39 @@
         },
         {
           "name": "disabled",
-          "description": "Whether the button is disabled (default: `false`)"
+          "description": "Whether the button is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "active",
+          "description": "Whether the button shows an active state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "busy",
-          "description": "Whether the button shows a loading/busy state (default: `false`)"
+          "description": "Whether the button shows a loading/busy state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "show-icon",
@@ -80,7 +108,15 @@
         },
         {
           "name": "full-width",
-          "description": "Whether button takes full width (default: `false`)"
+          "description": "Whether button takes full width (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "type",
@@ -128,6 +164,22 @@
         {
           "name": "keyup",
           "description": "JavaScript function to call on keyup event"
+        },
+        {
+          "name": "content",
+          "description": "Button content (slot)"
+        },
+        {
+          "name": "hover",
+          "description": "Whether the button shows hover state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -149,15 +201,39 @@
         },
         {
           "name": "full-card-link",
-          "description": "Make entire card clickable (default: `false`)"
+          "description": "Make entire card clickable (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "show-link-indicator",
-          "description": "Show arrow indicator for links (default: `false`)"
+          "description": "Show arrow indicator for links (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "outline",
-          "description": "Add card outline/border (default: `false`)"
+          "description": "Add card outline/border (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "padding",
@@ -237,15 +313,39 @@
         },
         {
           "name": "inline-image",
-          "description": "Render image inline with content (default: `false`)"
+          "description": "Render image inline with content (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "inverted-colors",
-          "description": "Use inverted color scheme (default: `false`)"
+          "description": "Use inverted color scheme (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "click",
+          "description": "JavaScript function to call on click event"
+        },
+        {
+          "name": "id",
+          "description": "HTML id attribute"
         }
       ]
     },
@@ -267,23 +367,115 @@
         },
         {
           "name": "checked",
-          "description": "Whether checkbox is checked (default: `false`)"
+          "description": "Whether checkbox is checked (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Whether checkbox is disabled (default: `false`)"
+          "description": "Whether checkbox is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Whether checkbox is required (default: `false`)"
+          "description": "Whether checkbox is required (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "invalid",
-          "description": "Whether checkbox has validation error (default: `false`)"
+          "description": "Whether checkbox has validation error (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "value",
           "description": "Checkbox value"
+        },
+        {
+          "name": "change",
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "active",
+          "description": "Whether checkbox shows active state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "focus",
+          "description": "Whether checkbox shows focus state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "helper-text-id",
+          "description": "ID of helper text element for aria-describedby"
+        },
+        {
+          "name": "hover",
+          "description": "Whether checkbox shows hover state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "indeterminate",
+          "description": "Whether checkbox shows indeterminate state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -309,15 +501,71 @@
         },
         {
           "name": "disabled",
-          "description": "Whether select is disabled (default: `false`)"
+          "description": "Whether select is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Whether select is required (default: `false`)"
+          "description": "Whether select is required (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "invalid",
-          "description": "Whether select has validation error (default: `false`)"
+          "description": "Whether select has validation error (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "change",
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "default-value",
+          "description": "Default selected value"
+        },
+        {
+          "name": "focus",
+          "description": "Whether select shows focus state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "description": "Selected value"
+        },
+        {
+          "name": "content",
+          "description": "HTML content for option elements (used when options attribute is not set)"
         }
       ]
     },
@@ -339,15 +587,99 @@
         },
         {
           "name": "checked",
-          "description": "Whether radio is selected (default: `false`)"
+          "description": "Whether radio is selected (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Whether radio is disabled (default: `false`)"
+          "description": "Whether radio is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "value",
           "description": "Radio button value"
+        },
+        {
+          "name": "change",
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "active",
+          "description": "Whether radio shows active state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "focus",
+          "description": "Whether radio shows focus state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "hover",
+          "description": "Whether radio shows hover state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "invalid",
+          "description": "Whether radio has validation error (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "required",
+          "description": "Whether radio is required (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -373,11 +705,103 @@
         },
         {
           "name": "disabled",
-          "description": "Whether textarea is disabled (default: `false`)"
+          "description": "Whether textarea is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Whether textarea is required (default: `false`)"
+          "description": "Whether textarea is required (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "change",
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "input",
+          "description": "JavaScript function to call on input event"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "cols",
+          "description": "Number of visible columns"
+        },
+        {
+          "name": "content",
+          "description": "Textarea content (slot)"
+        },
+        {
+          "name": "focus",
+          "description": "Whether textarea shows focus state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "invalid",
+          "description": "Whether textarea has validation error (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "max-length",
+          "description": "Maximum number of characters"
+        },
+        {
+          "name": "max-length-indicator",
+          "description": "Show character count indicator (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "read-only",
+          "description": "Whether textarea is read-only (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "description": "Textarea value"
         }
       ]
     },
@@ -426,11 +850,27 @@
         },
         {
           "name": "disabled",
-          "description": "Whether input is disabled (default: `false`)"
+          "description": "Whether input is disabled (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Whether input is required (default: `false`)"
+          "description": "Whether input is required (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "size",
@@ -452,6 +892,86 @@
               "name": "max"
             }
           ]
+        },
+        {
+          "name": "change",
+          "description": "JavaScript function to call on change event"
+        },
+        {
+          "name": "input",
+          "description": "JavaScript function to call on input event"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "default-value",
+          "description": "Default input value"
+        },
+        {
+          "name": "focus",
+          "description": "Whether input shows focus state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "invalid",
+          "description": "Whether input has validation error (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "max-length",
+          "description": "Maximum number of characters"
+        },
+        {
+          "name": "prefix",
+          "description": "Text prefix before input"
+        },
+        {
+          "name": "read-only",
+          "description": "Whether input is read-only (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "suffix",
+          "description": "Text suffix after input"
+        },
+        {
+          "name": "validation",
+          "description": "Type of validation to apply (default: `none`)",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "currency"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "description": "Input value"
         }
       ]
     },
@@ -518,11 +1038,27 @@
         },
         {
           "name": "row",
-          "description": "Use row layout instead of column (default: `false`)"
+          "description": "Use row layout instead of column (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "wrap",
-          "description": "Allow items to wrap (default: `false`)"
+          "description": "Allow items to wrap (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "align-items",
@@ -560,6 +1096,50 @@
             },
             {
               "name": "space-between"
+            }
+          ]
+        },
+        {
+          "name": "align-content",
+          "description": "Multi-line alignment",
+          "values": [
+            {
+              "name": ""
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "end"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Layout content (slot)"
+        },
+        {
+          "name": "justify-items",
+          "description": "Grid item alignment",
+          "values": [
+            {
+              "name": ""
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "end"
             }
           ]
         }
@@ -654,6 +1234,10 @@
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Grid content (slot)"
         }
       ]
     },
@@ -685,11 +1269,50 @@
         },
         {
           "name": "is-pill",
-          "description": "Use pill (rounded) styling (default: `false`)"
+          "description": "Use pill (rounded) styling (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "url",
           "description": "Make tag clickable with URL"
+        },
+        {
+          "name": "click",
+          "description": "JavaScript function to call on click event"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "icon",
+          "description": "Icon name from RVO icon set"
+        },
+        {
+          "name": "icon-placement",
+          "description": "Icon placement relative to content",
+          "values": [
+            {
+              "name": ""
+            },
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
+            }
+          ]
+        },
+        {
+          "name": "url-target",
+          "description": "Link target attribute (default: `_self`)"
         }
       ]
     },
@@ -731,15 +1354,35 @@
         },
         {
           "name": "htmx",
-          "description": "Include HTMX library (default: `true`)"
+          "description": "Include HTMX library (default: `true`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "no-index",
-          "description": "Add noindex meta tag (default: `false`)"
+          "description": "Add noindex meta tag (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "favicon",
           "description": "Favicon URL"
+        },
+        {
+          "name": "content",
+          "description": "Page body content (slot)"
         }
       ]
     },
@@ -800,15 +1443,39 @@
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "readonly",
-          "description": "Read-only state (default: `false`)"
+          "description": "Read-only state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "size",
@@ -834,7 +1501,15 @@
         },
         {
           "name": "expandable-helper-text",
-          "description": "Make helper text expandable (default: `false`)"
+          "description": "Make helper text expandable (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "expandable-helper-text-title",
@@ -850,7 +1525,15 @@
         },
         {
           "name": "invalid",
-          "description": "Invalid state (default: `false`)"
+          "description": "Invalid state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "error-message",
@@ -858,7 +1541,19 @@
         },
         {
           "name": "has-error",
-          "description": "Error state (legacy) (default: `false`)"
+          "description": "Error state (legacy) (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -888,11 +1583,27 @@
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "size",
@@ -918,7 +1629,15 @@
         },
         {
           "name": "expandable-helper-text",
-          "description": "Whether helper text is expandable (default: `false`)"
+          "description": "Whether helper text is expandable (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "expandable-helper-text-title",
@@ -930,11 +1649,23 @@
         },
         {
           "name": "has-error",
-          "description": "Error state (default: `false`)"
+          "description": "Error state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "placeholder",
           "description": "Placeholder option text"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -960,15 +1691,39 @@
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "readonly",
-          "description": "Read-only state (default: `false`)"
+          "description": "Read-only state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "size",
@@ -998,7 +1753,15 @@
         },
         {
           "name": "has-error",
-          "description": "Error state (default: `false`)"
+          "description": "Error state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "min-date",
@@ -1007,6 +1770,10 @@
         {
           "name": "max-date",
           "description": "Maximum date"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -1017,6 +1784,14 @@
         {
           "name": "legend",
           "description": "Fieldset legend text"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Fieldset content (slot)"
         }
       ]
     },
@@ -1078,6 +1853,14 @@
               "name": "vertical"
             }
           ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Action group content (slot)"
         }
       ]
     },
@@ -1143,6 +1926,14 @@
         {
           "name": "pay-off",
           "description": "Footer payoff text"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Footer content (slot)"
         }
       ]
     },
@@ -1183,7 +1974,15 @@
         },
         {
           "name": "use-icons",
-          "description": "Enable icons (default: `false`)"
+          "description": "Enable icons (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "icon-placement",
@@ -1217,7 +2016,15 @@
         },
         {
           "name": "horizontal-rule",
-          "description": "Show bottom border (default: `true`)"
+          "description": "Show bottom border (default: `true`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "link-color",
@@ -1237,6 +2044,38 @@
             },
             {
               "name": "zwart"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Menubar content (slot)"
+        },
+        {
+          "name": "grid",
+          "description": "Use grid layout for menubar (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "use-background-color",
+          "description": "Apply background color to menubar (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
             }
           ]
         }
@@ -1287,6 +2126,10 @@
         {
           "name": "aria-label",
           "description": "Aria label for accessibility"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -1322,7 +2165,15 @@
         },
         {
           "name": "closable",
-          "description": "Closable alert (default: `false`)"
+          "description": "Closable alert (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "padding",
@@ -1362,6 +2213,10 @@
               "name": "lg"
             }
           ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -1398,7 +2253,23 @@
         },
         {
           "name": "overlay",
-          "description": "Text overlay on image (default: `false`)"
+          "description": "Text overlay on image (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Hero content (slot)"
         }
       ]
     },
@@ -1413,6 +2284,14 @@
         {
           "name": "active-tab",
           "description": "Active tab index (default: `0`)"
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Tabs content (slot)"
         }
       ]
     },
@@ -1475,7 +2354,15 @@
         },
         {
           "name": "no-underline",
-          "description": "Remove underline (default: `false`)"
+          "description": "Remove underline (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "color",
@@ -1487,7 +2374,19 @@
         },
         {
           "name": "full-container",
-          "description": "Full container link (default: `false`)"
+          "description": "Full container link (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
         }
       ]
     },
@@ -1525,7 +2424,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -1555,7 +2470,15 @@
         },
         {
           "name": "expandable-helper-text",
-          "description": "Make helper text expandable (default: `false`)"
+          "description": "Make helper text expandable (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "expandable-helper-text-title",
@@ -1571,15 +2494,39 @@
         },
         {
           "name": "invalid",
-          "description": "Invalid state (default: `false`)"
+          "description": "Invalid state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -1617,15 +2564,39 @@
         },
         {
           "name": "invalid",
-          "description": "Invalid state (default: `false`)"
+          "description": "Invalid state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -1663,7 +2634,15 @@
         },
         {
           "name": "expandable-helper-text",
-          "description": "Make helper text expandable (default: `false`)"
+          "description": "Make helper text expandable (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "expandable-helper-text-title",
@@ -1679,23 +2658,84 @@
         },
         {
           "name": "has-error",
-          "description": "Error state (default: `false`)"
+          "description": "Error state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "invalid",
-          "description": "Invalid state (default: `false`)"
+          "description": "Invalid state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "readonly",
-          "description": "Read-only state (default: `false`)"
+          "description": "Read-only state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "Textarea size (default: `md`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "max"
+            }
+          ]
         }
       ]
     },
@@ -1721,7 +2761,15 @@
         },
         {
           "name": "multiple",
-          "description": "Allow multiple files (default: `false`)"
+          "description": "Allow multiple files (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "helper-text",
@@ -1737,19 +2785,51 @@
         },
         {
           "name": "has-error",
-          "description": "Error state (default: `false`)"
+          "description": "Error state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "invalid",
-          "description": "Invalid state (default: `false`)"
+          "description": "Invalid state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "required",
-          "description": "Required field (default: `false`)"
+          "description": "Required field (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "disabled",
-          "description": "Disabled state (default: `false`)"
+          "description": "Disabled state (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         }
       ]
     },
@@ -1817,6 +2897,10 @@
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Row content (slot)"
         }
       ]
     },
@@ -1831,6 +2915,10 @@
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Column content (slot)"
         }
       ]
     },
@@ -1844,15 +2932,35 @@
         },
         {
           "name": "no-padding",
-          "description": "Remove default padding (default: `false`)"
+          "description": "Remove default padding (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "no-margin",
-          "description": "Remove default margins (default: `false`)"
+          "description": "Remove default margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Ordered list content (slot)"
         }
       ]
     },
@@ -1896,15 +3004,35 @@
         },
         {
           "name": "no-margin",
-          "description": "Remove default margins (default: `false`)"
+          "description": "Remove default margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "no-padding",
-          "description": "Remove default padding (default: `false`)"
+          "description": "Remove default padding (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
         },
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Unordered list content (slot)"
         }
       ]
     },
@@ -1915,6 +3043,10 @@
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "List item content (slot)"
         }
       ]
     },
@@ -1929,6 +3061,10 @@
         {
           "name": "class",
           "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "List content (slot)"
         }
       ]
     },
@@ -1980,7 +3116,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -2018,7 +3170,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -2056,7 +3224,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -2094,7 +3278,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -2132,7 +3332,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     },
@@ -2170,7 +3386,23 @@
         },
         {
           "name": "no-margins",
-          "description": "Remove margins (default: `false`)"
+          "description": "Remove margins (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "class",
+          "description": "Additional CSS classes"
+        },
+        {
+          "name": "content",
+          "description": "Heading content (slot)"
         }
       ]
     }
