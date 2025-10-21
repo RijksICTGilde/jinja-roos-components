@@ -54,7 +54,7 @@ env = Environment(
 setup_components(env, strict_validation=True)
 
 # Mount static files for CSS/JS assets at the expected path
-css_static_dir = Path(__file__).parent.parent / 'src' / "jinja_roos_components" / "static"
+css_static_dir = Path(__file__).parent.parent / 'src' / "jinja_roos_components" / "static" / "roos"
 if os.path.exists(css_static_dir):
     app.mount("/static/roos", StaticFiles(directory=css_static_dir), name="roos_static")
 
