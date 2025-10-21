@@ -104,6 +104,10 @@
           "description": "Icon name from RVO icon set"
         },
         {
+          "name": "iconColor",
+          "description": "Icon color from RVO color system (default: `hemelblauw`)"
+        },
+        {
           "name": "fullWidth",
           "description": "Whether button takes full width (default: `false`)",
           "values": [
@@ -2341,7 +2345,7 @@
         },
         {
           "name": "iconColor",
-          "description": "Icon color"
+          "description": "Icon color (default: `logoblauw`)"
         },
         {
           "name": "noUnderline",

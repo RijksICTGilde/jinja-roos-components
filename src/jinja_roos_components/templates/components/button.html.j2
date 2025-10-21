@@ -11,6 +11,7 @@
 {% set label = _component_context.label | default(_component_context.content) | default('') %}
 {% set icon_placement = _component_context.iconPlacement | default('before') %}
 {% set icon = _component_context.icon | default('') %}
+{% set icon_color = _component_context.iconColor | default('hemelblauw') %}
 {% set full_width = _component_context.fullWidth | default(false) %}
 
 {# Map RVO button kinds to Utrecht appearances - mirrors RVO base project logic #}
@@ -62,5 +63,5 @@
     {% if disabled %}disabled{% endif %}
     type="{{ type_attr }}"
     {{ events.render_extra_attributes(_component_context) }}>
-    {% if icon_placement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{{ children if children else label | safe }}{% if icon_placement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
+    {% if icon_placement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{{ children if children else label | safe }}{% if icon_placement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ icon_color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
 </button>
