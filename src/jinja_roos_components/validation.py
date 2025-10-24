@@ -157,13 +157,13 @@ class ComponentValidator:
             # Common HTML attributes
             'id', 'class', 'style', 'data-*', 'aria-*', 'role', 'tabindex',
             # Vue.js directives and bindings
-            'v-if', 'v-else', 'v-else-if', 'v-show', 'v-for', 'v-model', 
+            'v-if', 'v-else', 'v-else-if', 'v-show', 'v-for', 'v-model',
             'v-bind', 'v-on', '@click', '@change', '@input', '@submit',
             # Vue.js binding syntax
             ':class', ':style', ':id', ':disabled', ':checked', ':value',
             # Event handlers
             'onclick', 'onchange', 'oninput', 'onsubmit', 'onload',
-            # Form attributes  
+            # Form attributes
             'name', 'value', 'checked', 'disabled', 'readonly', 'required',
             'placeholder', 'maxlength', 'minlength', 'pattern', 'autocomplete',
             # Link attributes
@@ -171,17 +171,17 @@ class ComponentValidator:
             # Image attributes
             'src', 'alt', 'width', 'height',
         }
-        
+
         # Check exact matches
         if attr_name in allowed_generic:
             return True
-            
-        # Check patterns (data-*, aria-*, etc.)
-        patterns = ['data-', 'aria-', 'v-', '@', ':']
+
+        # Check patterns (data-*, aria-*, @hx-*, hx-*, etc.)
+        patterns = ['data-', 'aria-', 'v-', '@', ':', 'hx-']
         for pattern in patterns:
             if attr_name.startswith(pattern):
                 return True
-                
+
         return False
 
 

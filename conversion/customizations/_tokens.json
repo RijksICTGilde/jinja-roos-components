@@ -1,0 +1,24 @@
+{
+  "_description": "Design token references for component customizations. Generated from extract_design_tokens.py",
+  "_sources": {
+    "colors": "node_modules/@nl-rvo/design-tokens/src/brand/rvo/color.tokens.json",
+    "icons": "node_modules/@nl-rvo/assets/icons/types.ts"
+  },
+  "all_rvo_colors": {
+    "type": "reference",
+    "source": "extract_colors_from_tokens",
+    "extract_field": "template_name",
+    "description": "All available RVO color names for component attributes"
+  },
+  "all_rvo_icons": {
+    "type": "reference",
+    "source": "extract_icons_from_types",
+    "extract_field": "template_name",
+    "description": "All available RVO icon names for component attributes"
+  },
+  "primary_colors": {
+    "type": "static",
+    "values": ["hemelblauw", "logoblauw", "donkerblauw", "lichtblauw"],
+    "description": "Primary RVO brand colors only"
+  }
+}

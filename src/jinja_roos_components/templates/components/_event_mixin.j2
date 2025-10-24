@@ -71,27 +71,12 @@
     {% if component_context.get('@abort') %}onabort="{{ component_context['@abort'] }}"{% endif %}
     {% if component_context.get('@toggle') %}ontoggle="{{ component_context['@toggle'] }}"{% endif %}
     
-    {# Support for HTMX attributes if HTMX is enabled #}
-    {% if roos_htmx %}
-        {% if component_context.get('@hx-get') %}hx-get="{{ component_context['@hx-get'] }}"{% endif %}
-        {% if component_context.get('@hx-post') %}hx-post="{{ component_context['@hx-post'] }}"{% endif %}
-        {% if component_context.get('@hx-put') %}hx-put="{{ component_context['@hx-put'] }}"{% endif %}
-        {% if component_context.get('@hx-patch') %}hx-patch="{{ component_context['@hx-patch'] }}"{% endif %}
-        {% if component_context.get('@hx-delete') %}hx-delete="{{ component_context['@hx-delete'] }}"{% endif %}
-        {% if component_context.get('@hx-trigger') %}hx-trigger="{{ component_context['@hx-trigger'] }}"{% endif %}
-        {% if component_context.get('@hx-target') %}hx-target="{{ component_context['@hx-target'] }}"{% endif %}
-        {% if component_context.get('@hx-swap') %}hx-swap="{{ component_context['@hx-swap'] }}"{% endif %}
-        {% if component_context.get('@hx-boost') %}hx-boost="{{ component_context['@hx-boost'] }}"{% endif %}
-        {% if component_context.get('@hx-push-url') %}hx-push-url="{{ component_context['@hx-push-url'] }}"{% endif %}
-        {% if component_context.get('@hx-select') %}hx-select="{{ component_context['@hx-select'] }}"{% endif %}
-        {% if component_context.get('@hx-select-oob') %}hx-select-oob="{{ component_context['@hx-select-oob'] }}"{% endif %}
-        {% if component_context.get('@hx-indicator') %}hx-indicator="{{ component_context['@hx-indicator'] }}"{% endif %}
-        {% if component_context.get('@hx-params') %}hx-params="{{ component_context['@hx-params'] }}"{% endif %}
-        {% if component_context.get('@hx-vals') %}hx-vals="{{ component_context['@hx-vals'] }}"{% endif %}
-        {% if component_context.get('@hx-confirm') %}hx-confirm="{{ component_context['@hx-confirm'] }}"{% endif %}
-        {% if component_context.get('@hx-disable') %}hx-disable="{{ component_context['@hx-disable'] }}"{% endif %}
-        {% if component_context.get('@hx-headers') %}hx-headers="{{ component_context['@hx-headers'] }}"{% endif %}
-    {% endif %}
+    {# Support for HTMX attributes - dynamically handle any @hx-* attribute #}
+    {% for key, value in component_context.items() %}
+        {% if key.startswith('@hx-') %}
+            {{ key[1:] }}="{{ value }}"
+        {% endif %}
+    {% endfor %}
 {%- endmacro %}
 
 {# Macro to render data attributes #}
@@ -112,7 +97,14 @@
     {% endfor %}
 {%- endmacro %}
 
+{# Macro to render HTMX attributes #}
+{% macro render_htmx_attributes(component_context) -%}
+    {%- for key, value in component_context.items() -%}
+        {%- if key.startswith('hx-') %} {{ key }}="{{ value }}"{% endif -%}
+    {%- endfor -%}
+{%- endmacro %}
+
 {# Combined macro for all extra attributes #}
 {% macro render_extra_attributes(component_context) -%}
-    {{ render_events(component_context) }} {{ render_data_attributes(component_context) }} {{ render_aria_attributes(component_context) }}
+    {{ render_events(component_context) }} {{ render_data_attributes(component_context) }} {{ render_aria_attributes(component_context) }} {{ render_htmx_attributes(component_context) }}
 {%- endmacro %}

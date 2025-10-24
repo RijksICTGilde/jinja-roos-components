@@ -336,23 +336,36 @@ class ComponentExtension(Extension):
             if attr_name.startswith('_'):
                 # Internal attributes (like _raw_content) are always allowed
                 continue
-            
+
             # Clean attribute name (remove binding/event prefixes)
             clean_attr_name = attr_name
             if attr_name.startswith(':') or attr_name.startswith('@'):
                 clean_attr_name = attr_name[1:]
-            
+
+            # Allow generic HTML attributes (data-*, aria-*, hx-*, etc.)
+            if self._is_generic_html_attribute(clean_attr_name):
+                continue
+
             # Case-insensitive check since HTML parsers convert to lowercase
             valid_attrs_lower = {attr.lower() for attr in valid_attrs}
             clean_attr_lower = clean_attr_name.lower()
-            
+
             if clean_attr_lower not in valid_attrs_lower:
                 available_attrs = sorted(valid_attrs)
                 raise ValueError(
                     f"Unknown attribute '{attr_name}' used in component '{component_tag}'. "
                     f"Available attributes for '{component_name}': {', '.join(available_attrs)}"
                 )
-    
+
+    def _is_generic_html_attribute(self, attr_name: str) -> bool:
+        """Check if an attribute is a generic HTML attribute that should be allowed on all components."""
+        # Check for common prefixes
+        generic_prefixes = ['data-', 'aria-', 'hx-']
+        for prefix in generic_prefixes:
+            if attr_name.startswith(prefix):
+                return True
+        return False
+
     def _parse_attributes(self, attrs_str: str) -> Dict[str, Any]:
         """Parse component attributes from the attribute string."""
         attrs = {}

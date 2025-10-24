@@ -1,0 +1,15 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: form-fieldset
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set legend = _component_context.legend | default('Fieldset legend') %}
+{% set disabled = _component_context.disabled | default(false) %}
+{% set fields = _component_context.fields | default('defaultFields') %}
+{% set children = _component_context.children %}
+{% set css_classes = ['utrecht-form-fieldset__fieldset', 'utrecht-form-fieldset--html-fieldset', 'utrecht-form-fieldset'] %}
+<fieldset
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="form-fieldset"
+    {% if disabled %}disabled{% endif %}
+    {{ events.render_extra_attributes(_component_context) }}>
+    {% if legend %}<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">{{ legend }}</legend>{% endif %}{{ _component_context.content if _component_context.content else '' }}{# TODO_CONVERSION: Handle fields.map rendering #}
+</fieldset>

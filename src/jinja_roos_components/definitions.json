@@ -3742,6 +3742,12 @@
         "type": "h6"
       },
       "description": "Heading level 6 (alias for c-heading type=\"h6\")"
+    },
+    {
+      "name": "fieldset",
+      "target_component": "form-fieldset",
+      "default_attributes": {},
+      "description": "Alias for form-fieldset"
     }
   ],
   "icons": [
