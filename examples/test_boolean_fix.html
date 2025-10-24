@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Boolean Attribute Fix Test</title>
+</head>
+<body>
+    <h1>Testing Boolean Attributes</h1>
+
+    <h2>Card with outline="false" (should NOT have outline)</h2>
+    <c-card title="No Outline" outline="false" padding="md">
+        This card should NOT have an outline border.
+    </c-card>
+
+    <h2>Card with outline="true" (should have outline)</h2>
+    <c-card title="With Outline" outline="true" padding="md">
+        This card SHOULD have an outline border.
+    </c-card>
+
+    <h2>Card with no outline attribute (should NOT have outline - default)</h2>
+    <c-card title="Default Outline" padding="md">
+        This card should NOT have an outline (default is false).
+    </c-card>
+
+    <h2>Card with :outline="false" (binding syntax - should still work)</h2>
+    <c-card title="Binding Syntax" :outline="false" padding="md">
+        This card should NOT have an outline (using binding syntax).
+    </c-card>
+
+    <h2>Testing other boolean values</h2>
+    <c-card title="outline='0'" outline="0" padding="md">
+        Using outline="0" (should be false, no outline)
+    </c-card>
+
+    <c-card title="outline='1'" outline="1" padding="md">
+        Using outline="1" (should be true, has outline)
+    </c-card>
+
+    <h2>Full card link boolean test</h2>
+    <c-card title="Not Full Card Link" link="#test" fullCardLink="false" padding="md">
+        Only the title should be a link (fullCardLink="false")
+    </c-card>
+
+    <c-card title="Full Card Link" link="#test" fullCardLink="true" padding="md">
+        The entire card should be clickable (fullCardLink="true")
+    </c-card>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "component": "card",
+  "description": "Customizations for the Card component to allow all RVO colors instead of just 4",
+  "attribute_overrides": {
+    "backgroundColor": {
+      "type": "enum",
+      "values": "all_rvo_colors",
+      "required": false,
+      "description": "Allow all RVO colors instead of just the 4 from base component (wit, grijs-200, hemelblauw, donkerblauw)"
+    }
+  },
+  "notes": [
+    "Original RVO card only supports 4 background colors",
+    "Extended to support full RVO color palette for more design flexibility"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "icon_component": {
+    "react_import": "@nl-rvo/icon",
+    "jinja_pattern": "<span class=\"utrecht-icon rvo-icon rvo-icon-{icon} rvo-icon--{size} rvo-icon--{color}\" role=\"img\" aria-label=\"{ariaLabel}\"></span>"
+  },
+  "default_props": {
+    "size": "md",
+    "color": "hemelblauw",
+    "ariaLabel": ""
+  },
+  "size_values": ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"],
+  "color_values": ["hemelblauw", "donkerblauw", "wit", "zwart", "grijs-700", "logoblauw"]
+}

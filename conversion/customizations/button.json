@@ -1,0 +1,16 @@
+{
+  "component": "button",
+  "description": "Add color attribute to allow all RVO colors for custom styling",
+  "attribute_additions": {
+    "color": {
+      "type": "enum",
+      "values": "all_rvo_colors",
+      "required": false,
+      "description": "Custom color for the button (additional to kind-based styling)"
+    }
+  },
+  "notes": [
+    "Base RVO button uses 'kind' prop for styling variants",
+    "Added 'color' attribute to allow custom color overrides with full RVO palette"
+  ]
+}

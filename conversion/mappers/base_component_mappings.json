@@ -1,0 +1,108 @@
+{
+  "@utrecht/component-library-react": {
+    "Button": {
+      "html_tag": "button",
+      "base_classes": ["utrecht-button"],
+      "prop_mappings": {
+        "appearance": {
+          "values": {
+            "primary-action-button": ["utrecht-button--primary-action"],
+            "secondary-action-button": ["utrecht-button--secondary-action"],
+            "subtle-button": ["utrecht-button--subtle"]
+          }
+        },
+        "busy": {
+          "boolean": {
+            "true_classes": ["utrecht-button--busy"],
+            "true_attributes": {
+              "aria-busy": "true"
+            }
+          }
+        },
+        "disabled": {
+          "boolean": {
+            "true_classes": ["utrecht-button--disabled"],
+            "true_attributes": {
+              "disabled": true
+            }
+          }
+        },
+        "hint": {
+          "values": {
+            "danger": ["utrecht-button--danger"],
+            "warning": ["utrecht-button--warning"],
+            "ready": ["utrecht-button--ready"]
+          }
+        },
+        "kind-warning": {
+          "comment": "Special handling for warning variants that add hint class",
+          "values": {
+            "warning": ["utrecht-button--warning"],
+            "warning-subtle": ["utrecht-button--warning"]
+          }
+        },
+        "pressed": {
+          "boolean": {
+            "true_classes": ["utrecht-button--pressed"],
+            "true_attributes": {
+              "aria-pressed": "true"
+            },
+            "false_attributes": {
+              "aria-pressed": "false"
+            }
+          }
+        },
+        "type": {
+          "attribute": "type"
+        }
+      }
+    },
+    "Textbox": {
+      "html_tag": "input",
+      "base_classes": ["utrecht-textbox"],
+      "prop_mappings": {
+        "invalid": {
+          "boolean": {
+            "true_classes": ["utrecht-textbox--invalid"]
+          }
+        },
+        "type": {
+          "attribute": "type"
+        },
+        "disabled": {
+          "boolean": {
+            "true_attributes": {
+              "disabled": true
+            }
+          }
+        },
+        "readOnly": {
+          "boolean": {
+            "true_attributes": {
+              "readonly": true
+            }
+          }
+        },
+        "required": {
+          "boolean": {
+            "true_attributes": {
+              "required": true
+            }
+          }
+        },
+        "placeholder": {
+          "attribute": "placeholder"
+        },
+        "value": {
+          "attribute": "value"
+        },
+        "defaultValue": {
+          "attribute": "value"
+        },
+        "maxLength": {
+          "attribute": "maxlength"
+        }
+      }
+    }
+  }
+}

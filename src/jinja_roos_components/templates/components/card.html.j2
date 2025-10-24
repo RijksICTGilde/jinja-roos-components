@@ -1,3 +1,5 @@
+{% from "components/_event_mixin.j2" import render_extra_attributes %}
+
 {% set title = _component_context.title | default('') %}
 {% set content = _component_context.content | default('') %}
 {% set link = _component_context.link | default('') %}
@@ -47,13 +49,7 @@
 <div class="{{ css_classes | join(' ') }}" data-roos-component="card"
      {% if element_id %}id="{{ element_id }}"{% endif %}
      {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
-     {% if _component_context.get('@click') %}
-         {% if roos_htmx and _component_context['@click'].startswith('hx-') %}
-             {{ _component_context['@click'] | safe }}
-         {% else %}
-             onclick="{{ _component_context['@click'] }}"
-         {% endif %}
-     {% endif %}>
+     {{ render_extra_attributes(_component_context) }}>
     
     {# Background image container #}
     {% if has_background_image %}

@@ -339,8 +339,20 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
             # Regular string attribute
             # Check attribute type for special handling
             attr_def = component_def.get_attribute(key) if component_def else None
-            
-            if attr_def and attr_def.type == AttributeType.OBJECT:
+
+            # Handle BOOLEAN attributes - auto-convert string boolean values
+            if attr_def and attr_def.type == AttributeType.BOOLEAN:
+                # Convert common string boolean values to actual booleans
+                value_lower = value.lower().strip()
+                if value_lower in ('false', '0', '', 'no', 'off'):
+                    context_items.append(f'"{key}": False')
+                elif value_lower in ('true', '1', 'yes', 'on'):
+                    context_items.append(f'"{key}": True')
+                else:
+                    # Unknown value for boolean - treat as truthy if non-empty
+                    context_items.append(f'"{key}": {bool(value)}')
+
+            elif attr_def and attr_def.type == AttributeType.OBJECT:
                 # Object attribute - handle JSON string parsing
                 if '{{' in value or '{%' in value:
                     # Contains Jinja expressions that should evaluate to JSON

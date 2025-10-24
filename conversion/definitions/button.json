@@ -1,0 +1,163 @@
+{
+  "name": "button",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/button/src/template.tsx",
+  "converted_at": "2025-10-17T10:12:48.163293Z",
+  "conversion_hash": "9f6262f02f8ff8410176a7fa39fb1fd4bff97350132e01f84d2d29f346ad0fed",
+  "base_components": [
+    {
+      "library": "@utrecht/component-library-react",
+      "component": "Button"
+    }
+  ],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "kind",
+      "type": "enum",
+      "required": false,
+      "description": "kind attribute",
+      "enum_values": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "quaternary",
+        "subtle",
+        "warning-subtle",
+        "warning"
+      ],
+      "default": "primary"
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": false,
+      "description": "size attribute",
+      "enum_values": [
+        "xs",
+        "sm",
+        "md"
+      ],
+      "default": "md"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "label attribute",
+      "default": "Button"
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "description": "active attribute",
+      "default": false
+    },
+    {
+      "name": "busy",
+      "type": "boolean",
+      "required": false,
+      "description": "busy attribute",
+      "default": false
+    },
+    {
+      "name": "focus",
+      "type": "boolean",
+      "required": false,
+      "description": "focus attribute",
+      "default": false
+    },
+    {
+      "name": "focusVisible",
+      "type": "boolean",
+      "required": false,
+      "description": "focusVisible attribute",
+      "default": false
+    },
+    {
+      "name": "hover",
+      "type": "boolean",
+      "required": false,
+      "description": "hover attribute",
+      "default": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "disabled attribute",
+      "default": false
+    },
+    {
+      "name": "showIcon",
+      "type": "enum",
+      "required": false,
+      "description": "showIcon attribute",
+      "enum_values": [
+        "no",
+        "before",
+        "after"
+      ],
+      "default": "no"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "icon attribute",
+      "default": "home"
+    },
+    {
+      "name": "iconAriaLabel",
+      "type": "string",
+      "required": false,
+      "description": "iconAriaLabel attribute",
+      "default": ""
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "fullWidth attribute",
+      "default": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "alignToRightInGroup",
+      "type": "boolean",
+      "required": false,
+      "description": "alignToRightInGroup attribute",
+      "default": false
+    },
+    {
+      "name": "color",
+      "type": "enum",
+      "required": false,
+      "description": "Custom color for the button (additional to kind-based styling)",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Unmapped prop: label",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: icon",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: iconAriaLabel",
+      "severity": "medium",
+      "source_line": 0
+    }
+  ]
+}

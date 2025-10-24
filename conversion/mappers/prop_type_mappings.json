@@ -1,0 +1,22 @@
+{
+  "typescript_to_jinja": {
+    "string": "string",
+    "number": "number",
+    "boolean": "boolean",
+    "ReactNode": "string",
+    "React.ReactNode": "string",
+    "string | ReactNode": "string",
+    "HTMLAttributes<HTMLButtonElement>": "object",
+    "HTMLAttributes<HTMLDivElement>": "object",
+    "PropsWithChildren": "object",
+    "function": "function"
+  },
+  "jinja_defaults": {
+    "string": "''",
+    "number": "0",
+    "boolean": "false",
+    "enum": "first_value",
+    "object": "{}",
+    "function": "none"
+  }
+}

@@ -188,9 +188,12 @@ class ComponentExtensionDOM(Extension):
                 attr_value = ""
             else:
                 attr_value = str(attr_value)
-            
-            # Handle binding (:attr) and event (@attr) prefixes
+
+            # Handle binding (:attr), event (@attr), and generic HTML attributes
             if attr_name.startswith(':') or attr_name.startswith('@'):
+                attrs[attr_name] = attr_value
+            elif self._is_generic_html_attribute(attr_name):
+                # Allow generic HTML attributes (data-*, aria-*, hx-*, etc.)
                 attrs[attr_name] = attr_value
             else:
                 # Check if attribute is valid (case-insensitive)
@@ -207,7 +210,16 @@ class ComponentExtensionDOM(Extension):
                     )
         
         return attrs
-    
+
+    def _is_generic_html_attribute(self, attr_name: str) -> bool:
+        """Check if an attribute is a generic HTML attribute that should be allowed on all components."""
+        # Check for common prefixes
+        generic_prefixes = ['data-', 'aria-', 'hx-']
+        for prefix in generic_prefixes:
+            if attr_name.startswith(prefix):
+                return True
+        return False
+
     def _build_include(self, component_name: str, attrs: Dict[str, Any], content: Optional[str]) -> str:
         """Build the Jinja2 include statement from component name, attributes, and content."""
         template_path = f"components/{component_name}.html.j2"
