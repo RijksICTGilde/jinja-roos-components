@@ -337,9 +337,13 @@ class ComponentExtension(Extension):
                 # Internal attributes (like _raw_content) are always allowed
                 continue
 
-            # Clean attribute name (remove binding/event prefixes)
+            # Event attributes (@click, @change, etc.) are always allowed - handled by event mixin
+            if attr_name.startswith('@'):
+                continue
+
+            # Clean attribute name (remove binding prefix)
             clean_attr_name = attr_name
-            if attr_name.startswith(':') or attr_name.startswith('@'):
+            if attr_name.startswith(':'):
                 clean_attr_name = attr_name[1:]
 
             # Allow generic HTML attributes (data-*, aria-*, hx-*, etc.)

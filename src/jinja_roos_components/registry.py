@@ -74,6 +74,7 @@ class ComponentRegistry:
         self._aliases: Dict[str, ComponentAlias] = {}
         self._register_default_components()
         self._register_default_aliases()
+        self._register_conversion_components()  # Auto-discover from conversion/definitions/
     
     def register_component(self, component: ComponentDefinition) -> None:
         """Register a new component."""
@@ -214,4 +215,69 @@ class ComponentRegistry:
                 description=alias_data.get("description", "")
             )
             self.register_alias(alias)
-        
+
+    def _register_conversion_components(self) -> None:
+        """Auto-discover and register components from conversion/definitions/ directory."""
+        # Find conversion definitions directory relative to this file
+        # src/jinja_roos_components/registry.py -> ../../conversion/definitions/
+        conversion_dir = Path(__file__).parent.parent.parent / "conversion" / "definitions"
+
+        if not conversion_dir.exists():
+            return  # No conversion definitions yet
+
+        # Scan for all .json files
+        for definition_file in conversion_dir.glob("*.json"):
+            try:
+                with open(definition_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+
+                # Skip if component is already registered in main definitions.json
+                component_name = data.get("name")
+                if not component_name:
+                    continue
+
+                if component_name in self._components:
+                    # Main definitions.json takes precedence
+                    continue
+
+                # Convert attributes from conversion format to ComponentDefinition format
+                attributes = []
+                for attr_data in data.get("attributes", []):
+                    # Conversion files use "type" directly as string, we need AttributeType enum
+                    attr_type_str = attr_data.get("type", "string")
+                    try:
+                        attr_type = AttributeType(attr_type_str)
+                    except ValueError:
+                        # Fallback to string if type is unknown
+                        attr_type = AttributeType.STRING
+
+                    attributes.append(AttributeDefinition(
+                        name=attr_data["name"],
+                        type=attr_type,
+                        required=attr_data.get("required", False),
+                        default=attr_data.get("default"),
+                        description=attr_data.get("description", ""),
+                        enum_values=attr_data.get("enum_values")  # Read enum_values from conversion definitions
+                    ))
+
+                # Create ComponentDefinition
+                # Use a simple description based on the component name
+                description = data.get("description", f"Auto-generated component: {component_name}")
+
+                component = ComponentDefinition(
+                    name=component_name,
+                    description=description,
+                    attributes=attributes,
+                    slots=["content"],  # Default to content slot
+                    examples=[],  # No examples in conversion format yet
+                    allow_preview=True,
+                    requires_children=False,
+                    preview_example=None
+                )
+
+                self.register_component(component)
+
+            except (json.JSONDecodeError, KeyError, TypeError) as e:
+                # Skip invalid definition files
+                continue
+

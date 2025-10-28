@@ -26,7 +26,11 @@ class JinjaGenerator:
         html_tag: str,
         base_classes: List[str],
         content: str = "",
-        content_elements: List = None
+        content_elements: List = None,
+        wrapper_info: Optional[Dict] = None,
+        component_structure: Optional[Dict] = None,
+        nested_components: List[Dict] = None,
+        array_mappings: Dict[str, Dict] = None
     ) -> str:
         """Generate complete Jinja template.
 
@@ -37,10 +41,18 @@ class JinjaGenerator:
             base_classes: Base CSS classes
             content: Optional inner content (legacy)
             content_elements: List of ContentElement objects
+            wrapper_info: Optional wrapper element info (tag and classes)
+            component_structure: Optional full component structure (for future use with arbitrary nesting)
+            nested_components: List of nested component metadata
+            array_mappings: Dict mapping array attributes to component info
 
         Returns:
             Generated Jinja template as string
         """
+        # Store nested components and array mappings for use in content generation
+        self.nested_components = nested_components or []
+        self.array_mappings = array_mappings or {}
+
         lines = []
 
         # Add header comment
@@ -53,12 +65,17 @@ class JinjaGenerator:
         self.class_builder.add_base_classes(base_classes)
         lines.append(self.class_builder.generate_jinja_code())
 
+        # If there's a wrapper, generate separate wrapper classes
+        if wrapper_info:
+            lines.append(self._generate_wrapper_classes(wrapper_info))
+
         # Generate content from content_elements if provided
         if content_elements:
             content = self._generate_content_from_elements(content_elements, attributes)
 
-        # Generate HTML element
-        lines.append(self._generate_html_element(html_tag, attributes, content))
+        # Generate HTML element (with wrapper if needed)
+        # TODO: Use component_structure for arbitrary depth nesting in future
+        lines.append(self._generate_html_element(html_tag, attributes, content, wrapper_info))
 
         return '\n'.join(lines)
 
@@ -93,14 +110,17 @@ class JinjaGenerator:
             default = self._get_default_value(attr, default_args)
 
             # Generate variable declaration
-            var_line = f"{{% set {attr.name} = _component_context.{attr.name}"
-
-            if default is not None:
+            # Special case: React 'children' prop maps to '_component_context.content' in Jinja
+            if attr.name == 'children':
+                # Children is nested content, accessed via .content not .children
+                var_line = f"{{% set children = _component_context.content | default('') %}}"
+            elif default is not None:
                 # Format default value
                 default_str = self._format_default_value(default, attr)
-                var_line += f" | default({default_str})"
-
-            var_line += " %}"
+                var_line = f"{{% set {attr.name} = _component_context.{attr.name} | default({default_str}) %}}"
+            else:
+                # No default - use .get() for dict-safe access
+                var_line = f"{{% set {attr.name} = _component_context.get('{attr.name}') %}}"
 
             lines.append(var_line)
             self.variables.append(attr.name)
@@ -118,11 +138,18 @@ class JinjaGenerator:
             Default value or None
         """
         if attr.name in default_args:
-            return default_args[attr.name]
+            value = default_args[attr.name]
+            # For array attributes, if the value is a string reference (like 'defaultSteps'),
+            # treat it as an example value and use empty array instead
+            if 'array' in attr.types and isinstance(value, str):
+                return []
+            return value
 
         # Use type-based defaults
         if 'boolean' in attr.types:
             return False
+        if 'array' in attr.types:
+            return []  # Arrays default to empty list
         if 'number' in attr.types:
             return None  # Don't default numbers
         if 'enum' in attr.types and attr.enum_values:
@@ -154,52 +181,83 @@ class JinjaGenerator:
 
         return "none"
 
-    def _generate_html_element(self, tag: str, attributes: List[AttributeInfo], content: str) -> str:
+    def _generate_wrapper_classes(self, wrapper_info: Dict) -> str:
+        """Generate wrapper classes variable.
+
+        Args:
+            wrapper_info: Wrapper element info (tag and classes)
+
+        Returns:
+            Jinja variable declaration for wrapper classes
+        """
+        classes_str = ', '.join(f"'{cls}'" for cls in wrapper_info['classes'])
+        return f"{{% set wrapper_classes = [{classes_str}] %}}"
+
+    def _generate_html_element(self, tag: str, attributes: List[AttributeInfo], content: str, wrapper_info: Optional[Dict] = None) -> str:
         """Generate HTML element with attributes.
 
         Args:
             tag: HTML tag name
             attributes: List of attributes
             content: Inner content
+            wrapper_info: Optional wrapper element info
 
         Returns:
             HTML element string
         """
         lines = []
 
-        # Opening tag
-        attrs = [
-            'class="{{ css_classes | join(\' \') }}"',
-            f'data-roos-component="{self.component_name}"'
+        # If there's a wrapper, generate wrapper opening tag
+        if wrapper_info:
+            wrapper_tag = wrapper_info['tag']
+            wrapper_opening = f'<{wrapper_tag} class="{{{{ wrapper_classes | join(\' \') }}}}" data-roos-component="{self.component_name}">'
+            lines.append(wrapper_opening)
+
+        # Inner element opening tag
+        inner_attrs = [
+            'class="{{ css_classes | join(\' \') }}"'
         ]
+
+        # Add data-roos-component only if there's no wrapper (wrapper has it)
+        if not wrapper_info:
+            inner_attrs.append(f'data-roos-component="{self.component_name}"')
 
         # Add common HTML attributes
         for attr in attributes:
             if attr.name in ['id', 'type', 'disabled', 'required', 'readonly', 'placeholder']:
                 attr_str = self._generate_html_attribute(attr)
                 if attr_str:
-                    attrs.append(attr_str)
+                    inner_attrs.append(attr_str)
 
         # Add event handlers via mixin
-        attrs.append('{{ events.render_extra_attributes(_component_context) }}')
+        inner_attrs.append('{{ events.render_extra_attributes(_component_context) }}')
 
-        # Build tag
+        # Build inner tag
         opening_tag = f"<{tag}"
-        for attr in attrs:
-            opening_tag += f"\n    {attr}"
+        for attr in inner_attrs:
+            indent = "        " if wrapper_info else "    "
+            opening_tag += f"\n{indent}{attr}"
         opening_tag += ">"
 
-        lines.append(opening_tag)
+        if wrapper_info:
+            lines.append("    " + opening_tag)
+        else:
+            lines.append(opening_tag)
 
         # Content
+        indent = "        " if wrapper_info else "    "
         if content:
-            lines.append(f"    {content}")
+            lines.append(f"{indent}{content}")
         else:
             # Default content placeholder
-            lines.append("    {# Content #}")
+            lines.append(f"{indent}{{# Content #}}")
 
-        # Closing tag
-        lines.append(f"</{tag}>")
+        # Closing tags
+        if wrapper_info:
+            lines.append(f"    </{tag}>")
+            lines.append(f"</{wrapper_info['tag']}>")
+        else:
+            lines.append(f"</{tag}>")
 
         return '\n'.join(lines)
 
@@ -289,21 +347,63 @@ class JinjaGenerator:
                 # Simple variable reference
                 parts.append(f"{{{{ {element.content} }}}}")
 
-        return ''.join(parts)
+            elif element.type == 'array_map':
+                # Convert array.map() to Jinja for-loop with nested component
+                loop_content = self._generate_array_map_loop(element, attributes)
+                parts.append(loop_content)
+
+            elif element.type == 'fallback_chain':
+                # Generate if/elif structure from fallback chain
+                chain_content = self._generate_fallback_chain(element, attributes)
+                parts.append(chain_content)
+
+            elif element.type == 'children_passthrough':
+                # Simple children passthrough
+                if element.condition:
+                    parts.append(f"{{% if {element.condition} %}}")
+                parts.append("{{ children | safe }}")
+                if element.condition:
+                    parts.append("{% endif %}")
+
+            elif element.type == 'conditional_component':
+                # Conditional component rendering
+                # e.g., let labelMarkup = label; if (state === 'incomplete' || ...) { labelMarkup = <Link .../> }
+                jinja_condition = self._convert_condition_to_jinja(element.condition)
+
+                # Try to inline/convert the component
+                component_html = self._inline_component(element, attributes)
+
+                # Generate fallback (default value)
+                fallback = f"{{{{ {element.fallback_value} }}}}"
+
+                # Build if/else structure
+                parts.append(f"{{% if {jinja_condition} %}}")
+                parts.append(f"    {component_html}")
+                parts.append("{% else %}")
+                parts.append(f"    {fallback}")
+                parts.append("{% endif %}")
+
+        return '\n'.join(parts) if any('\n' in p for p in parts) else ''.join(parts)
 
     def _convert_condition_to_jinja(self, condition: str) -> str:
         """Convert React condition to Jinja condition.
 
         Args:
-            condition: React condition like "showIcon === 'before'"
+            condition: React condition like "showIcon === 'before'" or
+                      "state === 'incomplete' || state === 'doing'"
 
         Returns:
-            Jinja condition like "showIcon == 'before'"
+            Jinja condition like "showIcon == 'before'" or
+                      "state == 'incomplete' or state == 'doing'"
         """
         # Replace === with ==
         jinja_cond = condition.replace(' === ', ' == ')
         # Replace !== with !=
         jinja_cond = jinja_cond.replace(' !== ', ' != ')
+        # Replace || with or
+        jinja_cond = jinja_cond.replace(' || ', ' or ')
+        # Replace && with and
+        jinja_cond = jinja_cond.replace(' && ', ' and ')
         return jinja_cond
 
     def _generate_element_content(self, element, attributes: List[AttributeInfo]) -> str:
@@ -328,18 +428,25 @@ class JinjaGenerator:
 
         For Icon component, we inline it as a span element.
         For Utrecht components, we auto-detect and inline them.
+        For other components (like Link), generate component tags.
 
         Args:
             element: ContentElement with component info
             attributes: List of AttributeInfo
 
         Returns:
-            Inlined component HTML
+            Inlined component HTML or component tag
         """
         if element.component_name == 'Icon':
             return self._inline_icon_component(element, attributes)
 
-        # Try to auto-inline Utrecht components
+        # Try to generate a component tag for known converted components FIRST
+        # This takes precedence over Utrecht inlining for components like Link
+        component_tag = self._try_generate_component_tag(element)
+        if component_tag:
+            return component_tag
+
+        # Try to auto-inline Utrecht components (only if not a known component)
         inlined = self._try_inline_utrecht_component(element, attributes)
         if inlined:
             return inlined
@@ -414,6 +521,205 @@ class JinjaGenerator:
         )
 
         return icon_html
+
+    def _try_generate_component_tag(self, element) -> Optional[str]:
+        """Try to generate a component tag for a known converted component.
+
+        Args:
+            element: ContentElement with component info
+
+        Returns:
+            Component tag string or None if component not found
+        """
+        # Convert component name to kebab-case (Link → link)
+        component_name_kebab = self._to_kebab_case(element.component_name)
+
+        # Check if this component exists (basic check - could be improved)
+        # For now, just generate the tag for common components like Link
+        known_components = ['link', 'button', 'heading', 'paragraph']
+
+        if component_name_kebab not in known_components:
+            return None
+
+        # Build component tag with props
+        tag_name = f'c-{component_name_kebab}'
+        props = element.component_props or {}
+
+        # Extract content prop (if any) - this becomes inner content, not an attribute
+        content_value = props.get('content', None)
+
+        # Convert props to Jinja attributes
+        attrs = []
+        for prop_name, prop_value in props.items():
+            # Skip content (it's inner content, not an attribute)
+            if prop_name == 'content':
+                continue
+            # Handle className -> class
+            elif prop_name == 'className':
+                attrs.append(f'class="{prop_value}"')
+            # Handle href (for links)
+            elif prop_name == 'href':
+                attrs.append(f'href="{{{{ {prop_value} }}}}"')
+            # Event handlers: onClick → @click, onMouseDown → @mousedown, etc.
+            elif prop_name.startswith('on'):
+                # Convert onClick to @click (remove 'on' prefix and lowercase the first char of event name)
+                event_name = prop_name[2:]  # Remove 'on' prefix
+                event_name = event_name[0].lower() + event_name[1:]  # Lowercase first char: Click → click
+                attrs.append(f'@{event_name}="{{{{ {prop_value} }}}}"')
+            # Regular props
+            else:
+                attrs.append(f'{prop_name}="{{{{ {prop_value} }}}}"')
+
+        # Build the tag
+        attr_str = ' '.join(attrs) if attrs else ''
+        if content_value:
+            # Component with content
+            if attr_str:
+                return f'<{tag_name} {attr_str}>{{{{ {content_value} }}}}</{tag_name}>'
+            else:
+                return f'<{tag_name}>{{{{ {content_value} }}}}</{tag_name}>'
+        else:
+            # Self-closing or empty component
+            if attr_str:
+                return f'<{tag_name} {attr_str}></{tag_name}>'
+            else:
+                return f'<{tag_name}></{tag_name}>'
+
+    def _generate_fallback_chain(self, element, attributes: List[AttributeInfo]) -> str:
+        """Generate if/elif structure from fallback chain.
+
+        Args:
+            element: ContentElement with type='fallback_chain'
+            attributes: List of AttributeInfo
+
+        Returns:
+            Jinja if/elif/endif structure
+        """
+        lines = []
+
+        for i, part in enumerate(element.fallback_chain):
+            part_type = part.get('type')
+            condition = part.get('condition')
+
+            # Generate if or elif
+            if i == 0:
+                lines.append(f"    {{% if {condition} %}}")
+            else:
+                lines.append(f"    {{% elif {condition} %}}")
+
+            # Generate content based on type
+            if part_type == 'children_passthrough':
+                lines.append("        {{ children | safe }}")
+            elif part_type == 'array_map':
+                # Get the array_map element
+                map_element = part.get('element')
+                if map_element:
+                    # Generate for-loop without the wrapping if (already in if/elif)
+                    lines.append(f"        {{% for {map_element.item_var} in {map_element.array_name} %}}")
+                    component_tag = self._generate_nested_component_tag(map_element)
+                    lines.append(f"            {component_tag}")
+                    lines.append("        {% endfor %}")
+
+        lines.append("    {% endif %}")
+        return '\n'.join(lines)
+
+    def _generate_array_map_loop(self, element, attributes: List[AttributeInfo]) -> str:
+        """Generate Jinja for-loop from array.map() element.
+
+        Args:
+            element: ContentElement with type='array_map'
+            attributes: List of AttributeInfo
+
+        Returns:
+            Jinja for-loop string with nested component
+        """
+        lines = []
+
+        # Wrap in conditional if element has a condition
+        if element.condition:
+            jinja_condition = self._convert_condition_to_jinja(element.condition)
+            # Check if it's a negated condition
+            if jinja_condition.startswith('not ('):
+                # It's an elif case
+                lines.append(f"{{% elif {element.array_name} %}}")
+            else:
+                lines.append(f"{{% if {jinja_condition} %}}")
+
+        # Generate the for-loop
+        lines.append(f"        {{% for {element.item_var} in {element.array_name} %}}")
+
+        # Generate the nested component tag
+        component_tag = self._generate_nested_component_tag(element)
+        lines.append(f"            {component_tag}")
+
+        lines.append("        {% endfor %}")
+
+        return '\n'.join(lines)
+
+    def _generate_nested_component_tag(self, element) -> str:
+        """Generate nested component tag with attributes.
+
+        Args:
+            element: ContentElement with component info
+
+        Returns:
+            Component tag string like <c-component-name attr="value"></c-component-name>
+        """
+        # Find the component metadata
+        component_meta = None
+        for comp in self.nested_components:
+            if comp['component_class'] == element.component_name:
+                component_meta = comp
+                break
+
+        if not component_meta:
+            # Fallback: convert component name to tag
+            tag_name = self._to_kebab_case(element.component_name)
+            tag_name = f'c-{tag_name}'
+        else:
+            tag_name = component_meta['tag_name']
+
+        # Build attributes
+        attrs = []
+
+        if element.is_spread:
+            # Props are spread from array item - need to know which props to include
+            if element.array_name in self.array_mappings:
+                mapping = self.array_mappings[element.array_name]
+                item_props = mapping.get('item_props', [])
+
+                # Generate attribute for each prop
+                for prop in item_props:
+                    # Skip function props
+                    if prop.startswith('on'):
+                        continue
+                    attrs.append(f'{prop}="{{{{ {element.item_var}.{prop} }}}}"')
+        else:
+            # Explicit props from component_props
+            for prop_name, prop_value in element.component_props.items():
+                # Convert prop value to Jinja
+                jinja_value = prop_value.replace(element.item_var, f'{element.item_var}')
+                attrs.append(f'{prop_name}="{{{{ {jinja_value} }}}}"')
+
+        # Build the tag
+        if attrs:
+            attr_str = '\n                '.join(attrs)
+            return f'<{tag_name}\n                {attr_str}\n            ></{tag_name}>'
+        else:
+            return f'<{tag_name}></{tag_name}>'
+
+    def _to_kebab_case(self, pascal_case: str) -> str:
+        """Convert PascalCase to kebab-case.
+
+        Args:
+            pascal_case: PascalCase string
+
+        Returns:
+            kebab-case string
+        """
+        import re
+        kebab = re.sub(r'(?<!^)(?=[A-Z])', '-', pascal_case)
+        return kebab.lower()
 
     def add_todo_comment(self, description: str, source_file: str, source_line: int, action: str = "") -> None:
         """Add a TODO comment for manual review.

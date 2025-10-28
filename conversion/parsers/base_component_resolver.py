@@ -265,11 +265,23 @@ class BaseComponentResolver:
                     if cls and cls not in css_classes:
                         css_classes.append(cls)
 
+            # Check if there's a wrapper structure (outer element is different from primary)
+            wrapper_info = None
+            if component_info.elements and len(component_info.elements) > 0:
+                outer_elem = component_info.elements[0]
+                # If outer element is a wrapper (div/span) and primary is not, preserve the structure
+                if outer_elem.tag in ('div', 'span') and outer_elem.tag != primary.tag:
+                    wrapper_info = {
+                        'tag': outer_elem.tag,
+                        'classes': outer_elem.classes.copy()
+                    }
+
             return {
                 'html_tag': primary.tag,
                 'css_classes': css_classes,
                 'attributes': attributes,
-                'needs_review': []
+                'needs_review': [],
+                'wrapper': wrapper_info  # Include wrapper info if present
             }
 
         except Exception as e:

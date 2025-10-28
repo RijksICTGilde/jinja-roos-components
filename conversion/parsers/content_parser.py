@@ -8,12 +8,17 @@ from dataclasses import dataclass
 @dataclass
 class ContentElement:
     """Represents a content element in JSX."""
-    type: str  # 'conditional', 'fallback', 'text', 'component', 'variable'
+    type: str  # 'conditional', 'fallback', 'text', 'component', 'variable', 'array_map', 'fallback_chain', 'children_passthrough', 'conditional_component'
     condition: Optional[str] = None  # For conditional rendering
     content: Optional[str] = None  # The actual content
     component_name: Optional[str] = None  # For component elements
     component_props: Optional[Dict] = None  # Props for components
-    fallback_chain: Optional[List[str]] = None  # For || operators
+    fallback_chain: Optional[List] = None  # For || operators (can be List[str] or List[Dict])
+    fallback_value: Optional[str] = None  # Fallback value when condition is false (for conditional_component)
+    # For array_map type:
+    array_name: Optional[str] = None  # Name of array being mapped
+    item_var: Optional[str] = None  # Variable name for each item
+    is_spread: bool = False  # Whether props are spread ({...item})
 
 
 class ContentParser:
@@ -62,6 +67,36 @@ class ContentParser:
 
         return None
 
+    def _normalize_jsx_expression(self, expression: str) -> str:
+        """Normalize JSX expression for consistent parsing.
+
+        WARNING: This removes newlines and collapses whitespace, which may affect
+        intentional formatting if the expression contains string literals with
+        meaningful whitespace. However, for JSX code expressions (conditions,
+        function calls, etc.), this is generally safe and necessary for robust parsing.
+
+        Args:
+            expression: Raw JSX expression
+
+        Returns:
+            Normalized expression with consistent whitespace
+        """
+        # Remove newlines and tabs (JSX code doesn't need them)
+        normalized = expression.replace('\n', ' ').replace('\t', ' ')
+
+        # Collapse multiple spaces to single space
+        # NOTE: This may affect intentional double spaces in string literals
+        normalized = re.sub(r'\s+', ' ', normalized)
+
+        # Ensure consistent spacing around operators for easier parsing
+        normalized = normalized.replace('||', ' || ')
+        normalized = normalized.replace('&&', ' && ')
+
+        # Clean up any extra spaces created
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+
+        return normalized
+
     def _parse_children(self, content: str) -> None:
         """Parse children content for rendering elements.
 
@@ -87,15 +122,27 @@ class ContentParser:
             # Remove outer braces and strip
             expression = expression[1:-1].strip()
 
+            # Normalize the expression for consistent parsing
+            # This handles newlines, extra spaces, etc. in JSX code
+            expression = self._normalize_jsx_expression(expression)
+
+            # Check for fallback rendering first (highest priority for complex patterns)
+            # Pattern: (children && ...) || (steps && ...)
+            if ' || ' in expression:  # Now we can safely check with spaces
+                self._parse_fallback(expression)
             # Check for ternary operator: condition ? value : fallback
-            if ' ? ' in expression and ' : ' in expression:
+            elif ' ? ' in expression and ' : ' in expression:
                 self._parse_ternary(expression)
+            # Check for .map() patterns (but not if already handled by fallback)
+            elif '.map(' in expression:
+                # Try to parse as array map
+                map_element = self._parse_array_map(expression)
+                if map_element:
+                    self.elements.append(map_element)
+                    continue
             # Check for conditional rendering: condition && element
             elif ' && ' in expression:
                 self._parse_conditional(expression)
-            # Check for fallback rendering: a || b || c
-            elif ' || ' in expression:
-                self._parse_fallback(expression)
             # Simple variable reference
             else:
                 self.elements.append(ContentElement(
@@ -252,20 +299,132 @@ class ContentParser:
     def _parse_fallback(self, expression: str) -> None:
         """Parse fallback rendering expression.
 
+        NOTE: Expects normalized expression (from _normalize_jsx_expression).
+        Operators like || and && should have consistent spacing.
+
         Args:
-            expression: Expression like "children || label"
+            expression: Normalized expression like "children || label" or
+                       "(children && React.Children.map(...)) || (steps && steps.map(...))"
         """
+        # Split on || (expression is already normalized, so spacing is consistent)
         parts = [p.strip() for p in expression.split(' || ')]
 
+        # Check if this is a complex fallback with .map() patterns
+        has_map = any('.map(' in part for part in parts)
+        has_react_children = any('React.Children.map' in part for part in parts)
+
+        if has_map or has_react_children:
+            # Parse as complex fallback chain with conditional rendering
+            parsed_parts = []
+
+            for part in parts:
+                if 'React.Children.map' in part:
+                    # Extract condition variable from: "(children && React.Children.map(...))"
+                    condition_match = re.match(r'\(?(\w+)\s+&&', part)
+                    condition = condition_match.group(1) if condition_match else 'children'
+
+                    parsed_parts.append({
+                        'type': 'children_passthrough',
+                        'condition': condition
+                    })
+                elif '.map(' in part:
+                    # Parse array map
+                    map_element = self._parse_array_map(part)
+                    if map_element:
+                        # Extract clean condition (remove wrapping parentheses if present)
+                        condition = map_element.condition or map_element.array_name
+                        condition = condition.strip('()')  # Remove any wrapping parens
+
+                        parsed_parts.append({
+                            'type': 'array_map',
+                            'element': map_element,
+                            'condition': condition
+                        })
+
+            # Create fallback chain element for if/elif generation
+            if parsed_parts:
+                self.elements.append(ContentElement(
+                    type='fallback_chain',
+                    fallback_chain=parsed_parts
+                ))
+                return
+
+        # Simple fallback without .map() - handle as before
         self.elements.append(ContentElement(
             type='fallback',
             fallback_chain=parts
         ))
 
+    def _parse_array_map(self, expression: str) -> Optional[ContentElement]:
+        """Parse array.map() expression.
+
+        Args:
+            expression: Expression like "steps.map((step) => <Component {...step} />)"
+                       or "steps && steps.map((step) => <Component {...step} />)"
+
+        Returns:
+            ContentElement with type='array_map' or None
+        """
+        # Pattern: arrayName.map((itemVar, index?) => <ComponentName .../>)
+        # First, check for condition before .map() like "steps && steps.map(...)"
+        condition = None
+        map_expr = expression
+
+        if ' && ' in expression:
+            parts = expression.split(' && ', 1)
+            if '.map(' in parts[1]:
+                condition = parts[0].strip()
+                map_expr = parts[1].strip()
+
+        # Extract array name, item variable, and component
+        # Pattern: arrayName.map((itemVar) => or arrayName.map((itemVar, index) =>
+        map_pattern = r'(\w+)\.map\(\s*\((\w+)(?:,\s*\w+)?\)\s*=>\s*<(\w+)\s*([^/>]*?)\s*/?>.*?\)'
+
+        match = re.search(map_pattern, map_expr, re.DOTALL)
+        if not match:
+            # Try React.Children.map pattern
+            children_pattern = r'React\.Children\.map\((\w+),\s*\((\w+)(?:,\s*\w+)?\)\s*=>\s*.*?<(\w+)\s*([^/>]*?)\s*/?>.*?\)'
+            match = re.search(children_pattern, map_expr, re.DOTALL)
+            if match:
+                array_name = match.group(1)
+                item_var = match.group(2)
+                component_name = match.group(3)
+                props_str = match.group(4).strip()
+            else:
+                return None
+        else:
+            array_name = match.group(1)
+            item_var = match.group(2)
+            component_name = match.group(3)
+            props_str = match.group(4).strip()
+
+        # Check for prop spreading: {...itemVar}
+        is_spread = f'...{item_var}' in props_str or f'...(child as any).props' in props_str
+
+        # Parse component props if not spread
+        component_props = {}
+        if not is_spread and props_str:
+            component_props = self._parse_component_props(props_str)
+
+        return ContentElement(
+            type='array_map',
+            component_name=component_name,
+            array_name=array_name,
+            item_var=item_var,
+            is_spread=is_spread,
+            component_props=component_props,
+            condition=condition
+        )
+
     def resolve_component_references(self, source_content: str) -> Dict[str, Dict]:
         """Resolve component variable references to their definitions.
 
         For example, if iconMarkup = <Icon .../>, return the Icon component info.
+        Also handles conditional assignments:
+          let labelMarkup = label;
+          if (condition) {
+            labelMarkup = <Component .../>
+          }
 
         Args:
             source_content: Full source file content
@@ -275,7 +434,7 @@ class ContentParser:
         """
         references = {}
 
-        # Pattern: const varName = <ComponentName .../>
+        # Pattern 1: const varName = <ComponentName .../>
         pattern = r'const\s+(\w+)\s*=\s*<(\w+)\s+([^/>]*)/>'
 
         for match in re.finditer(pattern, source_content):
@@ -287,6 +446,31 @@ class ContentParser:
             props = self._parse_component_props(props_str)
 
             references[var_name] = {
+                'component': component_name,
+                'props': props
+            }
+
+        # Pattern 2: Conditional assignment with component
+        # let varName: type = defaultValue;
+        # if (condition) {
+        #   varName = <ComponentName .../>;
+        # }
+        conditional_pattern = r'let\s+(\w+)(?::\s*[^=]+)?\s*=\s*([^;]+);[\s\S]*?if\s*\(([^)]+)\)\s*\{[\s]*\1\s*=\s*<(\w+)\s+([^/>]*)/>[\s]*;?[\s]*\}'
+
+        for match in re.finditer(conditional_pattern, source_content):
+            var_name = match.group(1)
+            default_value = match.group(2).strip()
+            condition = match.group(3).strip()
+            component_name = match.group(4)
+            props_str = match.group(5).strip()
+
+            # Parse props
+            props = self._parse_component_props(props_str)
+
+            references[var_name] = {
+                'type': 'conditional',
+                'default': default_value,
+                'condition': condition,
                 'component': component_name,
                 'props': props
             }
