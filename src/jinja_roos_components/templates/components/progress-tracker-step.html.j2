@@ -1,0 +1,31 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: progress-tracker-step
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set state = _component_context.state | default('incomplete') %}
+{% set line = _component_context.line | default('none') %}
+{% set size = _component_context.size | default('md') %}
+{% set label = _component_context.label | default('Step label') %}
+{% set link = _component_context.link | default('#') %}
+{% set onClick = _component_context.get('onClick') %}
+{% set stateImageCssClassname = 'start-end' if state == 'start' or state == 'end' else 'incomplete' if state == 'disabled' else state %}
+{% set css_classes = ['rvo-progress-tracker__step'] %}
+{% set css_classes = css_classes + ['rvo-progress-tracker__step--' + ('md' if line == 'substep-start' else size)] %}
+{% set css_classes = css_classes + ['rvo-image-bg-progress-tracker-' + stateImageCssClassname + '-' + ('md' if line == 'substep-start' else size) + '--after'] %}
+{% if state == 'start' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--start'] %}{% endif %}
+{% if state == 'incomplete' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--incomplete'] %}{% endif %}
+{% if state == 'doing' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--doing'] %}{% endif %}
+{% if state == 'completed' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--completed'] %}{% endif %}
+{% if state == 'disabled' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--disabled'] %}{% endif %}
+{% if state == 'end' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--end'] %}{% endif %}
+{% if line == 'straight' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--straight'] %}{% endif %}
+{% if line == 'substep-start' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--substep-start'] %}{% endif %}
+{% if line == 'substep-end' %}{% set css_classes = css_classes + ['rvo-progress-tracker__step--substep-end'] %}{% endif %}
+{% if line == 'straight' %}{% set css_classes = css_classes + ['rvo-image-bg-progress-tracker-line-straight--before'] %}{% endif %}
+{% if line == 'substep-start' %}{% set css_classes = css_classes + ['rvo-image-bg-progress-tracker-line-substep-start--before'] %}{% endif %}
+{% if line == 'substep-end' %}{% set css_classes = css_classes + ['rvo-image-bg-progress-tracker-line-substep-end--before'] %}{% endif %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="progress-tracker-step"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {% if state == 'incomplete' or state == 'doing' or state == 'completed' %}    <c-link href="{{ link }}" class="rvo-progress-tracker__step-link" @click="{{ onClick }}">{{ label }}</c-link>{% else %}    {{ label }}{% endif %}
+</div>

@@ -95,6 +95,7 @@ class SwitchParser:
         """
         cases = []
         current_case_values = []
+        is_default = False
 
         lines = switch_body.split('\n')
 
@@ -105,18 +106,38 @@ class SwitchParser:
             case_match = re.match(r"case\s+['\"]([^'\"]+)['\"]:\s*$", line)
             if case_match:
                 current_case_values.append(case_match.group(1))
+                is_default = False
                 continue
 
-            # Match assignment: varname = 'value';
+            # Match default case
+            if line.startswith('default:'):
+                is_default = True
+                continue
+
+            # Match assignment with quoted string: varname = 'value';
             assign_match = re.match(rf"{result_var}\s*=\s*['\"]([^'\"]+)['\"];", line)
             if assign_match:
                 result_value = assign_match.group(1)
-                if current_case_values:
+                if current_case_values or is_default:
                     cases.append(SwitchCase(
-                        values=current_case_values.copy(),
+                        values=current_case_values.copy() if current_case_values else ['__DEFAULT__'],
                         result=result_value
                     ))
                     current_case_values = []
+                    is_default = False
+                continue
+
+            # Match assignment with variable reference: varname = othervar;
+            var_assign_match = re.match(rf"{result_var}\s*=\s*(\w+);", line)
+            if var_assign_match:
+                result_value = var_assign_match.group(1)
+                if current_case_values or is_default:
+                    cases.append(SwitchCase(
+                        values=current_case_values.copy() if current_case_values else ['__DEFAULT__'],
+                        result=result_value
+                    ))
+                    current_case_values = []
+                    is_default = False
                 continue
 
             # Match break

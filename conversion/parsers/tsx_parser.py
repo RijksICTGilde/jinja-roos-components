@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from .interface_parser import InterfaceParser, AttributeInfo
 from .defaultargs_parser import DefaultArgsParser
+from .component_defaults_parser import ComponentDefaultsParser
 from ..utils.ast_helpers import extract_import_source, extract_import_names
 
 
@@ -23,6 +24,8 @@ class ComponentInfo:
     name: str
     props_interface: Optional[List[AttributeInfo]]
     default_args: Dict[str, Any]
+    actual_defaults: Dict[str, Any]  # Defaults actually used in component destructuring
+    example_values: Dict[str, Any]   # Values only in defaultArgs (examples for stories)
     imports: List[ImportInfo]
     jsx_content: str
     file_path: str
@@ -34,6 +37,7 @@ class TsxParser:
     def __init__(self):
         self.interface_parser = InterfaceParser()
         self.defaultargs_parser = DefaultArgsParser()
+        self.component_defaults_parser = ComponentDefaultsParser()
         self.imports: List[ImportInfo] = []
 
     def parse_component(self, tsx_file_path: str, defaultargs_file_path: Optional[str] = None) -> ComponentInfo:
@@ -70,10 +74,17 @@ class TsxParser:
         # Extract JSX content (the return statement)
         jsx_content = self._extract_jsx_return(tsx_content)
 
+        # Distinguish between actual defaults and example values
+        actual_defaults, example_values = self.component_defaults_parser.parse_component_function(
+            tsx_content, component_name, default_args
+        )
+
         return ComponentInfo(
             name=component_name,
             props_interface=props_interface,
             default_args=default_args,
+            actual_defaults=actual_defaults,
+            example_values=example_values,
             imports=self.imports,
             jsx_content=jsx_content,
             file_path=tsx_file_path

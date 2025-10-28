@@ -25,45 +25,70 @@ class DefinitionGenerator:
         source_file: str,
         source_content: str,
         base_components: List[Dict[str, str]],
-        nested_components: List[str],
-        manual_review_items: List[Dict[str, Any]]
+        nested_components: List[Dict[str, Any]],
+        manual_review_items: List[Dict[str, Any]],
+        actual_defaults: Dict[str, Any] = None,
+        example_values: Dict[str, Any] = None,
+        array_mappings: Dict[str, Dict] = None
     ) -> Dict[str, Any]:
         """Generate component definition.
 
         Args:
             attributes: List of component attributes
-            default_args: Default values
+            default_args: Default values (legacy - all values from defaultArgs)
             source_file: Path to source file
             source_content: Content of source file (for hash)
             base_components: List of base component info
-            nested_components: List of nested component names
+            nested_components: List of nested component metadata dicts
             manual_review_items: Items requiring manual review
+            actual_defaults: Actual defaults used in component (NEW)
+            example_values: Example values (not used in component, only in stories) (NEW)
+            array_mappings: Dict mapping array attributes to component info
 
         Returns:
             Definition dictionary
         """
-        return {
+        # Use actual_defaults if provided, otherwise fall back to default_args
+        defaults_to_use = actual_defaults if actual_defaults is not None else default_args
+
+        definition = {
             "name": self.component_name,
             "source_file": source_file,
             "converted_at": datetime.utcnow().isoformat() + "Z",
             "conversion_hash": compute_hash(source_content),
             "base_components": base_components,
             "nested_components": nested_components,
-            "attributes": self._convert_attributes(attributes, default_args),
+            "attributes": self._convert_attributes(attributes, defaults_to_use, example_values, array_mappings),
             "manual_review_items": manual_review_items
         }
 
-    def _convert_attributes(self, attributes: List[AttributeInfo], default_args: Dict[str, Any]) -> List[Dict[str, Any]]:
+        # Include example values separately if present
+        if example_values:
+            definition["example_values"] = example_values
+
+        return definition
+
+    def _convert_attributes(
+        self,
+        attributes: List[AttributeInfo],
+        default_args: Dict[str, Any],
+        example_values: Dict[str, Any] = None,
+        array_mappings: Dict[str, Dict] = None
+    ) -> List[Dict[str, Any]]:
         """Convert AttributeInfo list to definition format.
 
         Args:
             attributes: List of AttributeInfo
-            default_args: Default values dict
+            default_args: Actual default values dict
+            example_values: Example-only values dict
+            array_mappings: Dict mapping array attributes to component info
 
         Returns:
             List of attribute definitions
         """
         result = []
+        example_values = example_values or {}
+        array_mappings = array_mappings or {}
 
         for attr in attributes:
             # Skip function attributes
@@ -81,12 +106,27 @@ class DefinitionGenerator:
             if attr.enum_values:
                 attr_def["enum_values"] = attr.enum_values
 
+            # Add array mapping info if this is an array attribute
+            if attr.name in array_mappings:
+                mapping = array_mappings[attr.name]
+                attr_def["item_type"] = mapping.get("item_type", "object")
+                if mapping.get("item_props"):
+                    attr_def["item_props"] = mapping["item_props"]
+                if mapping.get("maps_to_component"):
+                    attr_def["maps_to_component"] = mapping["maps_to_component"]
+                    attr_def["component_tag"] = mapping.get("component_tag", "")
+
             # Add default value if present
             if attr.name in default_args:
                 attr_def["default"] = default_args[attr.name]
             elif not attr.required:
                 # Provide sensible defaults
                 attr_def["default"] = self._get_type_default(attr)
+
+            # Mark as example if only in example values
+            if attr.name in example_values:
+                attr_def["is_example"] = True
+                attr_def["example_value"] = example_values[attr.name]
 
             result.append(attr_def)
 

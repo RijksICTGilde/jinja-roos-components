@@ -19,6 +19,7 @@ class ClsxParser:
 
     def __init__(self):
         self.mappings: List[ClassMapping] = []
+        self.base_classes: List[str] = []
 
     def parse_clsx_call(self, clsx_content: str) -> List[ClassMapping]:
         """Parse a clsx() function call to extract class mappings.
@@ -30,6 +31,7 @@ class ClsxParser:
             List of ClassMapping objects
         """
         self.mappings = []
+        self.base_classes = []
 
         # Split by commas at the top level (not inside quotes or parentheses)
         arguments = self._split_arguments(clsx_content)
@@ -44,7 +46,14 @@ class ClsxParser:
             # String literals - base classes
             if (arg.startswith("'") and arg.endswith("'")) or \
                (arg.startswith('"') and arg.endswith('"')):
-                # These are base classes, handled separately
+                # Extract the base class name
+                class_name = arg.strip('\'"')
+                self.base_classes.append(class_name)
+                continue
+
+            # Template literals without condition (bare): `class-${var}`
+            if arg.startswith('`') and arg.endswith('`') and ' && ' not in arg:
+                self._parse_bare_template_literal(arg)
                 continue
 
             # Conditional expressions: condition && 'class-name'
@@ -179,6 +188,86 @@ class ClsxParser:
                 value='true',
                 css_class=class_part,
                 condition=condition
+            ))
+
+    def _parse_bare_template_literal(self, template: str) -> None:
+        """Parse bare template literal without a condition.
+
+        Examples:
+        - `rvo-progress-tracker__step--${state}`
+        - `rvo-progress-tracker__step--${line !== 'substep-start' ? size : 'md'}`
+        - `rvo-image-bg-progress-tracker-${stateImageCssClassname}-${size}--after`
+
+        Args:
+            template: Template literal like '`class-${var}`'
+        """
+        template_pattern = template.strip('`')
+
+        # Find all ${...} expressions
+        expressions = re.findall(r'\$\{([^}]+)\}', template_pattern)
+
+        if not expressions:
+            return
+
+        # For each expression, determine what it is:
+        # 1. Simple variable: ${state}
+        # 2. Ternary: ${cond ? val1 : val2}
+        # 3. Variable reference: ${someVar} where someVar is computed
+
+        for expr in expressions:
+            expr = expr.strip()
+
+            # Check if it's a ternary operator
+            if '?' in expr and ':' in expr:
+                self._parse_ternary_template(template_pattern, expr)
+                return  # Ternary templates need special handling
+
+        # For simple variables or variable references, mark as template for expansion
+        # Use the first expression as the prop_name (might need refinement)
+        primary_var = expressions[0].strip()
+
+        self.mappings.append(ClassMapping(
+            prop_name=primary_var,
+            value='__TEMPLATE__',
+            css_class=template_pattern,
+            condition='__ALWAYS__'  # Special marker for always-included templates
+        ))
+
+    def _parse_ternary_template(self, template_pattern: str, ternary_expr: str) -> None:
+        """Parse template literal containing a ternary operator.
+
+        Example: `class--${line !== 'substep-start' ? size : 'md'}`
+
+        Args:
+            template_pattern: Full template pattern
+            ternary_expr: The ternary expression like "line !== 'substep-start' ? size : 'md'"
+        """
+        # Parse ternary: condition ? trueVal : falseVal
+        parts = ternary_expr.split('?')
+        if len(parts) != 2:
+            return
+
+        condition = parts[0].strip()
+        value_parts = parts[1].split(':')
+        if len(value_parts) != 2:
+            return
+
+        true_val = value_parts[0].strip()
+        false_val = value_parts[1].strip().strip("'\"")
+
+        # Extract the property being checked (e.g., 'line' from "line !== 'substep-start'")
+        if ' !== ' in condition:
+            prop_name, excluded_value = condition.split(' !== ')
+            prop_name = prop_name.strip()
+            excluded_value = excluded_value.strip().strip("'\"")
+
+            # The true_val might be another variable (e.g., 'size')
+            # Store as special ternary template mapping
+            self.mappings.append(ClassMapping(
+                prop_name='__TERNARY__',  # Special marker
+                value=f"{condition}?{true_val}:{false_val}",
+                css_class=template_pattern,
+                condition=f"__TERNARY__{condition}?{true_val}:{false_val}"
             ))
 
     def _parse_template_literal(self, condition: str, template: str) -> None:

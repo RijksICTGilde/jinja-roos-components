@@ -9,6 +9,8 @@ class ClassBuilder:
     def __init__(self):
         self.class_conditionals: List[str] = []
         self.base_classes: List[str] = []
+        self.template_classes: List[Dict[str, Any]] = []  # Classes with variable interpolation
+        self.computed_vars: List[Dict[str, str]] = []  # Computed variables (ternary, switch, etc.)
 
     def add_base_classes(self, classes: List[str]) -> None:
         """Add base CSS classes (always applied).
@@ -60,6 +62,30 @@ class ClassBuilder:
 
         self.add_conditional_class(class_name, condition)
 
+    def add_template_class(self, template_pattern: str, condition: Optional[str] = None) -> None:
+        """Add a class with variable interpolation.
+
+        Args:
+            template_pattern: Class pattern with ${var} placeholders (e.g., 'class--${state}')
+            condition: Optional condition (None means always include)
+        """
+        self.template_classes.append({
+            'template': template_pattern,
+            'condition': condition
+        })
+
+    def add_computed_var(self, var_name: str, expression: str) -> None:
+        """Add a computed variable (from ternary or switch).
+
+        Args:
+            var_name: Variable name to assign
+            expression: Jinja expression to compute the value
+        """
+        self.computed_vars.append({
+            'name': var_name,
+            'expression': expression
+        })
+
     def add_size_classes(self, var_name: str = 'size', prefix: str = '', suffix: str = '') -> None:
         """Add size-based classes (common pattern).
 
@@ -87,12 +113,34 @@ class ClassBuilder:
         """
         lines = []
 
+        # Generate computed variables first
+        for comp_var in self.computed_vars:
+            lines.append(f"{{% set {comp_var['name']} = {comp_var['expression']} %}}")
+
         # Initialize array with base classes
         if self.base_classes:
             classes_str = ', '.join(f"'{c}'" for c in self.base_classes)
             lines.append(f"{{% set {array_var_name} = [{classes_str}] %}}")
         else:
             lines.append(f"{{% set {array_var_name} = [] %}}")
+
+        # Add template classes (with variable interpolation)
+        for tpl_class in self.template_classes:
+            template = tpl_class['template']
+            condition = tpl_class['condition']
+
+            # Convert ${var} to Jinja {{var}} syntax and build class string
+            jinja_class = self._convert_template_to_jinja(template)
+
+            if condition and condition != '__ALWAYS__':
+                # Convert React condition to Jinja
+                jinja_condition = self._convert_condition_to_jinja(condition)
+                lines.append(f"{{% if {jinja_condition} %}}")
+                lines.append(f"    {{% set {array_var_name} = {array_var_name} + [{jinja_class}] %}}")
+                lines.append("{% endif %}")
+            else:
+                # Always include
+                lines.append(f"{{% set {array_var_name} = {array_var_name} + [{jinja_class}] %}}")
 
         # Add conditional classes
         for item in self.class_conditionals:
@@ -103,6 +151,103 @@ class ClassBuilder:
             )
 
         return '\n'.join(lines)
+
+    def _convert_template_to_jinja(self, template: str) -> str:
+        """Convert React template literal to Jinja string concatenation.
+
+        Args:
+            template: Template like 'class--${var}'
+
+        Returns:
+            Jinja expression like "'class--' + var"
+        """
+        import re
+
+        # Find all ${...} expressions
+        parts = []
+        last_end = 0
+
+        for match in re.finditer(r'\$\{([^}]+)\}', template):
+            # Add the literal part before this expression
+            if match.start() > last_end:
+                literal = template[last_end:match.start()]
+                if literal:
+                    parts.append(f"'{literal}'")
+
+            # Add the variable expression (convert ternary if needed)
+            var_expr = match.group(1)
+            converted_expr = self._convert_ternary_to_jinja(var_expr)
+            parts.append(converted_expr)
+
+            last_end = match.end()
+
+        # Add any remaining literal part
+        if last_end < len(template):
+            literal = template[last_end:]
+            if literal:
+                parts.append(f"'{literal}'")
+
+        # Join with +
+        if len(parts) == 1:
+            return parts[0]
+        return ' + '.join(parts)
+
+    def _convert_condition_to_jinja(self, condition: str) -> str:
+        """Convert React condition to Jinja condition.
+
+        Args:
+            condition: React condition
+
+        Returns:
+            Jinja condition
+        """
+        # Replace !== with !=
+        jinja_cond = condition.replace(' !== ', ' != ')
+        # Replace === with ==
+        jinja_cond = jinja_cond.replace(' === ', ' == ')
+        return jinja_cond
+
+    def _convert_ternary_to_jinja(self, expr: str) -> str:
+        """Convert JavaScript ternary expression to Jinja conditional expression.
+
+        Args:
+            expr: Expression like "line !== 'substep-start' ? size : 'md'"
+
+        Returns:
+            Jinja expression like "('md' if line == 'substep-start' else size)"
+        """
+        import re
+
+        # Check if expression contains ternary operator
+        if '?' not in expr or ':' not in expr:
+            # No ternary, return as-is
+            return expr
+
+        # Parse ternary: condition ? trueVal : falseVal
+        # Split on ? first
+        parts = expr.split('?')
+        if len(parts) != 2:
+            return expr  # Invalid ternary, return as-is
+
+        condition = parts[0].strip()
+        value_parts = parts[1].split(':')
+        if len(value_parts) != 2:
+            return expr  # Invalid ternary, return as-is
+
+        true_val = value_parts[0].strip()
+        false_val = value_parts[1].strip()
+
+        # Convert condition to Jinja syntax
+        jinja_condition = self._convert_condition_to_jinja(condition)
+
+        # Handle !== by flipping the condition
+        if ' !== ' in condition:
+            # For !== we need to flip: "a !== b ? x : y" becomes "(y if a == b else x)"
+            jinja_condition = jinja_condition.replace(' != ', ' == ')
+            return f"({false_val} if {jinja_condition} else {true_val})"
+        else:
+            # Normal condition: "a === b ? x : y" becomes "(x if a == b else y)"
+            return f"({true_val} if {jinja_condition} else {false_val})"
 
     def generate_compact_jinja(self, array_var_name: str = 'css_classes') -> str:
         """Generate more compact Jinja code (one-liners where possible).

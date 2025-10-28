@@ -1,0 +1,57 @@
+{
+  "name": "progress-tracker",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/template.tsx",
+  "converted_at": "2025-10-27T17:12:43.218399Z",
+  "conversion_hash": "b4bd82feb52b256201b0649d5c27d3b88d8c1240c293d3b44994b4f9fb3e3b33",
+  "base_components": [],
+  "nested_components": [
+    {
+      "name": "progress-tracker-step",
+      "component_class": "ProgressTrackerStep",
+      "source_path": "./progress-tracker-step/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
+      "interface": "IProgressTrackerStepProps",
+      "tag_name": "c-progress-tracker-step",
+      "props": [
+        "state",
+        "line",
+        "size",
+        "label",
+        "link",
+        "onClick"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "steps",
+      "type": "string",
+      "required": false,
+      "description": "steps attribute",
+      "item_type": "object",
+      "item_props": [
+        "state",
+        "label",
+        "link",
+        "size",
+        "line"
+      ],
+      "maps_to_component": "progress-tracker-step",
+      "component_tag": "c-progress-tracker-step",
+      "default": "",
+      "is_example": true,
+      "example_value": "defaultSteps"
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "steps": "defaultSteps"
+  }
+}
