@@ -103,6 +103,23 @@ class ComponentValidator:
     
     def _validate_attribute_value(self, component_name: str, attr_name: str, attr_value: Any, attr_def) -> None:
         """Validate attribute value based on its type definition."""
+        # Check for None value (shorthand notation) - not supported for any attribute type
+        if attr_value is None:
+            type_hint = {
+                AttributeType.STRING: 'a string value (e.g., title="My Title")',
+                AttributeType.BOOLEAN: 'disabled="true" or disabled="false"',
+                AttributeType.NUMBER: 'a number value (e.g., count="5")',
+                AttributeType.ENUM: f'one of: {", ".join(attr_def.enum_values)}' if attr_def.enum_values else 'a valid enum value',
+                AttributeType.OBJECT: 'an object value'
+            }.get(attr_def.type, 'a value')
+
+            error_msg = f"Shorthand notation is not supported for attribute '{attr_name}' in component 'c-{component_name}'. Please provide {type_hint}."
+            if self.strict_mode:
+                raise ComponentValidationError(error_msg)
+            else:
+                logger.warning(error_msg)
+                return
+
         # Skip validation for jinja template expressions
         if isinstance(attr_value, str) and ('{{' in attr_value or '{%' in attr_value):
             return

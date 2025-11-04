@@ -33,8 +33,6 @@ def test_event_attribute_jinja_interpolation():
     template = env.from_string(test_template)
     result = template.render()
 
-    print(result)
-
     # Check if the variables were resolved
     assert "showDeleteConfirmation('test-project'" in result, \
         "Should resolve project.name in @click attribute"

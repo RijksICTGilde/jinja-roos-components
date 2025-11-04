@@ -183,20 +183,35 @@ class ComponentHTMLParser(html.parser.HTMLParser):
             # Read the attribute name
             while pos < len(attrs_str) and (attrs_str[pos].isalnum() or attrs_str[pos] in '-_'):
                 pos += 1
-            
-            if pos >= len(attrs_str):
-                break
-                
+
             attr_name = attrs_str[name_start:pos]
-            
-            # Skip whitespace and =
-            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r=':
+
+            if pos >= len(attrs_str):
+                # End of string after attribute name - it's a boolean attribute
+                attrs[attr_name] = None
+                break
+
+            # Skip whitespace after attribute name
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
                 pos += 1
-            
+
+            # Check if there's an = sign (attribute has a value) or not (boolean attribute)
+            if pos >= len(attrs_str) or attrs_str[pos] != '=':
+                # Boolean attribute (no value)
+                attrs[attr_name] = None
+                continue
+
+            # Skip the = sign
+            pos += 1
+
+            # Skip whitespace after =
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
+                pos += 1
+
             if pos >= len(attrs_str):
                 attrs[attr_name] = ""
                 break
-            
+
             # Find attribute value - handle nested structures
             if attrs_str[pos] in ('"', "'"):
                 # Quoted value - use stack to track nested brackets/quotes

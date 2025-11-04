@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Test Jinja syntax handling in regular attributes after the fix.
 """
@@ -92,3 +90,59 @@ def test_mixed_attributes():
         "Should extract Jinja expression from variant"
     assert '"Click me"' in result or "'Click me'" in result, \
         "Should preserve string value for title"
+    
+def test_shorthand_boolean_attribute():
+    """Test that shorthand boolean notation is properly parsed in the middle of attributes"""
+
+    registry = ComponentRegistry()
+    button_component = ComponentDefinition(
+        name='button',
+        description='Test button component',
+        attributes=[
+            AttributeDefinition('variant', AttributeType.STRING),
+            AttributeDefinition('disabled', AttributeType.BOOLEAN),
+        ]
+    )
+    registry.register_component(button_component)
+
+    parser = ComponentHTMLParser(registry)
+    components = parser.parse_components("""
+<c-button disabled title="my button"/>
+                                         """)
+
+    assert len(components) == 1
+    assert len(components[0]['attrs']) == 2
+    assert components[0]['attrs']['disabled'] == None
+    assert components[0]['attrs']['title'] == 'my button'
+
+def test_shorthand_attribute_at_end():
+    """Test that shorthand notation at the end of the tag is properly parsed"""
+
+    registry = ComponentRegistry()
+    button_component = ComponentDefinition(
+        name='button',
+        description='Test button component',
+        attributes=[
+            AttributeDefinition('title', AttributeType.STRING),
+            AttributeDefinition('disabled', AttributeType.BOOLEAN),
+        ]
+    )
+    registry.register_component(button_component)
+
+    parser = ComponentHTMLParser(registry)
+
+    # Test with self-closing tag
+    components = parser.parse_components('<c-button title="my button" disabled />')
+
+    assert len(components) == 1
+    assert len(components[0]['attrs']) == 2
+    assert components[0]['attrs']['title'] == 'my button'
+    assert components[0]['attrs']['disabled'] == None
+
+    # Test with regular closing tag
+    components = parser.parse_components('<c-button title="my button" disabled>content</c-button>')
+
+    assert len(components) == 1
+    assert len(components[0]['attrs']) == 2
+    assert components[0]['attrs']['title'] == 'my button'
+    assert components[0]['attrs']['disabled'] == None
