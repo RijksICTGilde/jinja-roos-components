@@ -472,6 +472,12 @@ Configure ROOS Components in a Jinja2 environment.
 5. Run code quality checks: `npm run lint && npm run typecheck`
 6. Submit a pull request
 
+## Tagging / releasing
+Currently the package is not released on a package index. However, by using tags, users can still pin to a specific version. 
+- Change "[Unreleased]" in CHANGES.md to new tag and create new "[Unreleased]" section on top
+- Change version in pyproject.toml
+- Tag on main with `git tag -a 0.1 -m "0.1"` (substitute new tags)
+
 ## 📄 License
 
 EUROPEAN UNION PUBLIC LICENSE v1.2 - see [LICENSE](LICENSE) file for details.

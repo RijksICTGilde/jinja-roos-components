@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "jinja-roos-components"
-version = "0.1.0"
+version = "0.1"
 description = "Modern, self-contained Jinja2 component library with built-in assets"
 readme = "README.md"
 license = {text = "EUPL"}
