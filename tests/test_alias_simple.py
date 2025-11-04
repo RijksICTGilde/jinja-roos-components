@@ -3,89 +3,63 @@
 Simple test for component alias registry functionality.
 """
 
-import sys
-import os
-
-# Add the package to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'jinja-roos-components'))
-
 from jinja_roos_components.registry import ComponentRegistry
 
-def test_registry_aliases():
-    """Test that the registry correctly handles aliases."""
-    print("=== Testing Component Registry Aliases ===\n")
-    
+
+def test_registry_alias_registration():
+    """Test that header aliases are registered."""
     registry = ComponentRegistry()
-    
-    print("1. Testing alias registration:")
-    # Test that aliases were registered
+
     header_aliases = [f"h{i}" for i in range(1, 7)]
-    list_aliases = ["ol", "ul", "li"]
-    
     for alias in header_aliases:
-        has_alias = registry.has_alias(alias)
-        print(f"   {alias}: {'✓' if has_alias else '✗'}")
-        
-    for alias in list_aliases:
-        has_alias = registry.has_alias(alias)
-        print(f"   {alias}: {'✓' if has_alias else '✗'}")
-    
-    print("\n2. Testing alias resolution:")
-    
-    # Test header alias resolution
-    if registry.has_alias('h1'):
-        target, attrs = registry.resolve_alias('h1', {})
-        print(f"   h1 -> {target} with attrs: {attrs}")
-        
-        # Test with user attributes
-        target, attrs = registry.resolve_alias('h1', {'class': 'title', 'id': 'main'})
-        print(f"   h1 with user attrs -> {target} with attrs: {attrs}")
-    
-    if registry.has_alias('h3'):
-        target, attrs = registry.resolve_alias('h3', {'textContent': 'Section'})
-        print(f"   h3 -> {target} with attrs: {attrs}")
-    
-    # Test list alias resolution
-    if registry.has_alias('ol'):
-        target, attrs = registry.resolve_alias('ol', {})
-        print(f"   ol -> {target} with attrs: {attrs}")
-        
-        # Test with user attributes
-        target, attrs = registry.resolve_alias('ol', {'class': 'numbered', 'bulletType': 'none'})
-        print(f"   ol with user attrs -> {target} with attrs: {attrs}")
-    
-    if registry.has_alias('ul'):
-        target, attrs = registry.resolve_alias('ul', {})
-        print(f"   ul -> {target} with attrs: {attrs}")
-        
-    if registry.has_alias('li'):
-        target, attrs = registry.resolve_alias('li', {})
-        print(f"   li -> {target} with attrs: {attrs}")
-    
-    print("\n3. Testing component lookup (including aliases):")
-    
-    # Test that has_component works for both real components and aliases
-    test_names = ['button', 'h1', 'list', 'ol', 'nonexistent']
-    for name in test_names:
-        has_comp = registry.has_component(name)
-        is_alias = registry.has_alias(name)
-        comp_def = registry.get_component(name)
-        status = "component" if (has_comp and not is_alias) else ("alias" if is_alias else "not found")
-        actual_name = comp_def.name if comp_def else "N/A"
-        print(f"   {name}: {status} -> {actual_name}")
-    
-    print("\n4. Testing component list includes aliases:")
+        assert registry.has_alias(alias), f"Header alias {alias} should be registered"
+
+def test_alias_resolution_header():
+    """Test header alias resolution."""
+    registry = ComponentRegistry()
+
+    # Test h1 without user attributes
+    target, attrs = registry.resolve_alias('h1', {})
+    assert target == 'heading', f"h1 should resolve to 'heading', got {target}"
+    assert 'type' in attrs, "h1 should set type attribute"
+
+    # Test h1 with user attributes
+    target, attrs = registry.resolve_alias('h1', {'class': 'title', 'id': 'main'})
+    assert target == 'heading'
+    assert 'type' in attrs
+    assert attrs['class'] == 'title'
+    assert attrs['id'] == 'main'
+
+def test_component_lookup_with_aliases():
+    """Test that has_component works for both real components and aliases."""
+    registry = ComponentRegistry()
+
+    # Test real component
+    assert registry.has_component('button'), "button should be a component"
+    assert not registry.has_alias('button'), "button should not be an alias"
+
+    # Test alias
+    assert registry.has_component('h1'), "h1 should be found as component"
+    assert registry.has_alias('h1'), "h1 should be an alias"
+
+    # Test non-existent
+    assert not registry.has_component('nonexistent'), "nonexistent should not be found"
+    assert not registry.has_alias('nonexistent'), "nonexistent should not be an alias"
+
+
+def test_component_list_includes_aliases():
+    """Test that list_components includes aliases."""
+    registry = ComponentRegistry()
+
     all_components = registry.list_components()
-    print(f"   Total components/aliases: {len(all_components)}")
-    
     aliases_in_list = [name for name in all_components if registry.has_alias(name)]
     components_in_list = [name for name in all_components if not registry.has_alias(name)]
-    
-    print(f"   Real components: {len(components_in_list)}")
-    print(f"   Aliases: {len(aliases_in_list)} -> {', '.join(sorted(aliases_in_list))}")
-    
-    print("\n✅ Registry alias functionality test completed successfully!")
 
+    assert len(all_components) > 0, "Should have components"
+    assert len(aliases_in_list) > 0, "Should have aliases in list"
+    assert len(components_in_list) > 0, "Should have real components in list"
 
-if __name__ == "__main__":
-    test_registry_aliases()
+    # Check specific aliases
+    expected_aliases = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    for alias in expected_aliases:
+        assert alias in all_components, f"Alias {alias} should be in component list"
