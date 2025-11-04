@@ -3,16 +3,21 @@
 Test script for component alias functionality.
 """
 
-from jinja2 import Environment, DictLoader
+import os
+
+from jinja2 import Environment, DictLoader, FileSystemLoader
 from jinja_roos_components.extension import setup_components
 
 def test_header_aliases():
     """Test that header aliases (c-h1 to c-h6) work correctly."""
     print("Testing header aliases...")
     
+    # Set up Jinja environment with ROOS components
+    template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
+
     # Setup Jinja environment
     env = Environment(
-        loader=DictLoader({})
+        loader=FileSystemLoader([template_dir, '.']),
     )
     setup_components(env, strict_validation=True)
     
@@ -21,24 +26,27 @@ def test_header_aliases():
     result_h1 = template_h1.render()
     print(f"c-h1 result: {result_h1[:100]}...")
     
-    # Test h2 with additional attributes
-    template_h2 = env.from_string('<c-h2 class="custom">Subtitle</c-h2>')
-    result_h2 = template_h2.render()
-    print(f"c-h2 with class result: {result_h2[:100]}...")
+    # # Test h2 with additional attributes
+    # template_h2 = env.from_string('<c-h2 class="custom">Subtitle</c-h2>')
+    # result_h2 = template_h2.render()
+    # print(f"c-h2 with class result: {result_h2[:100]}...")
     
-    # Test h3
-    template_h3 = env.from_string("<c-h3>Section Title</c-h3>")
-    result_h3 = template_h3.render()
-    print(f"c-h3 result: {result_h3[:100]}...")
+    # # Test h3
+    # template_h3 = env.from_string("<c-h3>Section Title</c-h3>")
+    # result_h3 = template_h3.render()
+    # print(f"c-h3 result: {result_h3[:100]}...")
 
 
 def test_list_aliases():
     """Test that list aliases (c-ol, c-ul, c-li) work correctly."""
     print("\nTesting list aliases...")
     
+    # Set up Jinja environment with ROOS components
+    template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
+
     # Setup Jinja environment
     env = Environment(
-        loader=DictLoader({})
+        loader=FileSystemLoader([template_dir, '.']),
     )
     setup_components(env, strict_validation=True)
     

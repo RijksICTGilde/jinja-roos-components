@@ -3,7 +3,9 @@
 Test script to verify menubar data processing with different data formats.
 """
 
-from jinja2 import Environment, DictLoader
+import os
+
+from jinja2 import Environment, FileSystemLoader
 from jinja_roos_components.extension import setup_components
 
 # Test templates
@@ -38,8 +40,11 @@ templates = {
 def test_menubar_data_processing():
     """Test different ways of passing data to menubar component."""
     
+    # Set up Jinja environment with ROOS components
+    template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
+
     # Create environment with component extension
-    env = Environment(loader=DictLoader(templates))
+    env = Environment(loader=FileSystemLoader([template_dir, '.']))
     setup_components(env)
     
     # Test data
@@ -72,7 +77,7 @@ def test_menubar_data_processing():
     }
     
     # Render template
-    template = env.get_template('test_menubar.html')
+    template = env.from_string(templates['test_menubar.html'])
     result = template.render(**context)
     
     print("=== RENDERED OUTPUT ===")
