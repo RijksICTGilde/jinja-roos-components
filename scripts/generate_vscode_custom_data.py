@@ -10,7 +10,7 @@ See: https://github.com/microsoft/vscode-html-languageservice/blob/main/docs/cus
 
 import json
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 
 
 def load_definitions() -> Dict[str, Any]:
@@ -21,21 +21,12 @@ def load_definitions() -> Dict[str, Any]:
     with open(definitions_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-
-def camel_to_kebab(name: str) -> str:
-    """Convert camelCase to kebab-case."""
-    import re
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1).lower()
-
-
 def create_attribute_definition(attr: Dict[str, Any]) -> Dict[str, Any]:
     """Convert a definitions.json attribute to VSCode custom data format."""
     # Convert camelCase attribute name to kebab-case
-    attr_name = camel_to_kebab(attr['name'])
 
     vscode_attr: Dict[str, Any] = {
-        "name": attr_name
+        "name": attr['name']
     }
 
     # Add description if present
