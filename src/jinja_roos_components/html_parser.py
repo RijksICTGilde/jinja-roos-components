@@ -92,7 +92,18 @@ class ComponentHTMLParser(html.parser.HTMLParser):
         tag_content = self.source[tag_start:tag_end]
         self_closing = tag_content.endswith('/>')
         
-        attrs_dict = {k: v for k, v in attrs}
+        # Extract attributes from the tag content since HTMLParser's attrs might be incomplete
+        # for multi-line attributes
+        attrs_dict = {}
+        if tag_content:
+            # Extract the attributes part (between tag name and >)
+            attrs_start = tag_start + len(f'<{tag}')
+            attrs_end = tag_end - 1 if not self_closing else tag_end - 2
+            attrs_str = self.source[attrs_start:attrs_end].strip()
+            
+            if attrs_str:
+                # Parse attributes manually to handle multi-line and complex values
+                attrs_dict = self._parse_attributes(attrs_str)
         
         component = {
             'tag': tag,
@@ -147,6 +158,144 @@ class ComponentHTMLParser(html.parser.HTMLParser):
         pos = self.source.find(data, self.current_pos)
         if pos != -1:
             self.current_pos = pos + len(data)
+    
+    def _parse_attributes(self, attrs_str: str) -> Dict[str, str]:
+        """
+        Parse attributes from a string, handling multi-line values and nested quotes.
+        Uses character-by-character parsing to handle complex nested structures.
+        """
+        attrs = {}
+        pos = 0
+        
+        while pos < len(attrs_str):
+            # Skip whitespace
+            while pos < len(attrs_str) and attrs_str[pos].isspace():
+                pos += 1
+            
+            if pos >= len(attrs_str):
+                break
+            
+            # Find attribute name (including : or @ prefix)
+            name_start = pos
+            if attrs_str[pos] in (':@'):
+                pos += 1
+            
+            # Read the attribute name
+            while pos < len(attrs_str) and (attrs_str[pos].isalnum() or attrs_str[pos] in '-_'):
+                pos += 1
+
+            attr_name = attrs_str[name_start:pos]
+
+            if pos >= len(attrs_str):
+                # End of string after attribute name - it's a boolean attribute
+                attrs[attr_name] = None
+                break
+
+            # Skip whitespace after attribute name
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
+                pos += 1
+
+            # Check if there's an = sign (attribute has a value) or not (boolean attribute)
+            if pos >= len(attrs_str) or attrs_str[pos] != '=':
+                # Boolean attribute (no value)
+                attrs[attr_name] = None
+                continue
+
+            # Skip the = sign
+            pos += 1
+
+            # Skip whitespace after =
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
+                pos += 1
+
+            if pos >= len(attrs_str):
+                attrs[attr_name] = ""
+                break
+
+            # Find attribute value - handle nested structures
+            if attrs_str[pos] in ('"', "'"):
+                # Quoted value - use stack to track nested brackets/quotes
+                outer_quote = attrs_str[pos]
+                pos += 1
+                value_start = pos
+                
+                # Track nesting of brackets and quotes
+                bracket_stack = []
+                inner_quote = None
+                
+                while pos < len(attrs_str):
+                    char = attrs_str[pos]
+                    
+                    # Handle quotes inside the value
+                    if char in ('"', "'") and not bracket_stack:
+                        # We're at the outer level
+                        if char == outer_quote:
+                            # Found closing outer quote
+                            break
+                    elif char in ('"', "'"):
+                        # Quote inside brackets
+                        if inner_quote is None:
+                            inner_quote = char
+                        elif inner_quote == char:
+                            inner_quote = None
+                    
+                    # Track brackets (only when not in inner quotes)
+                    elif not inner_quote:
+                        if char in '[{(':
+                            bracket_stack.append(char)
+                        elif char in ']})':
+                            if bracket_stack:
+                                bracket_stack.pop()
+                    
+                    pos += 1
+                
+                attr_value = attrs_str[value_start:pos]
+                if pos < len(attrs_str):
+                    pos += 1  # Skip closing quote
+            else:
+                # Unquoted value
+                value_start = pos
+                while pos < len(attrs_str) and not attrs_str[pos].isspace():
+                    pos += 1
+                attr_value = attrs_str[value_start:pos]
+            
+            attrs[attr_name] = attr_value
+        
+        return attrs
+
+
+def parse_component_attributes(attrs_str: str) -> Dict[str, str]:
+    """
+    Parse component attributes from attribute string.
+    This handles the complex attribute parsing that was done in the extension.
+    """
+    if not attrs_str.strip():
+        return {}
+    
+    attrs = {}
+    
+    # Pattern for attributes: name="value" or :name="value" or @name="value"
+    # Handle both quoted and unquoted values
+    pattern = re.compile(r'([@:]?)(\w+(?:-\w+)*)=(["\'])([^"\']*?)\3')
+    
+    for match in pattern.finditer(attrs_str):
+        prefix = match.group(1)
+        name = match.group(2)
+        quote = match.group(3)
+        value = match.group(4)
+        
+        # Add prefix to name if present
+        full_name = f"{prefix}{name}" if prefix else name
+        attrs[full_name] = value
+    
+    # Also handle boolean attributes (attributes without values)
+    bool_pattern = re.compile(r'\b(\w+(?:-\w+)*)\b(?!\s*=)')
+    for match in bool_pattern.finditer(attrs_str):
+        attr_name = match.group(1)
+        if attr_name not in attrs and not any(attr_name in key for key in attrs.keys()):
+            attrs[attr_name] = ""
+    
+    return attrs
 
 
 def convert_parsed_component(component: Dict[str, Any]) -> str:
