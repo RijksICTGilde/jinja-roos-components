@@ -100,6 +100,7 @@ class ComponentHTMLParser(html.parser.HTMLParser):
             'attrs': attrs_dict,
             'start': tag_start,
             'tag_end': tag_end,
+            'self_closing': self_closing,
             'full_match': tag_content,
             'depth': len(self.tag_stack),
             'content': ''
