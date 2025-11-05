@@ -87,3 +87,22 @@ def test_shorthand_boolean_notation_on_non_boolean_attr(env):
     assert 'Shorthand notation is not supported' in str(exc_info.value)
     assert 'label' in str(exc_info.value)
     assert 'string value' in str(exc_info.value)
+
+def test_attributes_passthrough(env):
+    """data-* and aria-* attributes should passthrough"""
+
+    # Create test template string with both data and aria attributes
+    template_str = '''
+<c-button label="Menu" data-component="nav-button" aria-expanded="false" data-boolean-attr/>
+    '''
+
+    # Should successfully parse and render with both attribute types
+    template = env.from_string(template_str)
+    result = template.render()
+
+    # Verify both attribute types are in the output
+    assert "data-component" in result
+    assert "nav-button" in result
+    assert "aria-expanded" in result
+    assert "false" in result
+    assert "data-boolean-attr" in result

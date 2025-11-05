@@ -397,7 +397,7 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
                         # Invalid JSON, treat as regular string
                         escaped_value = value.replace('"', '\\"')
                         context_items.append(f'"{key}": "{escaped_value}"')
-            elif '{{' in value or '{%' in value:
+            elif value is not None and ('{{' in value or '{%' in value):
                 # Regular attribute with Jinja expressions
                 import random
                 import string
@@ -406,6 +406,10 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
                 # Create a template that renders the attribute with current context
                 event_templates.append(f'{{% set {temp_var} %}}{value}{{% endset %}}')
                 context_items.append(f'"{key}": {temp_var}')
+            elif value is None:
+                # Handle shorthand notation for passthrough attributes (data-*, aria-*, etc.)
+                # Render as empty string so template can output just the attribute name
+                context_items.append(f'"{key}": ""')
             else:
                 # Regular string value
                 escaped_value = value.replace('"', '\\"')
