@@ -88,7 +88,7 @@
           ]
         },
         {
-          "name": "show-icon",
+          "name": "showIcon",
           "description": "Icon placement in button (default: `no`)",
           "values": [
             {
@@ -107,7 +107,7 @@
           "description": "Icon name from RVO icon set"
         },
         {
-          "name": "full-width",
+          "name": "fullWidth",
           "description": "Whether button takes full width (default: `false`)",
           "values": [
             {
@@ -200,7 +200,7 @@
           "description": "Card link URL"
         },
         {
-          "name": "full-card-link",
+          "name": "fullCardLink",
           "description": "Make entire card clickable (default: `false`)",
           "values": [
             {
@@ -212,7 +212,7 @@
           ]
         },
         {
-          "name": "show-link-indicator",
+          "name": "showLinkIndicator",
           "description": "Show arrow indicator for links (default: `false`)",
           "values": [
             {
@@ -272,11 +272,11 @@
           ]
         },
         {
-          "name": "background-color",
+          "name": "backgroundColor",
           "description": "Background color from RVO color system (default: `none`)"
         },
         {
-          "name": "background-image",
+          "name": "backgroundImage",
           "description": "Background image URL"
         },
         {
@@ -296,11 +296,11 @@
           "description": "Card image URL"
         },
         {
-          "name": "image-alt",
+          "name": "imageAlt",
           "description": "Image alt text"
         },
         {
-          "name": "image-size",
+          "name": "imageSize",
           "description": "Image size (default: `md`)",
           "values": [
             {
@@ -312,7 +312,7 @@
           ]
         },
         {
-          "name": "inline-image",
+          "name": "inlineImage",
           "description": "Render image inline with content (default: `false`)",
           "values": [
             {
@@ -324,7 +324,7 @@
           ]
         },
         {
-          "name": "inverted-colors",
+          "name": "invertedColors",
           "description": "Use inverted color scheme (default: `false`)",
           "values": [
             {
@@ -450,7 +450,7 @@
           ]
         },
         {
-          "name": "helper-text-id",
+          "name": "helperTextId",
           "description": "ID of helper text element for aria-describedby"
         },
         {
@@ -544,7 +544,7 @@
           "description": "Additional CSS classes"
         },
         {
-          "name": "default-value",
+          "name": "defaultValue",
           "description": "Default selected value"
         },
         {
@@ -772,11 +772,11 @@
           ]
         },
         {
-          "name": "max-length",
+          "name": "maxLength",
           "description": "Maximum number of characters"
         },
         {
-          "name": "max-length-indicator",
+          "name": "maxLengthIndicator",
           "description": "Show character count indicator (default: `false`)",
           "values": [
             {
@@ -788,7 +788,7 @@
           ]
         },
         {
-          "name": "read-only",
+          "name": "readOnly",
           "description": "Whether textarea is read-only (default: `false`)",
           "values": [
             {
@@ -906,7 +906,7 @@
           "description": "Additional CSS classes"
         },
         {
-          "name": "default-value",
+          "name": "defaultValue",
           "description": "Default input value"
         },
         {
@@ -934,7 +934,7 @@
           ]
         },
         {
-          "name": "max-length",
+          "name": "maxLength",
           "description": "Maximum number of characters"
         },
         {
@@ -942,7 +942,7 @@
           "description": "Text prefix before input"
         },
         {
-          "name": "read-only",
+          "name": "readOnly",
           "description": "Whether input is read-only (default: `false`)",
           "values": [
             {
@@ -1061,7 +1061,7 @@
           ]
         },
         {
-          "name": "align-items",
+          "name": "alignItems",
           "description": "Cross-axis alignment",
           "values": [
             {
@@ -1079,7 +1079,7 @@
           ]
         },
         {
-          "name": "justify-content",
+          "name": "justifyContent",
           "description": "Main-axis alignment",
           "values": [
             {
@@ -1100,7 +1100,7 @@
           ]
         },
         {
-          "name": "align-content",
+          "name": "alignContent",
           "description": "Multi-line alignment",
           "values": [
             {
@@ -1126,7 +1126,7 @@
           "description": "Layout content (slot)"
         },
         {
-          "name": "justify-items",
+          "name": "justifyItems",
           "description": "Grid item alignment",
           "values": [
             {
@@ -1268,7 +1268,7 @@
           ]
         },
         {
-          "name": "is-pill",
+          "name": "isPill",
           "description": "Use pill (rounded) styling (default: `false`)",
           "values": [
             {
@@ -1296,7 +1296,7 @@
           "description": "Icon name from RVO icon set"
         },
         {
-          "name": "icon-placement",
+          "name": "iconPlacement",
           "description": "Icon placement relative to content",
           "values": [
             {
@@ -1311,7 +1311,7 @@
           ]
         },
         {
-          "name": "url-target",
+          "name": "urlTarget",
           "description": "Link target attribute (default: `_self`)"
         }
       ]
@@ -1341,15 +1341,15 @@
           "description": "Page description for meta tag"
         },
         {
-          "name": "additional-css",
+          "name": "additionalCss",
           "description": "Additional CSS files or inline styles"
         },
         {
-          "name": "additional-js",
+          "name": "additionalJs",
           "description": "Additional JavaScript files or inline scripts"
         },
         {
-          "name": "body-class",
+          "name": "bodyClass",
           "description": "CSS classes for body element"
         },
         {
@@ -1365,7 +1365,7 @@
           ]
         },
         {
-          "name": "no-index",
+          "name": "noIndex",
           "description": "Add noindex meta tag (default: `false`)",
           "values": [
             {
@@ -1496,11 +1496,11 @@
           ]
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "expandable-helper-text",
+          "name": "expandableHelperText",
           "description": "Make helper text expandable (default: `false`)",
           "values": [
             {
@@ -1512,15 +1512,15 @@
           ]
         },
         {
-          "name": "expandable-helper-text-title",
+          "name": "expandableHelperTextTitle",
           "description": "Title for expandable helper text (default: `More info`)"
         },
         {
-          "name": "error-text",
+          "name": "errorText",
           "description": "Error text with icon"
         },
         {
-          "name": "warning-text",
+          "name": "warningText",
           "description": "Warning text with icon"
         },
         {
@@ -1536,11 +1536,11 @@
           ]
         },
         {
-          "name": "error-message",
+          "name": "errorMessage",
           "description": "Error message (legacy)"
         },
         {
-          "name": "has-error",
+          "name": "hasError",
           "description": "Error state (legacy) (default: `false`)",
           "values": [
             {
@@ -1624,11 +1624,11 @@
           ]
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "expandable-helper-text",
+          "name": "expandableHelperText",
           "description": "Whether helper text is expandable (default: `false`)",
           "values": [
             {
@@ -1640,15 +1640,15 @@
           ]
         },
         {
-          "name": "expandable-helper-text-title",
+          "name": "expandableHelperTextTitle",
           "description": "Title for expandable helper text section"
         },
         {
-          "name": "error-message",
+          "name": "errorMessage",
           "description": "Error message"
         },
         {
-          "name": "has-error",
+          "name": "hasError",
           "description": "Error state (default: `false`)",
           "values": [
             {
@@ -1744,15 +1744,15 @@
           ]
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "error-message",
+          "name": "errorMessage",
           "description": "Error message"
         },
         {
-          "name": "has-error",
+          "name": "hasError",
           "description": "Error state (default: `false`)",
           "values": [
             {
@@ -1764,11 +1764,11 @@
           ]
         },
         {
-          "name": "min-date",
+          "name": "minDate",
           "description": "Minimum date"
         },
         {
-          "name": "max-date",
+          "name": "maxDate",
           "description": "Maximum date"
         },
         {
@@ -1901,15 +1901,15 @@
       "description": "Site footer with menu columns",
       "attributes": [
         {
-          "name": "primary-menu",
+          "name": "primaryMenu",
           "description": "Primary menu columns"
         },
         {
-          "name": "secondary-menu",
+          "name": "secondaryMenu",
           "description": "Secondary menu items"
         },
         {
-          "name": "max-width",
+          "name": "maxWidth",
           "description": "Maximum width",
           "values": [
             {
@@ -1924,7 +1924,7 @@
           ]
         },
         {
-          "name": "pay-off",
+          "name": "payOff",
           "description": "Footer payoff text"
         },
         {
@@ -1973,7 +1973,7 @@
           "description": "Menu items array"
         },
         {
-          "name": "use-icons",
+          "name": "useIcons",
           "description": "Enable icons (default: `false`)",
           "values": [
             {
@@ -1985,7 +1985,7 @@
           ]
         },
         {
-          "name": "icon-placement",
+          "name": "iconPlacement",
           "description": "Icon placement (default: `before`)",
           "values": [
             {
@@ -1997,7 +1997,7 @@
           ]
         },
         {
-          "name": "max-width",
+          "name": "maxWidth",
           "description": "Maximum width (default: `none`)",
           "values": [
             {
@@ -2015,7 +2015,7 @@
           ]
         },
         {
-          "name": "horizontal-rule",
+          "name": "horizontalRule",
           "description": "Show bottom border (default: `true`)",
           "values": [
             {
@@ -2027,7 +2027,7 @@
           ]
         },
         {
-          "name": "link-color",
+          "name": "linkColor",
           "description": "Link color (default: `logoblauw`)",
           "values": [
             {
@@ -2068,7 +2068,7 @@
           ]
         },
         {
-          "name": "use-background-color",
+          "name": "useBackgroundColor",
           "description": "Apply background color to menubar (default: `false`)",
           "values": [
             {
@@ -2124,7 +2124,7 @@
           "description": "Icon color from RVO color system"
         },
         {
-          "name": "aria-label",
+          "name": "ariaLabel",
           "description": "Aria label for accessibility"
         },
         {
@@ -2200,7 +2200,7 @@
           ]
         },
         {
-          "name": "max-width",
+          "name": "maxWidth",
           "description": "Maximum width",
           "values": [
             {
@@ -2282,7 +2282,7 @@
           "description": "Array of tab objects"
         },
         {
-          "name": "active-tab",
+          "name": "activeTab",
           "description": "Active tab index (default: `0`)"
         },
         {
@@ -2316,7 +2316,7 @@
           "description": "Icon name"
         },
         {
-          "name": "show-icon",
+          "name": "showIcon",
           "description": "Icon placement (default: `no`)",
           "values": [
             {
@@ -2331,7 +2331,7 @@
           ]
         },
         {
-          "name": "icon-size",
+          "name": "iconSize",
           "description": "Icon size (default: `sm`)",
           "values": [
             {
@@ -2349,11 +2349,11 @@
           ]
         },
         {
-          "name": "icon-color",
+          "name": "iconColor",
           "description": "Icon color"
         },
         {
-          "name": "no-underline",
+          "name": "noUnderline",
           "description": "Remove underline (default: `false`)",
           "values": [
             {
@@ -2373,7 +2373,7 @@
           "description": "Font weight"
         },
         {
-          "name": "full-container",
+          "name": "fullContainer",
           "description": "Full container link (default: `false`)",
           "values": [
             {
@@ -2419,11 +2419,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -2465,11 +2465,11 @@
           "description": "Array of radio options"
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "expandable-helper-text",
+          "name": "expandableHelperText",
           "description": "Make helper text expandable (default: `false`)",
           "values": [
             {
@@ -2481,15 +2481,15 @@
           ]
         },
         {
-          "name": "expandable-helper-text-title",
+          "name": "expandableHelperTextTitle",
           "description": "Title for expandable helper text (default: `More info`)"
         },
         {
-          "name": "error-text",
+          "name": "errorText",
           "description": "Error message"
         },
         {
-          "name": "warning-text",
+          "name": "warningText",
           "description": "Warning message"
         },
         {
@@ -2551,15 +2551,15 @@
           "description": "Array of checkbox options"
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "error-text",
+          "name": "errorText",
           "description": "Error message"
         },
         {
-          "name": "warning-text",
+          "name": "warningText",
           "description": "Warning message"
         },
         {
@@ -2629,11 +2629,11 @@
           "description": "Number of rows (default: `4`)"
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "expandable-helper-text",
+          "name": "expandableHelperText",
           "description": "Make helper text expandable (default: `false`)",
           "values": [
             {
@@ -2645,19 +2645,19 @@
           ]
         },
         {
-          "name": "expandable-helper-text-title",
+          "name": "expandableHelperTextTitle",
           "description": "Title for expandable helper text (default: `More info`)"
         },
         {
-          "name": "error-text",
+          "name": "errorText",
           "description": "Error message"
         },
         {
-          "name": "warning-text",
+          "name": "warningText",
           "description": "Warning message"
         },
         {
-          "name": "has-error",
+          "name": "hasError",
           "description": "Error state (default: `false`)",
           "values": [
             {
@@ -2772,19 +2772,19 @@
           ]
         },
         {
-          "name": "helper-text",
+          "name": "helperText",
           "description": "Help text below field"
         },
         {
-          "name": "error-text",
+          "name": "errorText",
           "description": "Error message"
         },
         {
-          "name": "warning-text",
+          "name": "warningText",
           "description": "Warning message"
         },
         {
-          "name": "has-error",
+          "name": "hasError",
           "description": "Error state (default: `false`)",
           "values": [
             {
@@ -2865,7 +2865,7 @@
           ]
         },
         {
-          "name": "vertical-spacing",
+          "name": "verticalSpacing",
           "description": "Vertical spacing/margin around the row or alignment (default: `lg`)",
           "values": [
             {
@@ -2931,7 +2931,7 @@
           "description": "Array of list items (strings) - used when not using nested c-li components"
         },
         {
-          "name": "no-padding",
+          "name": "noPadding",
           "description": "Remove default padding (default: `false`)",
           "values": [
             {
@@ -2943,7 +2943,7 @@
           ]
         },
         {
-          "name": "no-margin",
+          "name": "noMargin",
           "description": "Remove default margins (default: `false`)",
           "values": [
             {
@@ -2973,7 +2973,7 @@
           "description": "Array of list items (strings) - used when not using nested c-li components"
         },
         {
-          "name": "bullet-type",
+          "name": "bulletType",
           "description": "Bullet type for unordered lists (default: `disc`)",
           "values": [
             {
@@ -2988,7 +2988,7 @@
           ]
         },
         {
-          "name": "bullet-icon",
+          "name": "bulletIcon",
           "description": "Icon type when bulletType is 'icon' (default: `option-1`)",
           "values": [
             {
@@ -3003,7 +3003,7 @@
           ]
         },
         {
-          "name": "no-margin",
+          "name": "noMargin",
           "description": "Remove default margins (default: `false`)",
           "values": [
             {
@@ -3015,7 +3015,7 @@
           ]
         },
         {
-          "name": "no-padding",
+          "name": "noPadding",
           "description": "Remove default padding (default: `false`)",
           "values": [
             {
@@ -3111,11 +3111,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -3165,11 +3165,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -3219,11 +3219,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -3273,11 +3273,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -3327,11 +3327,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
@@ -3381,11 +3381,11 @@
           ]
         },
         {
-          "name": "text-content",
+          "name": "textContent",
           "description": "Heading text"
         },
         {
-          "name": "no-margins",
+          "name": "noMargins",
           "description": "Remove margins (default: `false`)",
           "values": [
             {
