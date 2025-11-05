@@ -1,16 +1,31 @@
 {
   "component": "button",
-  "description": "Add color attribute to allow all RVO colors for custom styling",
+  "description": "Add color attribute, type attribute, and children/content support",
   "attribute_additions": {
     "color": {
       "type": "enum",
       "values": "all_rvo_colors",
       "required": false,
       "description": "Custom color for the button (additional to kind-based styling)"
+    },
+    "type": {
+      "type": "enum",
+      "values": ["button", "submit", "reset"],
+      "required": false,
+      "description": "HTML button type attribute",
+      "default": "button"
     }
   },
+  "default_overrides": {
+    "type": "button"
+  },
+  "add_children_support": true,
+  "custom_content_template": "{% if showIcon == 'before' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}{{ children if children else label | safe }}{% if showIcon == 'after' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}",
   "notes": [
     "Base RVO button uses 'kind' prop for styling variants",
-    "Added 'color' attribute to allow custom color overrides with full RVO palette"
+    "Added 'color' attribute to allow custom color overrides with full RVO palette",
+    "Added 'type' attribute with default 'button' to prevent accidental form submissions",
+    "Button content: renders children if provided, otherwise falls back to label attribute",
+    "Icons are conditionally rendered before/after content based on showIcon attribute"
   ]
 }

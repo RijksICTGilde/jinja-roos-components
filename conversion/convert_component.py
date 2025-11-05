@@ -76,6 +76,7 @@ class ComponentConverter:
         self.jinja_generator = JinjaGenerator(self.output_name)
         self.definition_generator = DefinitionGenerator(self.output_name)
         self.manual_review_items = []
+        self.add_children_support = False  # Track if children support is enabled
 
     def convert(self) -> None:
         """Run the full conversion process."""
@@ -104,16 +105,102 @@ class ComponentConverter:
         print(f"   ✓ Found {len(component_info.imports)} imports")
 
         # Step 2a: Apply customizations if they exist
-        if self.customization_loader.has_customization(self.component_name):
+        # Try output name first (for split conversions like ul/ol), then source name
+        customization_name = self.output_name if self.customization_loader.has_customization(self.output_name) else self.component_name
+
+        if self.customization_loader.has_customization(customization_name):
             print("\n🎨 Applying customizations...")
+            if customization_name != self.component_name:
+                print(f"   ℹ Using customization: {customization_name}.json")
+
             component_info.props_interface = self.customization_loader.apply_customizations(
-                self.component_name,
+                customization_name,
                 component_info.props_interface or []
             )
-            customization_notes = self.customization_loader.get_customization_notes(self.component_name)
+            customization_notes = self.customization_loader.get_customization_notes(customization_name)
             print(f"   ✓ Customizations applied")
             for note in customization_notes:
                 print(f"   ℹ {note}")
+
+            # Apply default overrides
+            original_defaults = component_info.default_args.copy()
+            component_info.default_args = self.customization_loader.apply_default_overrides(
+                customization_name,
+                component_info.default_args
+            )
+            # Check if any defaults were overridden
+            overridden_keys = [k for k in original_defaults if original_defaults.get(k) != component_info.default_args.get(k)]
+            if overridden_keys:
+                print(f"   ✓ Overridden {len(overridden_keys)} default value(s): {', '.join(overridden_keys)}")
+
+            # Apply children/content support if configured
+            children_config = self.customization_loader.get_children_support_config(customization_name)
+            if children_config:
+                self.add_children_support = True  # Enable children support flag
+                from conversion.parsers.interface_parser import AttributeInfo
+                # Add children/content attribute if not already present
+                attr_names = [attr.name for attr in (component_info.props_interface or [])]
+                if 'children' not in attr_names and 'content' not in attr_names:
+                    content_attr = AttributeInfo(
+                        name='children',
+                        types=['string'],
+                        required=False,
+                        description='Children/content support added via customization',
+                        enum_values=None,
+                        is_function=False
+                    )
+                    if component_info.props_interface is None:
+                        component_info.props_interface = []
+                    component_info.props_interface.append(content_attr)
+                    # Add empty default
+                    component_info.default_args['children'] = ''
+                    print(f"   ✓ Added children/content support")
+
+            # Apply pass-through attributes if configured
+            pass_through_attrs = self.customization_loader.get_pass_through_attributes(customization_name)
+            if pass_through_attrs:
+                from conversion.parsers.interface_parser import AttributeInfo
+                attr_names = [attr.name for attr in (component_info.props_interface or [])]
+
+                for pt_attr in pass_through_attrs:
+                    attr_name = pt_attr['name']
+                    # Skip if already exists
+                    if attr_name in attr_names:
+                        continue
+
+                    # Create new attribute with pass-through metadata
+                    new_attr = AttributeInfo(
+                        name=attr_name,
+                        types=[pt_attr.get('type', 'string')],
+                        required=pt_attr.get('required', False),
+                        description=pt_attr.get('description', f'Pass-through {attr_name} attribute'),
+                        enum_values=None,
+                        is_function=False
+                    )
+
+                    # Store pass-through metadata on the attribute object
+                    # We'll use a simple approach: store as private attribute
+                    new_attr._passthrough_target = pt_attr.get('target_element')
+                    new_attr._passthrough_attribute = pt_attr.get('target_attribute', attr_name)
+
+                    if component_info.props_interface is None:
+                        component_info.props_interface = []
+                    component_info.props_interface.append(new_attr)
+
+                    # Add empty default if not present
+                    if attr_name not in component_info.default_args:
+                        component_info.default_args[attr_name] = ''
+
+                print(f"   ✓ Added {len(pass_through_attrs)} pass-through attribute(s): {', '.join(pt['name'] for pt in pass_through_attrs)}")
+
+            # Step 2b: Merge aliases from customization file
+            customization_aliases = self.customization_loader.get_aliases(customization_name)
+            if customization_aliases:
+                # Merge with command-line aliases (avoiding duplicates)
+                for alias in customization_aliases:
+                    if alias not in self.aliases:
+                        self.aliases.append(alias)
+                print(f"   ✓ Found {len(customization_aliases)} alias(es) from customization: {', '.join(customization_aliases)}")
 
         # Step 3: Detect base components
         print("\n🔍 Detecting base components...")
@@ -533,7 +620,10 @@ class ComponentConverter:
         """
         if not base_components:
             # No base component - parse JSX structure directly
-            jsx_structure = self.jsx_structure_parser.parse_root_element(component_info.jsx_content)
+            jsx_structure = self.jsx_structure_parser.parse_root_element(
+                component_info.jsx_content,
+                dynamic_tag=component_info.dynamic_tag
+            )
 
             # Track review items
             for review_item in jsx_structure.get('needs_review', []):
@@ -543,15 +633,31 @@ class ComponentConverter:
                     'source_line': 0
                 })
 
+            # Build element structure including wrapper if present
+            elements = []
+
+            if jsx_structure.get('wrapper'):
+                # Add wrapper element
+                elements.append({
+                    'tag': jsx_structure['wrapper']['tag'],
+                    'classes': jsx_structure['wrapper']['classes'],
+                    'is_wrapper': True
+                })
+
+            # Add primary element
+            elements.append({
+                'tag': jsx_structure['html_tag'],
+                'classes': jsx_structure['css_classes'],
+                'attributes': jsx_structure.get('attributes', {}),
+                'is_primary': True
+            })
+
             return {
                 'primary_tag': jsx_structure['html_tag'],
                 'primary_classes': jsx_structure['css_classes'],
-                'elements': [{
-                    'tag': jsx_structure['html_tag'],
-                    'classes': jsx_structure['css_classes'],
-                    'attributes': jsx_structure.get('attributes', {}),
-                    'is_primary': True
-                }]
+                'elements': elements,
+                'wrapper': jsx_structure.get('wrapper'),
+                'dynamic_tag': jsx_structure.get('dynamic_tag')
             }
 
         first_base = base_components[0]
@@ -674,7 +780,9 @@ class ComponentConverter:
         Returns:
             List of ClassMapping objects
         """
-        return self.clsx_parser.extract_from_jsx(component_info.jsx_content)
+        # Read full source file to find clsx calls (they may be outside JSX)
+        source_content = read_file(component_info.file_path)
+        return self.clsx_parser.extract_from_jsx(source_content)
 
     def _extract_raw_switch_mappings(self, component_info):
         """Extract raw switch mappings (for use in template literals).
@@ -775,6 +883,14 @@ class ComponentConverter:
                     mapping.css_class,
                     condition
                 )
+            elif mapping.prop_name == '__COMPOUND__':
+                # Compound condition like "type === 'unordered' && noMargin"
+                # Convert React syntax to Jinja syntax
+                jinja_condition = self._convert_react_condition_to_jinja(mapping.condition)
+                self.jinja_generator.class_builder.add_conditional_class(
+                    mapping.css_class,
+                    jinja_condition
+                )
             elif mapping.prop_name == '__TERNARY__':
                 # Ternary expression in template - needs special handling
                 # For now, add as template class
@@ -797,10 +913,20 @@ class ComponentConverter:
                 )
             else:
                 # Value-based (enum)
-                self.jinja_generator.class_builder.add_conditional_class(
-                    mapping.css_class,
-                    f"{mapping.prop_name} == '{mapping.value}'"
-                )
+                # Check if this mapping has a compound condition (preserved from template expansion)
+                if mapping.condition and ' && ' in mapping.condition:
+                    # Use the compound condition (convert React syntax to Jinja)
+                    jinja_condition = self._convert_react_condition_to_jinja(mapping.condition)
+                    self.jinja_generator.class_builder.add_conditional_class(
+                        mapping.css_class,
+                        jinja_condition
+                    )
+                else:
+                    # Simple enum condition
+                    self.jinja_generator.class_builder.add_conditional_class(
+                        mapping.css_class,
+                        f"{mapping.prop_name} == '{mapping.value}'"
+                    )
 
     def _switch_to_jinja_expr(self, switch_mapping) -> str:
         """Convert a switch mapping to a Jinja inline if/else expression.
@@ -846,6 +972,33 @@ class ComponentConverter:
 
         return expr
 
+    def _convert_react_condition_to_jinja(self, react_condition: str) -> str:
+        """Convert React condition syntax to Jinja syntax.
+
+        Converts:
+        - === to ==
+        - !== to !=
+        - && to and
+        - || to or
+
+        Args:
+            react_condition: React condition like "type === 'unordered' && noMargin"
+
+        Returns:
+            Jinja condition like "type == 'unordered' and noMargin"
+        """
+        jinja_condition = react_condition
+
+        # Replace comparison operators
+        jinja_condition = jinja_condition.replace(' === ', ' == ')
+        jinja_condition = jinja_condition.replace(' !== ', ' != ')
+
+        # Replace logical operators
+        jinja_condition = jinja_condition.replace(' && ', ' and ')
+        jinja_condition = jinja_condition.replace(' || ', ' or ')
+
+        return jinja_condition
+
     def _extract_content(self, component_info, tsx_file: str):
         """Extract content rendering logic from component.
 
@@ -878,6 +1031,15 @@ class ComponentConverter:
                         element.component_props = ref_info['props']
                         # Store the default value (fallback when condition is false)
                         element.fallback_value = ref_info['default']
+                    elif ref_info.get('type') == 'content_function':
+                        # Content processing function - treat as simple variable reference
+                        # The Jinja generator will create: {% set varName = args %}
+                        element.type = 'content_function'
+                        element.content = element.content  # Keep the variable name
+                        # Store the args for the generator to use
+                        if element.component_props is None:
+                            element.component_props = {}
+                        element.component_props['_function_args'] = ref_info['args']
                     else:
                         # Simple component reference
                         element.component_name = ref_info['component']
@@ -905,6 +1067,9 @@ class ComponentConverter:
         Returns:
             Jinja template as string
         """
+        # Get custom content template from customization if available
+        custom_content_template = self.customization_loader.get_custom_content_template(self.output_name)
+
         return self.jinja_generator.generate_template(
             component_info.props_interface or [],
             component_info.default_args,
@@ -914,7 +1079,9 @@ class ComponentConverter:
             wrapper_info=component_structure.get('wrapper'),
             component_structure=component_structure,
             nested_components=nested_components or [],
-            array_mappings=array_mappings or {}
+            array_mappings=array_mappings or {},
+            add_children_support=self.add_children_support,
+            custom_content_template=custom_content_template
         )
 
     def _generate_definition(

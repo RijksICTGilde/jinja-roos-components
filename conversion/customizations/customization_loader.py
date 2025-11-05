@@ -136,6 +136,8 @@ class CustomizationLoader:
                     attr.required = override['required']
                 if 'description' in override:
                     attr.description = override['description']
+                if 'default' in override:
+                    attr.default = override['default']
 
         # Apply attribute additions
         attribute_additions = customization.get('attribute_additions', {})
@@ -188,3 +190,100 @@ class CustomizationLoader:
         if isinstance(notes, str):
             return [notes]
         return notes
+
+    def get_aliases(self, component_name: str) -> List[str]:
+        """Get aliases for a component from customization file.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            List of alias strings (empty list if no aliases defined)
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return []
+
+        aliases = customization.get('aliases', [])
+        # Support both string and list formats
+        if isinstance(aliases, str):
+            return [aliases]
+        return aliases
+
+    def apply_default_overrides(self, component_name: str, default_args: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply default value overrides from customization.
+
+        Args:
+            component_name: Name of the component
+            default_args: Original default args
+
+        Returns:
+            Modified default args
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return default_args
+
+        # Get default overrides
+        default_overrides = customization.get('default_overrides', {})
+        if not default_overrides:
+            return default_args
+
+        # Apply overrides
+        modified_args = default_args.copy()
+        for key, value in default_overrides.items():
+            modified_args[key] = value
+
+        return modified_args
+
+    def get_children_support_config(self, component_name: str) -> Optional[Dict]:
+        """Get children/content support configuration from customization.
+
+        This allows adding children support to components that don't have it in React.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            Dict with children support config or None
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return None
+
+        return customization.get('add_children_support')
+
+    def get_pass_through_attributes(self, component_name: str) -> List[Dict[str, Any]]:
+        """Get pass-through attributes from customization.
+
+        Pass-through attributes are custom attributes that should be added to the component
+        and rendered on a specific target element (e.g., 'name' attribute on the select element).
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            List of pass-through attribute definitions
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return []
+
+        return customization.get('pass_through_attributes', [])
+
+    def get_custom_content_template(self, component_name: str) -> Optional[str]:
+        """Get custom content template from customization.
+
+        This allows overriding the default content rendering with custom Jinja logic.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            Custom content template string or None
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return None
+
+        return customization.get('custom_content_template')

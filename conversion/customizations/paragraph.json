@@ -1,0 +1,8 @@
+{
+  "component": "paragraph",
+  "description": "Customizations for the Paragraph component",
+  "aliases": ["p"],
+  "notes": [
+    "Alias 'p' provides a shorter tag name for paragraph components"
+  ]
+}

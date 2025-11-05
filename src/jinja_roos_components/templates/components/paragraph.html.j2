@@ -1,37 +1,34 @@
-{% set text_content = _component_context.textContent | default('') %}
-{% set content = _component_context.content | default('') %}
+{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: paragraph
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set content = _component_context.content | default('Paragraph content') %}
+{% set children = _component_context.content | default('') %}
+{% set color = _component_context.color | default('grijs-900') %}
 {% set size = _component_context.size | default('md') %}
-{% set color = _component_context.color | default('logoblauw') %}
-{% set no_spacing = _component_context.noSpacing | default(false) %}
-{% set additional_class = _component_context.class | default('') %}
-
-{# Build CSS classes #}
-{% set paragraph_classes = ['rvo-paragraph'] %}
-
-{% if color != 'logoblauw' %}
-    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--' + color] %}
+{% set noSpacing = _component_context.noSpacing | default(false) %}
+{% set css_classes = ['rvo-paragraph'] %}
+{% if color == 'logoblauw' %}{% set css_classes = css_classes + ['rvo-paragraph--logoblauw'] %}{% endif %}
+{% if color == 'wit' %}{% set css_classes = css_classes + ['rvo-paragraph--wit'] %}{% endif %}
+{% if color == 'zwart' %}{% set css_classes = css_classes + ['rvo-paragraph--zwart'] %}{% endif %}
+{% if color == 'grijs-500' %}{% set css_classes = css_classes + ['rvo-paragraph--grijs-500'] %}{% endif %}
+{% if color == 'grijs-900' %}{% set css_classes = css_classes + ['rvo-paragraph--grijs-900'] %}{% endif %}
+{% if size == 'sm' %}{% set css_classes = css_classes + ['rvo-paragraph--sm'] %}{% endif %}
+{% if size == 'md' %}{% set css_classes = css_classes + ['rvo-paragraph--md'] %}{% endif %}
+{% if size == 'lg' %}{% set css_classes = css_classes + ['rvo-paragraph--lg'] %}{% endif %}
+{% if noSpacing %}{% set css_classes = css_classes + ['rvo-paragraph--no-spacing'] %}{% endif %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
 {% endif %}
-
-{% if size != 'md' %}
-    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--' + size] %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-
-{% if no_spacing %}
-    {% set paragraph_classes = paragraph_classes + ['rvo-paragraph--no-spacing'] %}
-{% endif %}
-
-{% if additional_class %}
-    {% set paragraph_classes = paragraph_classes + [additional_class] %}
-{% endif %}
-
-{# Determine content to display #}
-{% set display_content = content or text_content %}
-
-<p 
-    class="{{ paragraph_classes | join(' ') }}"
+<p
+    class="{{ css_classes | join(' ') }}"
     data-roos-component="paragraph"
-    data-roos-size="{{ size }}"
-    data-roos-color="{{ color }}"
-    data-roos-no-spacing="{{ no_spacing }}">
-    {{ display_content | safe }}
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ children or content | safe }}
 </p>

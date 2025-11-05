@@ -3692,6 +3692,293 @@
       "allow_preview": true,
       "requires_children": false,
       "preview_example": null
+    },
+    {
+      "name": "strong",
+      "description": "Semantic wrapper for bold/strong text - renders as span with bold styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Additional text utility classes (e.g., 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-strong>Bold text</c-strong>",
+        "<c-strong content=\"Bold text\"></c-strong>",
+        "<c-strong text-style=\"italic\" margin=\"inline-end-sm\">Bold and italic with margin</c-strong>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "b",
+      "description": "Semantic wrapper for bold text - renders as span with bold styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Additional text utility classes (e.g., 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-b>Bold text</c-b>",
+        "<c-b content=\"Bold text\"></c-b>",
+        "<c-b text-style=\"italic\">Bold and italic</c-b>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "small",
+      "description": "Semantic wrapper for small text - renders as span with small text styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Additional text utility classes (e.g., 'bold', 'italic', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-small>Small text</c-small>",
+        "<c-small content=\"Small text\"></c-small>",
+        "<c-small text-style=\"bold\">Small bold text</c-small>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "i",
+      "description": "Semantic wrapper for italic text - renders as span with italic styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Additional text utility classes (e.g., 'bold', 'sm', or combined 'bold, sm')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-i>Italic text</c-i>",
+        "<c-i content=\"Italic text\"></c-i>",
+        "<c-i text-style=\"bold\">Bold italic text</c-i>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "em",
+      "description": "Semantic wrapper for emphasized (italic) text - renders as span with italic styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Additional text utility classes (e.g., 'bold', 'sm', or combined 'bold, sm')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-em>Emphasized text</c-em>",
+        "<c-em content=\"Emphasized text\"></c-em>",
+        "<c-em text-style=\"bold\" margin=\"md\">Bold emphasized with margin</c-em>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "span",
+      "description": "Generic span wrapper for applying utility classes - no default styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Text utility classes (e.g., 'bold', 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-span text-style=\"bold\">Bold text</c-span>",
+        "<c-span text-style=\"bold, italic\" margin=\"md\">Bold italic with margin</c-span>",
+        "<c-span padding=\"inline-start-sm\" text-style=\"sm\">Small text with padding</c-span>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
+    },
+    {
+      "name": "div",
+      "description": "Generic div wrapper for applying utility classes - no default styling",
+      "attributes": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": false,
+          "description": "Block content"
+        },
+        {
+          "name": "text-style",
+          "type": "string",
+          "required": false,
+          "description": "Text utility classes (e.g., 'bold', 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ],
+      "slots": [
+        "content"
+      ],
+      "examples": [
+        "<c-div text-style=\"bold\">Bold block content</c-div>",
+        "<c-div margin=\"md lg\" padding=\"sm\">Block with margin and padding</c-div>",
+        "<c-div text-style=\"sm, italic\">Small italic block</c-div>"
+      ],
+      "allow_preview": true,
+      "requires_children": false,
+      "preview_example": null
     }
   ],
   "aliases": [
@@ -3748,6 +4035,24 @@
       "target_component": "form-fieldset",
       "default_attributes": {},
       "description": "Alias for form-fieldset"
+    },
+    {
+      "name": "p",
+      "target_component": "paragraph",
+      "default_attributes": {},
+      "description": "Alias for paragraph"
+    },
+    {
+      "name": "hr",
+      "target_component": "horizontal-rule",
+      "default_attributes": {},
+      "description": "Alias for horizontal-rule"
+    },
+    {
+      "name": "ul",
+      "target_component": "ordered-unordered-list",
+      "default_attributes": {},
+      "description": "Alias for ordered-unordered-list"
     }
   ],
   "icons": [

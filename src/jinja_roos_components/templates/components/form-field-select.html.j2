@@ -1,0 +1,42 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: form-field-select
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{# This is a composition component that wraps nested components #}
+
+{% set className = _component_context.get('className') %}
+{% set errorText = _component_context.get('errorText') %}
+{% set expandableHelperText = _component_context.get('expandableHelperText') %}
+{% set expandableHelperTextTitle = _component_context.get('expandableHelperTextTitle') %}
+{% set fieldId = _component_context.get('fieldId') %}
+{% set helperText = _component_context.get('helperText') %}
+{% set helperTextId = _component_context.get('helperTextId') %}
+{% set label = _component_context.get('label') %}
+{% set labelSize = _component_context.get('labelSize') %}
+{% set labelType = _component_context.get('labelType') %}
+{% set warningText = _component_context.get('warningText') %}
+
+<c-field
+    fieldId="{{ fieldId }}"
+    label="{{ label }}"
+    labelSize="{{ labelSize }}"
+    labelType="{{ labelType }}"
+    helperText="{{ helperText }}"
+    helperTextId="{{ helperTextId }}"
+    expandableHelperText="{{ expandableHelperText }}"
+    expandableHelperTextTitle="{{ expandableHelperTextTitle }}"
+    warningText="{{ warningText }}"
+    errorText="{{ errorText }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    <c-select
+        fieldId="{{ fieldId }}"
+        label="{{ label }}"
+        labelSize="{{ labelSize }}"
+        labelType="{{ labelType }}"
+        helperText="{{ helperText }}"
+        helperTextId="{{ helperTextId }}"
+        expandableHelperText="{{ expandableHelperText }}"
+        expandableHelperTextTitle="{{ expandableHelperTextTitle }}"
+        warningText="{{ warningText }}"
+        errorText="{{ errorText }}"
+    ></c-select>
+</c-field>

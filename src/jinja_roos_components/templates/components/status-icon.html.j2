@@ -1,0 +1,15 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: status-icon
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set type = _component_context.type | default('bevestiging') %}
+{% set size = _component_context.size | default('sm') %}
+{% set className = _component_context.get('className') %}
+{% set ignoreDefaultIconColor = _component_context.ignoreDefaultIconColor | default(false) %}
+{% set css_classes = [] %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="status-icon"
+    type="{{ type }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {# Content #}
+</div>

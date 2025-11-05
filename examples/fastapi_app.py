@@ -17,9 +17,10 @@ Usage (from root directory):
     Then visit:
     - http://localhost:8000/ - Documentation homepage
     - http://localhost:8000/docs/components - Live components reference
-    - http://localhost:8000/docs/colors - Live colors palette  
+    - http://localhost:8000/docs/colors - Live colors palette
     - http://localhost:8000/docs/icons - Live icons library
     - http://localhost:8000/docs/spacing - Live spacing & sizing reference
+    - http://localhost:8000/docs/utilities - Live utility classes reference
     - http://localhost:8000/render?template=simple-page.html.j2 - Live template rendering
 """
 
@@ -121,6 +122,19 @@ async def docs_spacing():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/docs/utilities", response_class=HTMLResponse)
+async def docs_utilities():
+    """Live utility classes documentation."""
+    try:
+        template = env.get_template("docs-utilities.html.j2")
+        html = template.render(
+            generation_date=get_generation_date()
+        )
+        return HTMLResponse(content=html)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/docs/components", response_class=HTMLResponse)
 async def docs_components():
     """Live components documentation."""
@@ -187,6 +201,7 @@ async def home():
                         <li style="margin: 0.5rem 0;"><a href="/docs/colors" style="color: #01689b; text-decoration: none; font-weight: 500;">🎨 Colors Palette</a></li>
                         <li style="margin: 0.5rem 0;"><a href="/docs/icons" style="color: #01689b; text-decoration: none; font-weight: 500;">🔸 Icons Library</a></li>
                         <li style="margin: 0.5rem 0;"><a href="/docs/spacing" style="color: #01689b; text-decoration: none; font-weight: 500;">📏 Spacing & Sizing</a></li>
+                        <li style="margin: 0.5rem 0;"><a href="/docs/utilities" style="color: #01689b; text-decoration: none; font-weight: 500;">⚙️ Utility Classes</a></li>
                     </ul>
                 </div>
                 

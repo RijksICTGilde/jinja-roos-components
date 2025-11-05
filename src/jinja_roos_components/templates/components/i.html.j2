@@ -1,0 +1,11 @@
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{% import 'components/_event_mixin.j2' as events %}
+{# Semantic wrapper for italic text - renders as span with italic styling #}
+{% set content = _component_context.content | default('') %}
+{% set css_classes = ['rvo-text--italic'] %}
+{# Add utility classes from attribute mixin #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+<span class="{{ css_classes | join(' ') }}" data-roos-component="i" {{ events.render_extra_attributes(_component_context) }}>{{ content | safe }}</span>

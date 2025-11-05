@@ -13,6 +13,22 @@ from .registry import ComponentRegistry
 from .html_parser import ComponentHTMLParser, parse_component_attributes, convert_parsed_component
 
 
+# Valid values for utility attributes (from _attribute_mixin.j2)
+VALID_TEXT_STYLES = {
+    'subtle', 'sm', 'md', 'lg', 'xl',
+    'error', 'bold', 'italic', 'no-margins'
+}
+
+VALID_SPACING_SIZES = {
+    'none', '3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl',
+    '2xl', '3xl', '4xl', '5xl'
+}
+
+VALID_SPACING_DIRECTIONS = {
+    'inline-start', 'inline-end', 'block-start', 'block-end'
+}
+
+
 class ComponentExtension(Extension):
     """
     Jinja2 extension that preprocesses component syntax using proper HTML parsing.
@@ -322,7 +338,7 @@ class ComponentExtension(Extension):
         
         # Get all valid attribute names for this component
         valid_attrs = {attr.name for attr in component_def.attributes}
-        
+
         # Add standard attributes that are always allowed
         standard_attrs = {
             'class',     # Custom CSS classes
@@ -330,6 +346,14 @@ class ComponentExtension(Extension):
             'style',     # Inline styles (rare but allowed)
         }
         valid_attrs.update(standard_attrs)
+
+        # Add utility attributes from _attribute_mixin.j2 (available to all components)
+        utility_attrs = {
+            'text-style',  # Text styling utilities (bold, italic, etc.)
+            'margin',      # Margin utilities
+            'padding',     # Padding utilities
+        }
+        valid_attrs.update(utility_attrs)
         
         # Check each attribute in the component usage
         for attr_name in attrs.keys():
@@ -361,6 +385,11 @@ class ComponentExtension(Extension):
                     f"Available attributes for '{component_name}': {', '.join(available_attrs)}"
                 )
 
+            # Validate utility attribute values (text-style, margin, padding)
+            if clean_attr_lower in ('text-style', 'margin', 'padding'):
+                attr_value = attrs[attr_name]
+                self._validate_utility_attribute(clean_attr_lower, attr_value, component_tag)
+
     def _is_generic_html_attribute(self, attr_name: str) -> bool:
         """Check if an attribute is a generic HTML attribute that should be allowed on all components."""
         # Check for common prefixes
@@ -369,6 +398,59 @@ class ComponentExtension(Extension):
             if attr_name.startswith(prefix):
                 return True
         return False
+
+    def _validate_utility_attribute(self, attr_name: str, attr_value: str, component_tag: str) -> None:
+        """
+        Validate utility attribute values (text-style, margin, padding).
+        Raises ValueError if the value is invalid.
+        """
+        # Split multi-value attributes (space or comma separated)
+        raw_value = attr_value.replace(',', ' ')
+        values = raw_value.split()
+
+        if attr_name == 'text-style':
+            for value in values:
+                if value not in VALID_TEXT_STYLES:
+                    raise ValueError(
+                        f"Invalid value '{value}' for 'text-style' attribute in component '{component_tag}'. "
+                        f"Valid values: {', '.join(sorted(VALID_TEXT_STYLES))}"
+                    )
+
+        elif attr_name in ('margin', 'padding'):
+            for value in values:
+                # Check if it's a directional pattern (e.g., "inline-end-sm")
+                if '-' in value and value.count('-') >= 2:
+                    parts = value.split('-')
+                    if len(parts) == 3:
+                        direction = f"{parts[0]}-{parts[1]}"
+                        size = parts[2]
+
+                        if direction not in VALID_SPACING_DIRECTIONS:
+                            raise ValueError(
+                                f"Invalid direction '{direction}' in '{attr_name}' attribute value '{value}' "
+                                f"in component '{component_tag}'. "
+                                f"Valid directions: {', '.join(sorted(VALID_SPACING_DIRECTIONS))}"
+                            )
+
+                        if size not in VALID_SPACING_SIZES:
+                            raise ValueError(
+                                f"Invalid size '{size}' in '{attr_name}' attribute value '{value}' "
+                                f"in component '{component_tag}'. "
+                                f"Valid sizes: {', '.join(sorted(VALID_SPACING_SIZES))}"
+                            )
+                    else:
+                        raise ValueError(
+                            f"Invalid directional pattern '{value}' in '{attr_name}' attribute "
+                            f"in component '{component_tag}'. "
+                            f"Expected format: {{direction}}-{{size}} (e.g., 'inline-end-sm')"
+                        )
+                else:
+                    # Simple size value
+                    if value not in VALID_SPACING_SIZES:
+                        raise ValueError(
+                            f"Invalid value '{value}' for '{attr_name}' attribute in component '{component_tag}'. "
+                            f"Valid values: {', '.join(sorted(VALID_SPACING_SIZES))} or directional patterns like 'inline-end-sm'"
+                        )
 
     def _parse_attributes(self, attrs_str: str) -> Dict[str, Any]:
         """Parse component attributes from the attribute string."""

@@ -1,7 +1,7 @@
 {% import 'components/_event_mixin.j2' as events %}
 {# Auto-generated from React component: form-fieldset
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
-{% set legend = _component_context.legend | default('Fieldset legend') %}
+{% set legend = _component_context.legend | default('') %}
 {% set disabled = _component_context.disabled | default(false) %}
 {% set fields = _component_context.fields | default('defaultFields') %}
 {% set children = _component_context.content | default('') %}

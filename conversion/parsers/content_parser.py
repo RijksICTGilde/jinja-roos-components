@@ -53,6 +53,9 @@ class ContentParser:
     def _extract_component_children(self, jsx_content: str) -> Optional[str]:
         """Extract children content from the main JSX element.
 
+        Detects wrapper patterns (e.g., <div className="..."><select>...</select></div>)
+        and extracts children from the inner element instead of the wrapper.
+
         Args:
             jsx_content: Full JSX content
 
@@ -62,10 +65,33 @@ class ContentParser:
         # Pattern: <Component ...> children </Component>
         # Find the outermost component
         match = re.search(r'<(\w+)[^>]*>(.*)</\1>', jsx_content, re.DOTALL)
-        if match:
-            return match.group(2)
+        if not match:
+            return None
 
-        return None
+        outer_tag = match.group(1)
+        outer_content = match.group(2)
+
+        # Check if this is a simple wrapper pattern:
+        # <div className="..."> <select ...> ... </select> </div>
+        # A wrapper is a div/span with only className wrapping a single element
+        if outer_tag in ('div', 'span'):
+            # Check if outer element has only className (no other significant attributes)
+            outer_attrs_match = re.match(r'<\w+\s+([^>]*)>', jsx_content)
+            if outer_attrs_match:
+                attrs_str = outer_attrs_match.group(1)
+                # Simple check: only className attribute present
+                has_classname = 'className=' in attrs_str
+                attr_count = len(re.findall(r'\w+\s*=', attrs_str))
+
+                if has_classname and attr_count <= 1:
+                    # This looks like a wrapper - try to extract from nested element
+                    nested_match = re.search(r'<(\w+)[^>]*>(.*)</\1>', outer_content.strip(), re.DOTALL)
+                    if nested_match:
+                        # Return children from nested element instead
+                        return nested_match.group(2)
+
+        # Not a wrapper pattern, or no nested element found
+        return outer_content
 
     def _normalize_jsx_expression(self, expression: str) -> str:
         """Normalize JSX expression for consistent parsing.
@@ -111,6 +137,12 @@ class ContentParser:
             if start == -1:
                 break
 
+            # Check if this { is inside an opening tag (between < and >)
+            # Skip expressions that are attribute values
+            if self._is_inside_opening_tag(content, start):
+                pos = start + 1
+                continue
+
             # Extract balanced braces
             expression, end_pos = self._extract_balanced_expression(content, start)
             if not expression:
@@ -149,6 +181,27 @@ class ContentParser:
                     type='variable',
                     content=expression
                 ))
+
+    def _is_inside_opening_tag(self, content: str, pos: int) -> bool:
+        """Check if position is inside an opening tag (between < and >).
+
+        Args:
+            content: Full content string
+            pos: Position to check
+
+        Returns:
+            True if position is inside an opening tag
+        """
+        # Look backwards to find the nearest < and check if there's a > before pos
+        last_open = content.rfind('<', 0, pos)
+        if last_open == -1:
+            return False
+
+        # Check if there's a > between last_open and pos
+        last_close = content.rfind('>', last_open, pos)
+
+        # If no > found, we're inside an opening tag
+        return last_close == -1
 
     def _extract_balanced_expression(self, content: str, start: int) -> tuple:
         """Extract a balanced {expression} from content.
@@ -229,8 +282,8 @@ class ContentParser:
 
         Args:
             expression: Expression like "children ? parseContentMarkup(children) : fields && fields.map(...)"
+                       or "children ? React.Children.map(...) : items?.map(...)"
         """
-        # For now, we'll treat ternary as a fallback with the true and false values
         # Split on ? to get condition and rest
         parts = expression.split(' ? ', 1)
         if len(parts) != 2:
@@ -240,22 +293,122 @@ class ContentParser:
         rest = parts[1].strip()
 
         # Split on : to get true and false values
-        # Be careful with nested expressions
-        true_false = rest.split(' : ', 1)
-        if len(true_false) != 2:
+        # Be careful with nested expressions - need to find the : that splits true/false branches
+        # not : inside callbacks or template literals
+        colon_pos = self._find_ternary_separator(rest)
+        if colon_pos == -1:
             return
 
-        true_value = true_false[0].strip()
-        false_value = true_false[1].strip()
+        true_value = rest[:colon_pos].strip()
+        false_value = rest[colon_pos + 1:].strip()
 
-        # For template rendering, we'll create a special ternary element
-        # which the generator can convert to Jinja's inline if
+        # Check if either branch contains .map() - if so, convert to if/elif structure
+        # Note: includes React.Children.map and items?.map patterns
+        true_has_map = '.map(' in true_value or 'React.Children.map' in true_value
+        false_has_map = '.map(' in false_value or '?.map(' in false_value
+
+        if true_has_map or false_has_map:
+            # Convert ternary with .map() to fallback_chain structure
+            parsed_parts = []
+
+            # Parse true branch
+            if true_has_map:
+                # Special case: React.Children.map means "pass through children as-is"
+                if 'React.Children.map' in true_value:
+                    parsed_parts.append({
+                        'type': 'children_passthrough',
+                        'condition': condition
+                    })
+                else:
+                    true_element = self._parse_array_map(true_value)
+                    if true_element:
+                        # Set condition for the true branch
+                        true_element.condition = condition
+                        parsed_parts.append({
+                            'type': 'array_map',
+                            'element': true_element,
+                            'condition': condition
+                        })
+            else:
+                # Simple value in true branch
+                parsed_parts.append({
+                    'type': 'children_passthrough' if true_value == 'children' else 'variable',
+                    'condition': condition,
+                    'content': true_value
+                })
+
+            # Parse false branch
+            if false_has_map:
+                false_element = self._parse_array_map(false_value)
+                if false_element:
+                    # The false branch should use a negated or alternative condition
+                    # For if/elif structure: first condition, then array check
+                    false_condition = false_element.condition or false_element.array_name
+                    parsed_parts.append({
+                        'type': 'array_map',
+                        'element': false_element,
+                        'condition': false_condition
+                    })
+            else:
+                # Simple value in false branch - this becomes the final else
+                # Don't add a condition for the final else clause
+                pass
+
+            # Create fallback chain element for if/elif/else generation
+            if parsed_parts:
+                self.elements.append(ContentElement(
+                    type='fallback_chain',
+                    fallback_chain=parsed_parts
+                ))
+                return
+
+        # Simple ternary without .map() - handle as before
         self.elements.append(ContentElement(
             type='ternary',
             condition=condition,
             content=true_value,
             fallback_chain=[true_value, false_value]
         ))
+
+    def _find_ternary_separator(self, expression: str) -> int:
+        """Find the : that separates true/false branches in a ternary.
+
+        Args:
+            expression: The part after ? in a ternary
+
+        Returns:
+            Position of the separating : or -1 if not found
+        """
+        depth = 0
+        in_string = False
+        string_char = None
+
+        for i, char in enumerate(expression):
+            # Track strings
+            if char in ('"', "'", '`') and (i == 0 or expression[i-1] != '\\'):
+                if not in_string:
+                    in_string = True
+                    string_char = char
+                elif char == string_char:
+                    in_string = False
+
+            if not in_string:
+                # Track parentheses depth
+                if char in '([{':
+                    depth += 1
+                elif char in ')]}':
+                    depth -= 1
+                # Find : at top level
+                elif char == ':' and depth == 0:
+                    # Check if it's preceded by space (not a label in object literal)
+                    if i > 0 and expression[i-1] == ' ':
+                        return i
+                    # Check if it's part of ' : ' pattern
+                    if i > 0 and i < len(expression) - 1:
+                        if expression[i-1:i+2] == ' : ':
+                            return i
+
+        return -1
 
     def _parse_jsx_element(self, jsx: str) -> Optional[Dict]:
         """Parse a JSX element to extract component name, props, and children.
@@ -377,8 +530,11 @@ class ContentParser:
                 map_expr = parts[1].strip()
 
         # Extract array name, item variable, and component
-        # Pattern: arrayName.map((itemVar) => or arrayName.map((itemVar, index) =>
-        map_pattern = r'(\w+)\.map\(\s*\((\w+)(?:,\s*\w+)?\)\s*=>\s*<(\w+)\s*([^/>]*?)\s*/?>.*?\)'
+        # Pattern: arrayName.map((itemVar) => or arrayName?.map((itemVar, index) =>
+        # Also handles object destructuring: arrayName.map(({ prop1, prop2 }) =>
+        # Captures both self-closing and regular tags with children
+        # Support optional chaining: items?.map(...)
+        map_pattern = r'(\w+)\??\.map\(\s*\(([^)]+)\)\s*=>\s*(?:\(?\s*)?<(\w+)\s*([^/>]*?)(?:/>|>(.*?)</\3>)'
 
         match = re.search(map_pattern, map_expr, re.DOTALL)
         if not match:
@@ -394,9 +550,37 @@ class ContentParser:
                 return None
         else:
             array_name = match.group(1)
-            item_var = match.group(2)
+            raw_params = match.group(2).strip()
             component_name = match.group(3)
             props_str = match.group(4).strip()
+            # Children content (if not self-closing tag)
+            children_str = match.group(5).strip() if len(match.groups()) >= 5 and match.group(5) else None
+
+            # Handle object destructuring: { prop1, prop2 } or { prop1, prop2 }, index
+            if raw_params.startswith('{'):
+                # Extract destructured properties
+                # For Jinja, we'll use the singular of the array name as the item variable
+                # and extract properties from the object
+                item_var = array_name.rstrip('s') if array_name.endswith('s') else array_name + '_item'
+
+                # Extract destructured property names
+                destructure_match = re.match(r'\{\s*([^}]+)\s*\}', raw_params)
+                if destructure_match:
+                    # Properties like "label, value" or "label, value: optionValue"
+                    props_part = destructure_match.group(1)
+                    # Simple extraction: split by comma and get property names
+                    destructured_props = [p.split(':')[0].strip() for p in props_part.split(',')]
+
+                    # Update props_str to use item_var.property syntax
+                    # Replace {label} with {item_var.label} in the component props and children
+                    for prop in destructured_props:
+                        # Replace {prop} or prop={prop} patterns
+                        props_str = re.sub(rf'\b{prop}\b', f'{item_var}.{prop}', props_str)
+                        if children_str:
+                            children_str = re.sub(rf'\b{prop}\b', f'{item_var}.{prop}', children_str)
+            else:
+                # Simple variable, possibly with index: itemVar or itemVar, index
+                item_var = raw_params.split(',')[0].strip()
 
         # Check for prop spreading: {...itemVar}
         is_spread = f'...{item_var}' in props_str or f'...(child as any).props' in props_str
@@ -405,6 +589,13 @@ class ContentParser:
         component_props = {}
         if not is_spread and props_str:
             component_props = self._parse_component_props(props_str)
+
+        # Add children content if present
+        if children_str:
+            # Extract content from JSX expression: {variable} -> variable
+            if children_str.startswith('{') and children_str.endswith('}'):
+                children_str = children_str[1:-1].strip()
+            component_props['_children'] = children_str
 
         return ContentElement(
             type='array_map',
@@ -425,6 +616,8 @@ class ContentParser:
           if (condition) {
             labelMarkup = <Component .../>
           }
+        Also handles content processing functions:
+          const contentMarkup = parseContentMarkup(children || content);
 
         Args:
             source_content: Full source file content
@@ -433,6 +626,25 @@ class ContentParser:
             Dict mapping variable names to component info
         """
         references = {}
+
+        # Pattern 0: Content processing utility functions
+        # Matches: const/let varName = anyFunctionName(children || content)
+        # These are utility functions that process/format content but essentially pass it through
+        # In Jinja, we just use the arguments directly: {% set varName = children or content %}
+        content_function_pattern = r'(?:const|let)\s+(\w+)(?::\s*[^=]+)?\s*=\s*(\w+)\(([^)]+)\)'
+
+        for match in re.finditer(content_function_pattern, source_content):
+            var_name = match.group(1)
+            function_name = match.group(2)
+            args = match.group(3).strip()
+
+            # Only treat it as content function if args mention children or content
+            if 'children' in args or 'content' in args:
+                references[var_name] = {
+                    'type': 'content_function',
+                    'function': function_name,
+                    'args': args
+                }
 
         # Pattern 1: const varName = <ComponentName .../>
         pattern = r'const\s+(\w+)\s*=\s*<(\w+)\s+([^/>]*)/>'

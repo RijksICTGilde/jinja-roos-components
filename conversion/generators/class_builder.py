@@ -102,15 +102,17 @@ class ClassBuilder:
             condition = f"{var_name} == '{size}'"
             self.add_conditional_class(class_name, condition)
 
-    def generate_jinja_code(self, array_var_name: str = 'css_classes') -> str:
+    def generate_jinja_code(self, array_var_name: str = 'css_classes', name_mappings: dict = None) -> str:
         """Generate Jinja template code for class building.
 
         Args:
             array_var_name: Name of the Jinja array variable
+            name_mappings: Optional dict mapping original names to safe names (for reserved words)
 
         Returns:
             Jinja template code as string
         """
+        name_mappings = name_mappings or {}
         lines = []
 
         # Generate computed variables first
@@ -130,11 +132,11 @@ class ClassBuilder:
             condition = tpl_class['condition']
 
             # Convert ${var} to Jinja {{var}} syntax and build class string
-            jinja_class = self._convert_template_to_jinja(template)
+            jinja_class = self._convert_template_to_jinja(template, name_mappings)
 
             if condition and condition != '__ALWAYS__':
                 # Convert React condition to Jinja
-                jinja_condition = self._convert_condition_to_jinja(condition)
+                jinja_condition = self._convert_condition_to_jinja(condition, name_mappings)
                 lines.append(f"{{% if {jinja_condition} %}}")
                 lines.append(f"    {{% set {array_var_name} = {array_var_name} + [{jinja_class}] %}}")
                 lines.append("{% endif %}")
@@ -146,22 +148,44 @@ class ClassBuilder:
         for item in self.class_conditionals:
             class_name = item['class']
             condition = item['condition']
+            # Apply name mappings to condition
+            mapped_condition = self._apply_name_mappings(condition, name_mappings)
             lines.append(
-                f"{{% if {condition} %}}{{% set {array_var_name} = {array_var_name} + ['{class_name}'] %}}{{% endif %}}"
+                f"{{% if {mapped_condition} %}}{{% set {array_var_name} = {array_var_name} + ['{class_name}'] %}}{{% endif %}}"
             )
 
         return '\n'.join(lines)
 
-    def _convert_template_to_jinja(self, template: str) -> str:
+    def _apply_name_mappings(self, text: str, name_mappings: dict) -> str:
+        """Apply name mappings to variable names in text.
+
+        Args:
+            text: Text containing variable names
+            name_mappings: Dict mapping original names to safe names
+
+        Returns:
+            Text with mapped variable names
+        """
+        import re
+        result = text
+        # Sort by length descending to avoid partial matches
+        for original, mapped in sorted(name_mappings.items(), key=lambda x: len(x[0]), reverse=True):
+            # Match whole words only
+            result = re.sub(r'\b' + re.escape(original) + r'\b', mapped, result)
+        return result
+
+    def _convert_template_to_jinja(self, template: str, name_mappings: dict = None) -> str:
         """Convert React template literal to Jinja string concatenation.
 
         Args:
             template: Template like 'class--${var}'
+            name_mappings: Optional dict mapping original names to safe names
 
         Returns:
             Jinja expression like "'class--' + var"
         """
         import re
+        name_mappings = name_mappings or {}
 
         # Find all ${...} expressions
         parts = []
@@ -176,7 +200,7 @@ class ClassBuilder:
 
             # Add the variable expression (convert ternary if needed)
             var_expr = match.group(1)
-            converted_expr = self._convert_ternary_to_jinja(var_expr)
+            converted_expr = self._convert_ternary_to_jinja(var_expr, name_mappings)
             parts.append(converted_expr)
 
             last_end = match.end()
@@ -192,36 +216,42 @@ class ClassBuilder:
             return parts[0]
         return ' + '.join(parts)
 
-    def _convert_condition_to_jinja(self, condition: str) -> str:
+    def _convert_condition_to_jinja(self, condition: str, name_mappings: dict = None) -> str:
         """Convert React condition to Jinja condition.
 
         Args:
             condition: React condition
+            name_mappings: Optional dict mapping original names to safe names
 
         Returns:
             Jinja condition
         """
+        name_mappings = name_mappings or {}
         # Replace !== with !=
         jinja_cond = condition.replace(' !== ', ' != ')
         # Replace === with ==
         jinja_cond = jinja_cond.replace(' === ', ' == ')
+        # Apply name mappings
+        jinja_cond = self._apply_name_mappings(jinja_cond, name_mappings)
         return jinja_cond
 
-    def _convert_ternary_to_jinja(self, expr: str) -> str:
+    def _convert_ternary_to_jinja(self, expr: str, name_mappings: dict = None) -> str:
         """Convert JavaScript ternary expression to Jinja conditional expression.
 
         Args:
             expr: Expression like "line !== 'substep-start' ? size : 'md'"
+            name_mappings: Optional dict mapping original names to safe names
 
         Returns:
             Jinja expression like "('md' if line == 'substep-start' else size)"
         """
         import re
+        name_mappings = name_mappings or {}
 
         # Check if expression contains ternary operator
         if '?' not in expr or ':' not in expr:
-            # No ternary, return as-is
-            return expr
+            # No ternary, apply name mappings and return
+            return self._apply_name_mappings(expr, name_mappings)
 
         # Parse ternary: condition ? trueVal : falseVal
         # Split on ? first
@@ -237,8 +267,12 @@ class ClassBuilder:
         true_val = value_parts[0].strip()
         false_val = value_parts[1].strip()
 
-        # Convert condition to Jinja syntax
-        jinja_condition = self._convert_condition_to_jinja(condition)
+        # Convert condition to Jinja syntax (with name mappings)
+        jinja_condition = self._convert_condition_to_jinja(condition, name_mappings)
+
+        # Apply name mappings to values
+        true_val = self._apply_name_mappings(true_val, name_mappings)
+        false_val = self._apply_name_mappings(false_val, name_mappings)
 
         # Handle !== by flipping the condition
         if ' !== ' in condition:

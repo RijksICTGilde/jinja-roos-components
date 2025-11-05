@@ -1,0 +1,8 @@
+{
+  "component": "horizontal-rule",
+  "description": "Customizations for the Horizontal Rule component",
+  "aliases": ["hr"],
+  "notes": [
+    "Alias 'hr' provides a shorter tag name for horizontal-rule components, matching the HTML <hr> element"
+  ]
+}

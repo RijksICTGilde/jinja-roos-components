@@ -29,6 +29,7 @@ class ComponentInfo:
     imports: List[ImportInfo]
     jsx_content: str
     file_path: str
+    dynamic_tag: Optional[Dict[str, Any]] = None  # Info about dynamic tag selection (e.g., TagName = cond ? 'div' : 'span')
 
 
 class TsxParser:
@@ -79,6 +80,9 @@ class TsxParser:
             tsx_content, component_name, default_args
         )
 
+        # Detect dynamic tag assignments
+        dynamic_tag = self._detect_dynamic_tag(tsx_content)
+
         return ComponentInfo(
             name=component_name,
             props_interface=props_interface,
@@ -87,7 +91,8 @@ class TsxParser:
             example_values=example_values,
             imports=self.imports,
             jsx_content=jsx_content,
-            file_path=tsx_file_path
+            file_path=tsx_file_path,
+            dynamic_tag=dynamic_tag
         )
 
     def _parse_imports(self, content: str) -> List[ImportInfo]:
@@ -168,10 +173,19 @@ class TsxParser:
             JSX content as string
         """
         # Find the main component function/const
-        # Look for patterns like: export const Button: React.FC = ({ ... }) => {
-        # or: export const Button = ({ ... }) => {
+        # Look for patterns like:
+        # 1. export const Button: React.FC = ({ ... }) => { return (...) }
+        # 2. export const Button = ({ ... }) => { return (...) }
+        # 3. export const Button = ({ ... }) => (...)  <-- immediate return
 
-        # Simple heuristic: find "return (" and extract until matching ")"
+        # First try arrow function with immediate JSX return: ) => (
+        arrow_return_match = re.search(r'\)\s*=>\s*\(', content)
+        if arrow_return_match:
+            start = arrow_return_match.end() - 1  # Start at the '('
+            jsx = self._extract_until_matching_paren(content[start:])
+            return jsx.strip()
+
+        # Fallback to explicit return statement
         return_match = re.search(r'return\s*\(', content)
         if not return_match:
             # Try without parentheses
@@ -276,3 +290,33 @@ class TsxParser:
                     break
 
         return base_imports
+
+    def _detect_dynamic_tag(self, content: str) -> Optional[Dict[str, Any]]:
+        """Detect dynamic tag assignment patterns like: const TagName = condition ? 'tag1' : 'tag2'
+
+        Args:
+            content: File content
+
+        Returns:
+            Dictionary with dynamic tag info or None
+            {
+                'variable_name': 'ListTag',
+                'condition': 'type === "unordered"',
+                'true_tag': 'ul',
+                'false_tag': 'ol'
+            }
+        """
+        # Pattern: const TagName = condition ? 'tag1' : 'tag2';
+        # Supports single or double quotes
+        pattern = r'const\s+([A-Z][a-zA-Z0-9]*)\s*=\s*([^?]+)\s*\?\s*["\']([a-z][a-z0-9]*)["\']?\s*:\s*["\']([a-z][a-z0-9]*)["\']'
+
+        match = re.search(pattern, content)
+        if match:
+            return {
+                'variable_name': match.group(1),
+                'condition': match.group(2).strip(),
+                'true_tag': match.group(3),
+                'false_tag': match.group(4)
+            }
+
+        return None

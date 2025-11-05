@@ -47,6 +47,27 @@ poetry run python conversion/convert_component.py form-fieldset --name fieldset 
 
 Aliases are registered in `src/jinja_roos_components/definitions.json` and work immediately in templates.
 
+### Split Components (Multi-Variant)
+
+Convert one source component into multiple semantic variants:
+
+```bash
+# Convert ordered-unordered-list → <c-ul> and <c-ol>
+poetry run python conversion/convert_component.py ordered-unordered-list --name ul
+poetry run python conversion/convert_component.py ordered-unordered-list --name ol
+
+# Result: Two separate components
+# <c-ul>...</c-ul>    (type="unordered" by default)
+# <c-ol>...</c-ol>    (type="ordered" by default)
+```
+
+**Use cases:**
+- List variants (`ul`, `ol`)
+- Heading levels (`h1`, `h2`, `h3`, etc.)
+- Button types (`submit-button`, `reset-button`)
+
+See **[Split Component Guide](SPLIT_COMPONENT_GUIDE.md)** for complete documentation.
+
 ## CLI Options
 
 ```bash
@@ -298,6 +319,7 @@ poetry run python conversion/convert_component.py card
 
 ## Further Reading
 
+- **[Split Component Guide](SPLIT_COMPONENT_GUIDE.md)** - Converting multi-variant components (ul/ol, h1-h6, etc.)
 - **[Customizations Quick Start](customizations/QUICKSTART.md)** - Examples and common patterns
 - **[Customizations Full Guide](customizations/README.md)** - Complete documentation
 - **[Boolean Attributes](../docs/BOOLEAN_ATTRIBUTES.md)** - How boolean attributes work

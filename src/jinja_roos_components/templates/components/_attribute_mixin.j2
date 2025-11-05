@@ -1,0 +1,40 @@
+{# Utility class attribute mixin for components #}
+{# Renders utility classes based on text-style, margin, and padding attributes #}
+{# Supports multiple values separated by spaces or commas: text-style="bold italic" or text-style="bold, italic" #}
+
+{% macro render_utility_classes(component_context) -%}
+{%- set ns = namespace(classes=[]) -%}
+{%- if 'text-style' in component_context -%}
+    {%- set text_style_raw = component_context['text-style'] | replace(',', ' ') -%}
+    {%- for value in text_style_raw.split() -%}
+        {%- set ns.classes = ns.classes + ['rvo-text--' + value] -%}
+    {%- endfor -%}
+{%- endif -%}
+{%- if 'margin' in component_context -%}
+    {%- set margin_raw = component_context['margin'] | replace(',', ' ') -%}
+    {%- for margin_val in margin_raw.split() -%}
+        {%- if '-' in margin_val and margin_val.count('-') >= 2 -%}
+            {%- set parts = margin_val.split('-') -%}
+            {%- if parts|length == 3 -%}
+                {%- set ns.classes = ns.classes + ['rvo-margin-' + parts[0] + '-' + parts[1] + '--' + parts[2]] -%}
+            {%- endif -%}
+        {%- else -%}
+            {%- set ns.classes = ns.classes + ['rvo-margin--' + margin_val] -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endif -%}
+{%- if 'padding' in component_context -%}
+    {%- set padding_raw = component_context['padding'] | replace(',', ' ') -%}
+    {%- for padding_val in padding_raw.split() -%}
+        {%- if '-' in padding_val and padding_val.count('-') >= 2 -%}
+            {%- set parts = padding_val.split('-') -%}
+            {%- if parts|length == 3 -%}
+                {%- set ns.classes = ns.classes + ['rvo-padding-' + parts[0] + '-' + parts[1] + '--' + parts[2]] -%}
+            {%- endif -%}
+        {%- else -%}
+            {%- set ns.classes = ns.classes + ['rvo-padding--' + padding_val] -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endif -%}
+{{- ns.classes | join(' ') -}}
+{%- endmacro %}

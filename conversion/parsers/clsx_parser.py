@@ -51,6 +51,11 @@ class ClsxParser:
                 self.base_classes.append(class_name)
                 continue
 
+            # Object literal: { 'class-name': condition, ... }
+            if arg.startswith('{') and arg.endswith('}'):
+                self._parse_object_literal(arg)
+                continue
+
             # Template literals without condition (bare): `class-${var}`
             if arg.startswith('`') and arg.endswith('`') and ' && ' not in arg:
                 self._parse_bare_template_literal(arg)
@@ -61,6 +66,94 @@ class ClsxParser:
                 self._parse_conditional(arg)
 
         return self.mappings
+
+    def _parse_object_literal(self, obj_str: str) -> None:
+        """Parse object literal like { 'class-name': condition, ... }.
+
+        Args:
+            obj_str: Object literal string like "{ 'class': cond, ... }"
+        """
+        # Remove outer braces
+        obj_content = obj_str.strip()[1:-1].strip()
+
+        # Split by commas (respecting nested structures)
+        entries = self._split_object_entries(obj_content)
+
+        for entry in entries:
+            # Parse key: value pair
+            # Pattern: 'class-name': condition
+            match = re.match(r"['\"]([^'\"]+)['\"]:\s*(.+)", entry.strip())
+            if not match:
+                continue
+
+            class_name = match.group(1)
+            condition = match.group(2).strip().rstrip(',')
+
+            # Treat the condition as a simple variable (boolean check)
+            # Handles patterns like: disabled, focus, invalid, !something, etc.
+            if condition.startswith('!'):
+                # Negated boolean
+                prop_name = condition[1:].strip()
+                self.mappings.append(ClassMapping(
+                    prop_name=prop_name,
+                    value='false',
+                    css_class=class_name,
+                    condition=condition
+                ))
+            else:
+                # Positive boolean or expression
+                prop_name = condition.strip()
+                self.mappings.append(ClassMapping(
+                    prop_name=prop_name,
+                    value='true',
+                    css_class=class_name,
+                    condition=condition
+                ))
+
+    def _split_object_entries(self, content: str) -> List[str]:
+        """Split object entries by commas.
+
+        Args:
+            content: Object content without outer braces
+
+        Returns:
+            List of key: value entries
+        """
+        entries = []
+        current = []
+        in_string = False
+        string_char = None
+        paren_depth = 0
+
+        for i, char in enumerate(content):
+            # Track strings
+            if char in ('"', "'") and (i == 0 or content[i-1] != '\\\\'):
+                if not in_string:
+                    in_string = True
+                    string_char = char
+                elif char == string_char:
+                    in_string = False
+
+            # Track parentheses/brackets
+            if not in_string:
+                if char in '([{':
+                    paren_depth += 1
+                elif char in ')]}':
+                    paren_depth -= 1
+
+                # Split on comma at top level
+                if char == ',' and paren_depth == 0:
+                    entries.append(''.join(current).strip())
+                    current = []
+                    continue
+
+            current.append(char)
+
+        # Add last entry
+        if current:
+            entries.append(''.join(current).strip())
+
+        return entries
 
     def _split_arguments(self, content: str) -> List[str]:
         """Split clsx arguments by commas at the top level.
@@ -110,20 +203,39 @@ class ClsxParser:
     def _parse_conditional(self, expression: str) -> None:
         """Parse a conditional expression like 'prop === value && class-name'.
 
+        Now also supports compound conditions like:
+        'type === "unordered" && noMargin && "rvo-ul--no-margin"'
+
         Args:
             expression: Conditional expression
         """
         # Pattern: condition && 'class-name' or condition && `template-${var}`
+        # For compound conditions: cond1 && cond2 && 'class-name'
         parts = expression.split(' && ')
-        if len(parts) != 2:
+        if len(parts) < 2:
             return
 
-        condition = parts[0].strip()
-        class_part = parts[1].strip()
+        # The last part is always the class name or template literal
+        class_part = parts[-1].strip()
+
+        # Everything before the last part forms the compound condition
+        if len(parts) == 2:
+            # Simple condition: condition && 'class'
+            condition = parts[0].strip()
+        else:
+            # Compound condition: cond1 && cond2 && ... && 'class'
+            # Join all conditions except the last part
+            condition_parts = [p.strip() for p in parts[:-1]]
+            condition = ' && '.join(condition_parts)
 
         # Check if it's a template literal
         if class_part.startswith('`') and class_part.endswith('`'):
             self._parse_template_literal(condition, class_part)
+            return
+
+        # Check if it's a string concatenation: 'prefix-' + variable
+        if ' + ' in class_part:
+            self._parse_string_concatenation(condition, class_part)
             return
 
         # Remove quotes from regular class names
@@ -136,6 +248,19 @@ class ClsxParser:
         # 3. prop !== 'value' (not equal)
         # 4. prop (boolean)
         # 5. !prop (negated boolean)
+        # 6. Compound conditions: cond1 && cond2 (added for ul/ol components)
+
+        # Compound condition check (has && in the condition itself)
+        if ' && ' in condition:
+            # This is a compound condition like "type === 'unordered' && noMargin"
+            # Store it with a special marker so it can be converted to Jinja as-is
+            self.mappings.append(ClassMapping(
+                prop_name='__COMPOUND__',  # Special marker for compound conditions
+                value='__COMPOUND__',
+                css_class=class_part,
+                condition=condition
+            ))
+            return
 
         # Not equal check
         if ' !== ' in condition:
@@ -189,6 +314,50 @@ class ClsxParser:
                 css_class=class_part,
                 condition=condition
             ))
+
+    def _parse_string_concatenation(self, condition: str, class_expr: str) -> None:
+        """Parse string concatenation expression like 'prefix-' + variable.
+
+        Converts string concatenation to template literal format for uniform handling.
+
+        Args:
+            condition: Condition like 'color'
+            class_expr: Expression like "'rvo-paragraph--' + color"
+        """
+        # Split on ' + ' to get parts
+        parts = class_expr.split(' + ')
+
+        # Convert to template literal format
+        # 'prefix-' + var → prefix-${var}
+        template_parts = []
+        for part in parts:
+            part = part.strip()
+            # Check if it's a quoted string
+            if (part.startswith("'") and part.endswith("'")) or \
+               (part.startswith('"') and part.endswith('"')):
+                # Remove quotes and add as literal
+                template_parts.append(part.strip("'\""))
+            else:
+                # It's a variable, wrap in ${}
+                template_parts.append(f"${{{part}}}")
+
+        # Join parts to create template pattern
+        template_pattern = ''.join(template_parts)
+
+        # Extract variable name (the first variable part)
+        var_match = re.search(r'\$\{([^}]+)\}', template_pattern)
+        if not var_match:
+            return
+
+        var_name = var_match.group(1).strip()
+
+        # Store as template mapping
+        self.mappings.append(ClassMapping(
+            prop_name=var_name,
+            value='__TEMPLATE__',
+            css_class=template_pattern,
+            condition=condition
+        ))
 
     def _parse_bare_template_literal(self, template: str) -> None:
         """Parse bare template literal without a condition.
@@ -378,11 +547,21 @@ class ClsxParser:
                         mapping.css_class
                     )
 
+                    # Preserve the original compound condition
+                    # If the original condition is not just __ALWAYS__, keep it and append the enum check
+                    if mapping.condition and mapping.condition != '__ALWAYS__':
+                        # The original condition might be: "type === 'unordered' && bulletType === 'icon'"
+                        # We need to add: " && bulletIcon == 'option-1'"
+                        new_condition = f"{mapping.condition} && {mapping.prop_name} == '{enum_value}'"
+                    else:
+                        # No original condition, just the enum check
+                        new_condition = f"{mapping.prop_name} == '{enum_value}'"
+
                     expanded.append(ClassMapping(
                         prop_name=mapping.prop_name,
                         value=enum_value,
                         css_class=css_class,
-                        condition=f"{mapping.prop_name} == '{enum_value}'"
+                        condition=new_condition
                     ))
             else:
                 # Keep non-template mappings as-is

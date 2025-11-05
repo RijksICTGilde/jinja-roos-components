@@ -1,12 +1,13 @@
 {
   "name": "button",
   "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/button/src/template.tsx",
-  "converted_at": "2025-10-17T10:12:48.163293Z",
+  "converted_at": "2025-11-03T08:41:17.249831Z",
   "conversion_hash": "9f6262f02f8ff8410176a7fa39fb1fd4bff97350132e01f84d2d29f346ad0fed",
   "base_components": [
     {
       "library": "@utrecht/component-library-react",
-      "component": "Button"
+      "component": "Button",
+      "jsx_name": "UtrechtButton"
     }
   ],
   "nested_components": [],
@@ -25,7 +26,9 @@
         "warning-subtle",
         "warning"
       ],
-      "default": "primary"
+      "default": "primary",
+      "is_example": true,
+      "example_value": "primary"
     },
     {
       "name": "size",
@@ -37,56 +40,72 @@
         "sm",
         "md"
       ],
-      "default": "md"
+      "default": "xs",
+      "is_example": true,
+      "example_value": "md"
     },
     {
       "name": "label",
       "type": "string",
       "required": false,
       "description": "label attribute",
-      "default": "Button"
+      "default": "",
+      "is_example": true,
+      "example_value": "Button"
     },
     {
       "name": "active",
       "type": "boolean",
       "required": false,
       "description": "active attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "busy",
       "type": "boolean",
       "required": false,
       "description": "busy attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "focus",
       "type": "boolean",
       "required": false,
       "description": "focus attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "focusVisible",
       "type": "boolean",
       "required": false,
       "description": "focusVisible attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "hover",
       "type": "boolean",
       "required": false,
       "description": "hover attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "disabled",
       "type": "boolean",
       "required": false,
       "description": "disabled attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "showIcon",
@@ -98,28 +117,36 @@
         "before",
         "after"
       ],
-      "default": "no"
+      "default": "no",
+      "is_example": true,
+      "example_value": "no"
     },
     {
       "name": "icon",
       "type": "string",
       "required": false,
       "description": "icon attribute",
-      "default": "home"
+      "default": "",
+      "is_example": true,
+      "example_value": "home"
     },
     {
       "name": "iconAriaLabel",
       "type": "string",
       "required": false,
       "description": "iconAriaLabel attribute",
-      "default": ""
+      "default": "",
+      "is_example": true,
+      "example_value": ""
     },
     {
       "name": "fullWidth",
       "type": "boolean",
       "required": false,
       "description": "fullWidth attribute",
-      "default": false
+      "default": false,
+      "is_example": true,
+      "example_value": false
     },
     {
       "name": "className",
@@ -141,23 +168,41 @@
       "required": false,
       "description": "Custom color for the button (additional to kind-based styling)",
       "default": ""
+    },
+    {
+      "name": "type",
+      "type": "enum",
+      "required": false,
+      "description": "HTML button type attribute",
+      "enum_values": [
+        "button",
+        "submit",
+        "reset"
+      ],
+      "default": "button"
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "Children/content support added via customization",
+      "default": ""
     }
   ],
-  "manual_review_items": [
-    {
-      "issue": "Unmapped prop: label",
-      "severity": "medium",
-      "source_line": 0
-    },
-    {
-      "issue": "Unmapped prop: icon",
-      "severity": "medium",
-      "source_line": 0
-    },
-    {
-      "issue": "Unmapped prop: iconAriaLabel",
-      "severity": "medium",
-      "source_line": 0
-    }
-  ]
+  "manual_review_items": [],
+  "example_values": {
+    "kind": "primary",
+    "size": "md",
+    "active": false,
+    "busy": false,
+    "disabled": false,
+    "focus": false,
+    "focusVisible": false,
+    "hover": false,
+    "label": "Button",
+    "showIcon": "no",
+    "icon": "home",
+    "iconAriaLabel": "",
+    "fullWidth": false
+  }
 }

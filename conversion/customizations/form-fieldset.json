@@ -1,0 +1,11 @@
+{
+  "component": "form-fieldset",
+  "description": "Customizations for form-fieldset component",
+  "default_overrides": {
+    "legend": ""
+  },
+  "notes": [
+    "Legend default changed from 'Fieldset legend' to empty string",
+    "The original 'Fieldset legend' text is only meant as an example for stories, not a real default"
+  ]
+}
