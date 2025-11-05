@@ -146,3 +146,67 @@ def test_shorthand_attribute_at_end():
     assert len(components[0]['attrs']) == 2
     assert components[0]['attrs']['title'] == 'my button'
     assert components[0]['attrs']['disabled'] == None
+
+def test_attribute_case_preservation():
+    """Test that attribute name capitalization is preserved"""
+
+    registry = ComponentRegistry()
+    button_component = ComponentDefinition(
+        name='button',
+        description='Test button component',
+        attributes=[
+            AttributeDefinition('dataId', AttributeType.STRING),
+        ]
+    )
+    registry.register_component(button_component)
+
+    parser = ComponentHTMLParser(registry)
+    components = parser.parse_components('<c-button dataId="test123" />')
+
+    assert len(components) == 1
+    attrs = components[0]['attrs']
+    assert 'dataId' in attrs
+    assert attrs['dataId'] == 'test123'
+
+def test_binding_attribute_case_preservation():
+    """Test that binding attributes (starting with :) preserve capitalization"""
+
+    registry = ComponentRegistry()
+    button_component = ComponentDefinition(
+        name='button',
+        description='Test button component',
+        attributes=[
+            AttributeDefinition('isActive', AttributeType.BOOLEAN),
+        ]
+    )
+    registry.register_component(button_component)
+
+    parser = ComponentHTMLParser(registry)
+    components = parser.parse_components('<c-button :isActive="active_state" />')
+
+    assert len(components) == 1
+    attrs = components[0]['attrs']
+    assert ':isActive' in attrs
+    assert attrs[':isActive'] == 'active_state'
+
+def test_event_attribute_case_preservation():
+    """Test that event attributes (starting with @) preserve capitalization"""
+
+    registry = ComponentRegistry()
+    button_component = ComponentDefinition(
+        name='button',
+        description='Test button component',
+        attributes=[
+            AttributeDefinition('onClick', AttributeType.STRING),
+        ]
+    )
+    registry.register_component(button_component)
+
+    parser = ComponentHTMLParser(registry)
+    components = parser.parse_components('<c-button @onClick="handleClick()" />')
+
+    assert len(components) == 1
+    attrs = components[0]['attrs']
+    assert '@onClick' in attrs
+    assert attrs['@onClick'] == 'handleClick()'
+    
