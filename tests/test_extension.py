@@ -54,23 +54,24 @@ def test_preprocessing_directly():
     assert '"{{ service_def.icon }}"' not in result, \
         "Preprocessing should not treat Jinja expressions as quoted strings"
     
-def test_horthand_boolean_notation(env):
-    """Shorthand boolean notation is not supported"""
+def test_shorthand_boolean_notation(env):
+    """Shorthand boolean notation is supported on boolean attributes"""
 
     # Create test template string
     template_str = '''
 <c-button disabled label="my button" />
     '''
 
-    # Should raise validation error for shorthand boolean notation
-    with pytest.raises(RuntimeError) as exc_info:
-        env.from_string(template_str)
+    # Should successfully parse shorthand boolean notation
+    try:
+        template = env.from_string(template_str)
+        result = template.render()
+    except Exception:
+        assert False, 'should not error'
 
-    # Check error message mentions shorthand notation
-    assert 'Shorthand notation is not supported' in str(exc_info.value)
-    assert 'disabled' in str(exc_info.value)
+    assert "disabled" in result
 
-def test_horthand_boolean_notation_on_non_boolean_attr(env):
+def test_shorthand_boolean_notation_on_non_boolean_attr(env):
     """Shorthand notation is not supported on non-boolean attributes"""
 
     # Create test template string

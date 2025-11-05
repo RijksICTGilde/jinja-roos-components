@@ -357,15 +357,19 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
 
             # Handle BOOLEAN attributes - auto-convert string boolean values
             if attr_def and attr_def.type == AttributeType.BOOLEAN:
-                # Convert common string boolean values to actual booleans
-                value_lower = value.lower().strip()
-                if value_lower in ('false', '0', '', 'no', 'off'):
-                    context_items.append(f'"{key}": False')
-                elif value_lower in ('true', '1', 'yes', 'on'):
+                # Handle shorthand notation (None value means true)
+                if value is None:
                     context_items.append(f'"{key}": True')
                 else:
-                    # Unknown value for boolean - treat as truthy if non-empty
-                    context_items.append(f'"{key}": {bool(value)}')
+                    # Convert common string boolean values to actual booleans
+                    value_lower = value.lower().strip()
+                    if value_lower in ('false', '0', '', 'no', 'off'):
+                        context_items.append(f'"{key}": False')
+                    elif value_lower in ('true', '1', 'yes', 'on'):
+                        context_items.append(f'"{key}": True')
+                    else:
+                        # Unknown value for boolean - treat as truthy if non-empty
+                        context_items.append(f'"{key}": {bool(value)}')
 
             elif attr_def and attr_def.type == AttributeType.OBJECT:
                 # Object attribute - handle JSON string parsing
