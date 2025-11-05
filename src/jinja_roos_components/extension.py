@@ -10,7 +10,7 @@ from jinja2 import Environment
 from jinja2.ext import Extension
 
 from .registry import ComponentRegistry
-from .html_parser import ComponentHTMLParser, parse_component_attributes, convert_parsed_component
+from .html_parser import ComponentHTMLParser, convert_parsed_component
 
 
 # Valid values for utility attributes (from _attribute_mixin.j2)
