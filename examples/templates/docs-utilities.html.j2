@@ -1,0 +1,293 @@
+{% extends "docs-layout.html.j2" %}
+
+{% block title %}ROOS Utility Classes Reference{% endblock %}
+{% block page_title %}Utility Classes Reference{% endblock %}
+{% block footer_stats %}Text Style, Margin & Padding Utilities{% endblock %}
+
+{% block page_content %}
+
+<c-layout-flow gap="xl">
+
+    <!-- Introduction Section -->
+    <section>
+        <c-heading type="h2" textContent="Overview" />
+        <p>The utility class system allows you to apply common styling utilities (text styling, margins, and padding) to components without needing custom CSS. This is achieved through an attribute mixin and specialized wrapper components.</p>
+
+        <c-card padding="md" style="margin: 1rem 0; background: #f6f8fa;">
+            <c-heading type="h6" textContent="Key Features" />
+            <ul>
+                <li>Three utility attributes: <code>text-style</code>, <code>margin</code>, and <code>padding</code></li>
+                <li>Multi-value support with space or comma separation</li>
+                <li>Directional margin/padding patterns (e.g., <code>inline-end-sm</code>)</li>
+                <li>Semantic wrapper components (<code>&lt;c-strong&gt;</code>, <code>&lt;c-small&gt;</code>, etc.)</li>
+                <li>Utility wrapper components (<code>&lt;c-span&gt;</code>, <code>&lt;c-div&gt;</code>)</li>
+            </ul>
+        </c-card>
+    </section>
+
+    <!-- Text Style Utilities -->
+    <section>
+        <c-heading type="h2" textContent="Text Style Utilities" />
+        <p>Apply text styling using the <code>text-style</code> attribute. Multiple values can be combined using spaces or commas.</p>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Available Values" />
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div><code>bold</code> - Bold font weight</div>
+                <div><code>italic</code> - Italic font style</div>
+                <div><code>subtle</code> - Subtle text color</div>
+                <div><code>error</code> - Error text color</div>
+                <div><code>sm</code> - Small text (12px)</div>
+                <div><code>md</code> - Medium text (16px)</div>
+                <div><code>lg</code> - Large text (18px)</div>
+                <div><code>xl</code> - Extra large text (24px)</div>
+                <div><code>no-margins</code> - Remove margins</div>
+            </div>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0; border-left: 4px solid #007BC7;">
+            <c-heading type="h6" textContent="Examples" />
+            <div style="margin-top: 1rem;">
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-span text-style="bold"&gt;Bold text&lt;/c-span&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-span text-style="bold">Bold text</c-span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-span text-style="bold, italic"&gt;Bold and italic&lt;/c-span&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-span text-style="bold, italic">Bold and italic</c-span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-span text-style="sm, subtle"&gt;Small subtle text&lt;/c-span&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-span text-style="sm, subtle">Small subtle text</c-span>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Margin Utilities -->
+    <section>
+        <c-heading type="h2" textContent="Margin Utilities" />
+        <p>Apply margins using the <code>margin</code> attribute. Supports both simple sizes and directional patterns.</p>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Simple Margin Sizes" />
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; margin-top: 1rem;">
+                <code>none</code>
+                <code>3xs</code>
+                <code>2xs</code>
+                <code>xs</code>
+                <code>sm</code>
+                <code>md</code>
+                <code>lg</code>
+                <code>xl</code>
+                <code>2xl</code>
+                <code>3xl</code>
+                <code>4xl</code>
+                <code>5xl</code>
+            </div>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Directional Patterns" />
+            <p>Use the pattern <code>{direction}-{size}</code> for precise control:</p>
+            <ul>
+                <li><strong>Directions:</strong> <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code></li>
+                <li><strong>Example:</strong> <code>margin="inline-end-sm"</code> → <code>rvo-margin-inline-end--sm</code></li>
+            </ul>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0; border-left: 4px solid #007BC7;">
+            <c-heading type="h6" textContent="Examples" />
+            <div style="margin-top: 1rem;">
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-div margin="md"&gt;Content with medium margin&lt;/c-div&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8; background: white;">
+                        <c-div margin="md" style="background: #e3f2fd; padding: 0.5rem;">Content with medium margin</c-div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-span margin="inline-end-sm"&gt;Text with inline-end margin&lt;/c-span&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-span margin="inline-end-sm" style="background: #e3f2fd;">Text with inline-end margin</c-span>← Notice the space
+                    </div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Padding Utilities -->
+    <section>
+        <c-heading type="h2" textContent="Padding Utilities" />
+        <p>Apply padding using the <code>padding</code> attribute. Works identically to margin utilities.</p>
+
+        <c-card padding="md" style="margin: 1rem 0; border-left: 4px solid #007BC7;">
+            <c-heading type="h6" textContent="Examples" />
+            <div style="margin-top: 1rem;">
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-div padding="md"&gt;Content with medium padding&lt;/c-div&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-div padding="md" style="background: #e3f2fd;">Content with medium padding</c-div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-span padding="inline-start-sm"&gt;Text with inline-start padding&lt;/c-span&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-span padding="inline-start-sm" style="background: #e3f2fd;">Text with inline-start padding</c-span>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Semantic Wrapper Components -->
+    <section>
+        <c-heading type="h2" textContent="Semantic Wrapper Components" />
+        <p>Pre-styled components that render as <code>&lt;span&gt;</code> elements with default styling. All support the utility attributes above.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            <c-card padding="md">
+                <c-heading type="h5" textContent="<c-strong> & <c-b>" />
+                <p style="font-size: 0.9rem; color: #666;">Bold text with <code>rvo-text--bold</code></p>
+                <div style="margin-top: 0.75rem; padding: 0.5rem; background: #f6f8fa; border-radius: 4px;">
+                    <c-strong>Strong bold text</c-strong>
+                </div>
+            </c-card>
+
+            <c-card padding="md">
+                <c-heading type="h5" textContent="<c-small>" />
+                <p style="font-size: 0.9rem; color: #666;">Small text with <code>rvo-text--sm</code></p>
+                <div style="margin-top: 0.75rem; padding: 0.5rem; background: #f6f8fa; border-radius: 4px;">
+                    <c-small>Small text example</c-small>
+                </div>
+            </c-card>
+
+            <c-card padding="md">
+                <c-heading type="h5" textContent="<c-i> & <c-em>" />
+                <p style="font-size: 0.9rem; color: #666;">Italic text with <code>rvo-text--italic</code></p>
+                <div style="margin-top: 0.75rem; padding: 0.5rem; background: #f6f8fa; border-radius: 4px;">
+                    <c-em>Emphasized italic text</c-em>
+                </div>
+            </c-card>
+        </div>
+
+        <c-card padding="md" style="margin: 1.5rem 0; border-left: 4px solid #007BC7;">
+            <c-heading type="h6" textContent="Combining Semantic Components with Utilities" />
+            <div style="margin-top: 1rem;">
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem;">&lt;c-strong text-style="italic" margin="inline-end-sm"&gt;Bold and italic&lt;/c-strong&gt;</code>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                        <c-strong text-style="italic" margin="inline-end-sm">Bold and italic</c-strong>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Utility Wrapper Components -->
+    <section>
+        <c-heading type="h2" textContent="Utility Wrapper Components" />
+        <p>Generic wrappers with <strong>no default styling</strong> - only apply the utility classes you specify.</p>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h5" textContent="<c-span>" />
+            <p>Generic inline wrapper for applying utility classes.</p>
+            <div style="margin-top: 0.75rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                <code style="font-size: 0.85rem;">&lt;c-span text-style="bold, italic" margin="md"&gt;Styled span&lt;/c-span&gt;</code>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                    <c-span text-style="bold, italic" margin="md">Styled span</c-span>
+                </div>
+            </div>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h5" textContent="<c-div>" />
+            <p>Generic block wrapper for applying utility classes.</p>
+            <div style="margin-top: 0.75rem; padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                <code style="font-size: 0.85rem;">&lt;c-div text-style="bold" padding="md" margin="md"&gt;Styled block&lt;/c-div&gt;</code>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1e4e8;">
+                    <c-div text-style="bold" padding="md" margin="md" style="background: #e3f2fd;">Styled block</c-div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Complex Examples -->
+    <section>
+        <c-heading type="h2" textContent="Complex Examples" />
+
+        <c-card padding="md" style="margin: 1rem 0; border-left: 4px solid #28a745;">
+            <c-heading type="h6" textContent="Inline Text Formatting" />
+            <div style="margin-top: 1rem;">
+                <div style="padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">
+                        &lt;p&gt;The price is &lt;c-span text-style="bold" margin="inline-start-xs inline-end-xs"&gt;$99.99&lt;/c-span&gt; per month.&lt;/p&gt;
+                    </code>
+                    <div style="padding: 0.5rem; background: white; border: 1px solid #e1e4e8; border-radius: 4px;">
+                        <p style="margin: 0;">The price is <c-span text-style="bold" margin="inline-start-xs inline-end-xs">$99.99</c-span> per month.</p>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0; border-left: 4px solid #28a745;">
+            <c-heading type="h6" textContent="Layout with Utilities" />
+            <div style="margin-top: 1rem;">
+                <div style="padding: 0.75rem; background: #f6f8fa; border-radius: 4px;">
+                    <code style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem; white-space: pre-wrap;">
+&lt;c-div margin="md" padding="lg"&gt;
+  &lt;c-span text-style="bold, xl"&gt;Large Bold Title&lt;/c-span&gt;
+  &lt;c-div margin="block-start-sm"&gt;
+    &lt;c-span text-style="subtle, sm"&gt;Small subtle description&lt;/c-span&gt;
+  &lt;/c-div&gt;
+&lt;/c-div&gt;</code>
+                    <div style="padding: 0.5rem; background: white; border: 1px solid #e1e4e8; border-radius: 4px;">
+                        <c-div margin="md" padding="lg" style="background: #e3f2fd;">
+                            <c-span text-style="bold, xl">Large Bold Title</c-span>
+                            <c-div margin="block-start-sm">
+                                <c-span text-style="subtle, sm">Small subtle description</c-span>
+                            </c-div>
+                        </c-div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+    </section>
+
+    <!-- Technical Details -->
+    <section>
+        <c-heading type="h2" textContent="Technical Details" />
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Generated CSS Classes" />
+            <p>The attribute mixin generates CSS classes following these patterns:</p>
+            <ul>
+                <li><strong>Text Style:</strong> <code>rvo-text--{value}</code> (e.g., <code>rvo-text--bold</code>)</li>
+                <li><strong>Margin (simple):</strong> <code>rvo-margin--{size}</code> (e.g., <code>rvo-margin--md</code>)</li>
+                <li><strong>Margin (directional):</strong> <code>rvo-margin-{direction}--{size}</code> (e.g., <code>rvo-margin-inline-end--sm</code>)</li>
+                <li><strong>Padding (simple):</strong> <code>rvo-padding--{size}</code> (e.g., <code>rvo-padding--md</code>)</li>
+                <li><strong>Padding (directional):</strong> <code>rvo-padding-{direction}--{size}</code> (e.g., <code>rvo-padding-inline-start--sm</code>)</li>
+            </ul>
+        </c-card>
+
+        <c-card padding="md" style="margin: 1rem 0;">
+            <c-heading type="h6" textContent="Multi-Value Parsing" />
+            <p>When multiple values are specified (space or comma-separated), the mixin generates multiple CSS classes:</p>
+            <ul>
+                <li><code>text-style="bold, italic"</code> → <code>class="rvo-text--bold rvo-text--italic"</code></li>
+                <li><code>margin="md inline-end-sm"</code> → <code>class="rvo-margin--md rvo-margin-inline-end--sm"</code></li>
+            </ul>
+        </c-card>
+    </section>
+
+</c-layout-flow>
+{% endblock %}

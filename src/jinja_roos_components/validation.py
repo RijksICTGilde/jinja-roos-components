@@ -12,6 +12,22 @@ from .registry import ComponentRegistry, AttributeType
 logger = logging.getLogger(__name__)
 
 
+# Valid values for utility attributes (from _attribute_mixin.j2)
+VALID_TEXT_STYLES = {
+    'subtle', 'sm', 'md', 'lg', 'xl',
+    'error', 'bold', 'italic', 'no-margins'
+}
+
+VALID_SPACING_SIZES = {
+    'none', '3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl',
+    '2xl', '3xl', '4xl', '5xl'
+}
+
+VALID_SPACING_DIRECTIONS = {
+    'inline-start', 'inline-end', 'block-start', 'block-end'
+}
+
+
 class ComponentValidationError(Exception):
     """Exception raised when component validation fails."""
     pass
@@ -69,8 +85,11 @@ class ComponentValidator:
         if not attr_def:
             # Skip common HTML attributes and Vue.js directives
             if self._is_allowed_generic_attribute(attr_name):
+                # Validate utility attribute values if applicable
+                if attr_name in ('text-style', 'margin', 'padding'):
+                    self._validate_utility_attribute(component_name, attr_name, attr_value)
                 return
-                
+
             available_attrs = [attr.name for attr in component_def.attributes]
             error_msg = f"Unknown attribute '{attr_name}' for component 'c-{component_name}'. Available attributes: {', '.join(sorted(available_attrs))}"
             if self.strict_mode:
@@ -78,7 +97,7 @@ class ComponentValidator:
             else:
                 logger.warning(error_msg)
                 return
-        
+
         # Validate attribute value based on type
         self._validate_attribute_value(component_name, attr_name, attr_value, attr_def)
     
@@ -150,38 +169,99 @@ class ComponentValidator:
                     raise ComponentValidationError(error_msg)
                 else:
                     logger.warning(error_msg)
-    
+
+    def _validate_utility_attribute(self, component_name: str, attr_name: str, attr_value: str) -> None:
+        """
+        Validate utility attribute values (text-style, margin, padding).
+        Raises ComponentValidationError if the value is invalid.
+        """
+        # Skip validation for jinja template expressions
+        if isinstance(attr_value, str) and ('{{' in attr_value or '{%' in attr_value):
+            return
+
+        # Split multi-value attributes (space or comma separated)
+        raw_value = attr_value.replace(',', ' ')
+        values = raw_value.split()
+
+        if attr_name == 'text-style':
+            for value in values:
+                if value not in VALID_TEXT_STYLES:
+                    error_msg = f"Invalid value '{value}' for 'text-style' attribute in component 'c-{component_name}'. Valid values: {', '.join(sorted(VALID_TEXT_STYLES))}"
+                    if self.strict_mode:
+                        raise ComponentValidationError(error_msg)
+                    else:
+                        logger.warning(error_msg)
+
+        elif attr_name in ('margin', 'padding'):
+            for value in values:
+                # Check if it's a directional pattern (e.g., "inline-end-sm")
+                if '-' in value and value.count('-') >= 2:
+                    parts = value.split('-')
+                    if len(parts) == 3:
+                        direction = f"{parts[0]}-{parts[1]}"
+                        size = parts[2]
+
+                        if direction not in VALID_SPACING_DIRECTIONS:
+                            error_msg = f"Invalid direction '{direction}' in '{attr_name}' attribute value '{value}' in component 'c-{component_name}'. Valid directions: {', '.join(sorted(VALID_SPACING_DIRECTIONS))}"
+                            if self.strict_mode:
+                                raise ComponentValidationError(error_msg)
+                            else:
+                                logger.warning(error_msg)
+
+                        if size not in VALID_SPACING_SIZES:
+                            error_msg = f"Invalid size '{size}' in '{attr_name}' attribute value '{value}' in component 'c-{component_name}'. Valid sizes: {', '.join(sorted(VALID_SPACING_SIZES))}"
+                            if self.strict_mode:
+                                raise ComponentValidationError(error_msg)
+                            else:
+                                logger.warning(error_msg)
+                    else:
+                        error_msg = f"Invalid directional pattern '{value}' in '{attr_name}' attribute in component 'c-{component_name}'. Expected format: {{direction}}-{{size}} (e.g., 'inline-end-sm')"
+                        if self.strict_mode:
+                            raise ComponentValidationError(error_msg)
+                        else:
+                            logger.warning(error_msg)
+                else:
+                    # Simple size value
+                    if value not in VALID_SPACING_SIZES:
+                        error_msg = f"Invalid value '{value}' for '{attr_name}' attribute in component 'c-{component_name}'. Valid values: {', '.join(sorted(VALID_SPACING_SIZES))} or directional patterns like 'inline-end-sm'"
+                        if self.strict_mode:
+                            raise ComponentValidationError(error_msg)
+                        else:
+                            logger.warning(error_msg)
+
     def _is_allowed_generic_attribute(self, attr_name: str) -> bool:
         """Check if an attribute is a common HTML or framework attribute that should be allowed."""
         allowed_generic = {
             # Common HTML attributes
             'id', 'class', 'style', 'data-*', 'aria-*', 'role', 'tabindex',
             # Vue.js directives and bindings
-            'v-if', 'v-else', 'v-else-if', 'v-show', 'v-for', 'v-model', 
+            'v-if', 'v-else', 'v-else-if', 'v-show', 'v-for', 'v-model',
             'v-bind', 'v-on', '@click', '@change', '@input', '@submit',
             # Vue.js binding syntax
             ':class', ':style', ':id', ':disabled', ':checked', ':value',
             # Event handlers
             'onclick', 'onchange', 'oninput', 'onsubmit', 'onload',
-            # Form attributes  
+            # Form attributes
             'name', 'value', 'checked', 'disabled', 'readonly', 'required',
             'placeholder', 'maxlength', 'minlength', 'pattern', 'autocomplete',
             # Link attributes
             'href', 'target', 'rel', 'download',
             # Image attributes
             'src', 'alt', 'width', 'height',
+            # Utility attributes from _attribute_mixin.j2 (available to all components)
+            'text-style', 'margin', 'padding',
         }
-        
+
         # Check exact matches
         if attr_name in allowed_generic:
             return True
-            
-        # Check patterns (data-*, aria-*, etc.)
-        patterns = ['data-', 'aria-', 'v-', '@', ':']
+
+        # Check patterns (data-*, aria-*, @hx-*, hx-*, etc.)
+        patterns = ['data-', 'aria-', 'v-', '@', ':', 'hx-']
         for pattern in patterns:
             if attr_name.startswith(pattern):
                 return True
-                
+
         return False
 
 

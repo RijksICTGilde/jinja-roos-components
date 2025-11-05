@@ -1,0 +1,24 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: progress-tracker
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set steps = _component_context.steps | default('defaultSteps') %}
+{% set children = _component_context.content | default('') %}
+{% set css_classes = ['rvo-progress-tracker'] %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="progress-tracker"
+    {{ events.render_extra_attributes(_component_context) }}>
+        {% if children %}
+        {{ children | safe }}
+    {% elif steps %}
+        {% for stepProps in steps %}
+            <c-progress-tracker-step
+                state="{{ stepProps.state }}"
+                label="{{ stepProps.label }}"
+                link="{{ stepProps.link }}"
+                size="{{ stepProps.size }}"
+                line="{{ stepProps.line }}"
+            ></c-progress-tracker-step>
+        {% endfor %}
+    {% endif %}
+</div>

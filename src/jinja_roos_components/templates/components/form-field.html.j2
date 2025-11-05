@@ -1,0 +1,22 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: form-field
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set fieldId = _component_context.fieldId | default('fieldId') %}
+{% set label = _component_context.label | default('Field label') %}
+{% set labelSize = _component_context.labelSize | default('md') %}
+{% set labelType = _component_context.labelType | default('default') %}
+{% set helperText = _component_context.get('helperText') %}
+{% set helperTextId = _component_context.helperTextId | default('helperTextId') %}
+{% set expandableHelperText = _component_context.expandableHelperText | default(false) %}
+{% set expandableHelperTextTitle = _component_context.expandableHelperTextTitle | default('Expandable helper text title') %}
+{% set warningText = _component_context.warningText | default('') %}
+{% set errorText = _component_context.errorText | default('') %}
+{% set className = _component_context.get('className') %}
+{% set children = _component_context.content | default('') %}
+{% set css_classes = ['rvo-form-field'] %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="form-field"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ fieldLabelId }}{{ labelSize }}{{ labelType as any }}{{ fieldId }}{{ label }}{{ helperTextMarkup }}{% if errorText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{% if warningText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{{ (className && <div className={className}>{parseContentMarkup(children)}</div>) if (className && <div className={className}>{parseContentMarkup(children)}</div>) else parseContentMarkup(children) | safe }}
+</div>

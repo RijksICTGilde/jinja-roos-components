@@ -1,0 +1,84 @@
+{
+  "name": "max-width-layout",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/max-width-layout/src/template.tsx",
+  "converted_at": "2025-10-29T11:04:52.466411Z",
+  "conversion_hash": "96e92c33806b15a9b665ae4b49a9a4440af9c532e630a3cd2ee6d829269d88f7",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "size",
+      "type": "enum",
+      "required": false,
+      "description": "size attribute",
+      "enum_values": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "sm",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "content attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "Deze gecentreerde layout container heeft een maximale breedte van {maxWidth}."
+    },
+    {
+      "name": "inlinePadding",
+      "type": "enum",
+      "required": false,
+      "description": "inlinePadding attribute",
+      "enum_values": [
+        "none",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "none",
+      "is_example": true,
+      "example_value": "none"
+    },
+    {
+      "name": "centered",
+      "type": "boolean",
+      "required": false,
+      "description": "centered attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": true
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Dynamic className expression found - may need clsx parsing",
+      "severity": "low",
+      "source_line": 0
+    }
+  ],
+  "example_values": {
+    "size": "md",
+    "content": "Deze gecentreerde layout container heeft een maximale breedte van {maxWidth}.",
+    "centered": true,
+    "inlinePadding": "none"
+  }
+}

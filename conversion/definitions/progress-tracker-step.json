@@ -1,0 +1,90 @@
+{
+  "name": "progress-tracker-step",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
+  "converted_at": "2025-10-27T17:17:11.394908Z",
+  "conversion_hash": "361b9b1543534f1fa87400a06fb06649d0d11234a33dedeaf95c9d1c9502304a",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "state",
+      "type": "enum",
+      "required": true,
+      "description": "state attribute",
+      "enum_values": [
+        "start",
+        "incomplete",
+        "doing",
+        "completed",
+        "disabled",
+        "end"
+      ],
+      "is_example": true,
+      "example_value": "incomplete"
+    },
+    {
+      "name": "line",
+      "type": "enum",
+      "required": true,
+      "description": "line attribute",
+      "enum_values": [
+        "none",
+        "straight",
+        "substep-start",
+        "substep-end"
+      ],
+      "is_example": true,
+      "example_value": "none"
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": true,
+      "description": "size attribute",
+      "enum_values": [
+        "sm",
+        "md"
+      ],
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "label attribute",
+      "is_example": true,
+      "example_value": "Step label"
+    },
+    {
+      "name": "link",
+      "type": "string",
+      "required": false,
+      "description": "link attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "#"
+    },
+    {
+      "name": "onClick",
+      "type": "string",
+      "required": false,
+      "description": "onClick attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Dynamic className expression found - may need clsx parsing",
+      "severity": "low",
+      "source_line": 0
+    }
+  ],
+  "example_values": {
+    "state": "incomplete",
+    "line": "none",
+    "size": "md",
+    "label": "Step label",
+    "link": "#"
+  }
+}

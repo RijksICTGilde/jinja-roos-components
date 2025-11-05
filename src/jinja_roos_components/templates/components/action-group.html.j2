@@ -39,23 +39,25 @@
         {{ content | safe }}
     {% elif actions %}
         {% for action in actions %}
-            {% if action.type == 'button' %}
-                <button 
-                    type="{{ action.buttonType | default('button') }}"
-                    class="utrecht-button {% if action.kind == 'primary' %}utrecht-button--primary-action{% elif action.kind == 'secondary' %}utrecht-button--secondary-action{% elif action.kind == 'tertiary' %}utrecht-button--subtle-action{% endif %}{% if action.class %} {{ action.class }}{% endif %}"
-                    {% if action.disabled %}disabled{% endif %}
-                    {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
-                    {% if action.ariaLabel %}aria-label="{{ action.ariaLabel }}"{% endif %}>
-                    {{ action.label }}
-                </button>
-            {% elif action.type == 'link' %}
-                <a href="{{ action.href | default('#') }}"
-                   class="rvo-link{% if action.class %} {{ action.class }}{% endif %}"
-                   {% if action.target %}target="{{ action.target }}"{% endif %}
-                   {% if action.ariaLabel %}aria-label="{{ action.ariaLabel }}"{% endif %}>
-                    {{ action.label }}
-                </a>
-            {% endif %}
+            {% call c_button(
+                type=action.get('type'),
+                kind=action.get('kind'),
+                size=action.get('size'),
+                label=action.get('label'),
+                disabled=action.get('disabled'),
+                showIcon=action.get('showIcon'),
+                icon=action.get('icon'),
+                iconAriaLabel=action.get('iconAriaLabel'),
+                fullWidth=action.get('fullWidth'),
+                className=action.get('className'),
+                alignToRightInGroup=action.get('alignToRightInGroup'),
+                active=action.get('active'),
+                busy=action.get('busy'),
+                focus=action.get('focus'),
+                focusVisible=action.get('focusVisible'),
+                hover=action.get('hover'),
+                color=action.get('color')
+            ) %}{% endcall %}
         {% endfor %}
     {% endif %}
     

@@ -1,0 +1,103 @@
+{
+  "name": "action-group",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/action-group/src/template.tsx",
+  "converted_at": "2025-11-03T09:43:07.038926Z",
+  "conversion_hash": "9269417f6d93f7b84d1fba1d9b5df1fa8309f1a58570ab5f5245889d8acf9cd5",
+  "base_components": [
+    {
+      "library": "@utrecht/component-library-react",
+      "component": "ButtonGroup",
+      "jsx_name": "ButtonGroup"
+    }
+  ],
+  "nested_components": [
+    {
+      "name": "button",
+      "component_class": "Button",
+      "source_path": "../../button/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/button/src/template.tsx",
+      "interface": "IButtonProps",
+      "tag_name": "c-button",
+      "props": [
+        "kind",
+        "size",
+        "label",
+        "active",
+        "busy",
+        "focus",
+        "focusVisible",
+        "hover",
+        "disabled",
+        "showIcon",
+        "icon",
+        "iconAriaLabel",
+        "fullWidth",
+        "className",
+        "alignToRightInGroup",
+        "onFocus",
+        "onBlur",
+        "onClick"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "buttonsLeft",
+      "type": "string",
+      "required": false,
+      "description": "buttonsLeft attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "defaultButtonsLeft"
+    },
+    {
+      "name": "buttonsRight",
+      "type": "string",
+      "required": false,
+      "description": "buttonsRight attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "defaultButtonsRight"
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "fullWidth attribute",
+      "default": false
+    },
+    {
+      "name": "position",
+      "type": "enum",
+      "required": false,
+      "description": "position attribute",
+      "enum_values": [
+        "left",
+        "right"
+      ],
+      "default": "left",
+      "is_example": true,
+      "example_value": "left"
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "buttonsLeft": "defaultButtonsLeft",
+    "buttonsRight": "defaultButtonsRight",
+    "position": "left"
+  }
+}

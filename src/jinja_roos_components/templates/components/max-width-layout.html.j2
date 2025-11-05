@@ -1,0 +1,24 @@
+{% import 'components/_event_mixin.j2' as events %}
+{# Auto-generated from React component: max-width-layout
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set size = _component_context.size | default('md') %}
+{% set content = _component_context.content | default('Deze gecentreerde layout container heeft een maximale breedte van {maxWidth}.') %}
+{% set inlinePadding = _component_context.inlinePadding | default('none') %}
+{% set centered = _component_context.centered | default(true) %}
+{% set className = _component_context.get('className') %}
+{% set children = _component_context.content | default('') %}
+{% set css_classes = ['rvo-max-width-layout'] %}
+{% if size == 'sm' %}{% set css_classes = css_classes + ['rvo-max-width-layout--sm'] %}{% endif %}
+{% if size == 'md' %}{% set css_classes = css_classes + ['rvo-max-width-layout--md'] %}{% endif %}
+{% if size == 'lg' %}{% set css_classes = css_classes + ['rvo-max-width-layout--lg'] %}{% endif %}
+{% if inlinePadding == 'none' %}{% set css_classes = css_classes + ['rvo-max-width-layout-inline-padding--none'] %}{% endif %}
+{% if inlinePadding == 'sm' %}{% set css_classes = css_classes + ['rvo-max-width-layout-inline-padding--sm'] %}{% endif %}
+{% if inlinePadding == 'md' %}{% set css_classes = css_classes + ['rvo-max-width-layout-inline-padding--md'] %}{% endif %}
+{% if inlinePadding == 'lg' %}{% set css_classes = css_classes + ['rvo-max-width-layout-inline-padding--lg'] %}{% endif %}
+{% if not centered %}{% set css_classes = css_classes + ['rvo-max-width-layout--uncentered'] %}{% endif %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="max-width-layout"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ children or content | safe }}
+</div>

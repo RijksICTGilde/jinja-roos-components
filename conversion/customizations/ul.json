@@ -1,0 +1,14 @@
+{
+  "component": "ordered-unordered-list",
+  "description": "Unordered list variant of ordered-unordered-list",
+  "default_overrides": {
+    "type": "unordered"
+  },
+  "attribute_overrides": {
+    "type": {
+      "values": ["unordered"],
+      "description": "Fixed to unordered type"
+    }
+  },
+  "notes": "Unordered list (<ul>) variant with type fixed to 'unordered'"
+}

@@ -1,0 +1,169 @@
+{
+  "name": "field",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field/src/template.tsx",
+  "converted_at": "2025-10-29T14:16:35.051885Z",
+  "conversion_hash": "834d3344e6cb212269e2f1066740d70bb340f9c89fe347af1b52efac9a3626ba",
+  "base_components": [
+    {
+      "library": "@utrecht/component-library-react",
+      "component": "FormField",
+      "jsx_name": "FormField"
+    }
+  ],
+  "nested_components": [
+    {
+      "name": "feedback",
+      "component_class": "Feedback",
+      "source_path": "../../form-feedback/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-feedback/src/template.tsx",
+      "interface": "IFeedbackProps",
+      "tag_name": "c-feedback",
+      "props": [
+        "text",
+        "type",
+        "children"
+      ]
+    },
+    {
+      "name": "label",
+      "component_class": "Label",
+      "source_path": "../../form-field-label/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field-label/src/template.tsx",
+      "interface": "ILabelProps",
+      "tag_name": "c-label",
+      "props": [
+        "text",
+        "type",
+        "children"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "fieldId",
+      "type": "string",
+      "required": false,
+      "description": "fieldId attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "fieldId"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "label attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "Field label"
+    },
+    {
+      "name": "labelSize",
+      "type": "enum",
+      "required": false,
+      "description": "labelSize attribute",
+      "enum_values": [
+        "sm",
+        "md"
+      ],
+      "default": "sm",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "labelType",
+      "type": "enum",
+      "required": false,
+      "description": "labelType attribute",
+      "enum_values": [
+        "default",
+        "optional",
+        "required"
+      ],
+      "default": "default",
+      "is_example": true,
+      "example_value": "default"
+    },
+    {
+      "name": "helperText",
+      "type": "string",
+      "required": false,
+      "description": "helperText attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": null
+    },
+    {
+      "name": "helperTextId",
+      "type": "string",
+      "required": false,
+      "description": "helperTextId attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "helperTextId"
+    },
+    {
+      "name": "expandableHelperText",
+      "type": "boolean",
+      "required": false,
+      "description": "expandableHelperText attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "expandableHelperTextTitle",
+      "type": "string",
+      "required": false,
+      "description": "expandableHelperTextTitle attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "Expandable helper text title"
+    },
+    {
+      "name": "warningText",
+      "type": "string",
+      "required": false,
+      "description": "warningText attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "errorText",
+      "type": "string",
+      "required": false,
+      "description": "errorText attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "fieldId": "fieldId",
+    "label": "Field label",
+    "labelSize": "md",
+    "labelType": "default",
+    "helperText": null,
+    "helperTextId": "helperTextId",
+    "expandableHelperText": false,
+    "expandableHelperTextTitle": "Expandable helper text title",
+    "warningText": "",
+    "errorText": ""
+  }
+}

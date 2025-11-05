@@ -1,4 +1,27 @@
 {# Simple c-page example as requested #}
 <c-page title="Simple Test Page">
-    <c-button label="Click me" />
+    <c-header text="Site Title" subtitle="Department" link="/home" />
+    <c-layout-flow gap="lg" size="lg">
+        <c-menubar items='[{"label": "Home", "link": "/home"}, {"label": "About", "link": "/about"}]' size="md" />
+
+        <c-hero
+            title="Components + HTMX"
+            subtitle="Hoeft niet, kan wel"
+            size="lg"
+            image='{"src": "/static/hero1.jpg", "alt": "ROOS Components"}'
+        />
+
+        <c-grid columns="two">
+            <c-card outline="true" hx-get="/render?template=simple-htmx.html.j2" hx-trigger="click" hx-target="#target1" hx-swap="innerHTML" >
+                <p>
+                Dit is een card
+                </p>
+                <c-button label="Click me" @click="alert('Hello World!')" />
+            </c-card>
+            <c-card outline="true" id="target1">
+                Dit is mijn target
+            </c-card>
+        </c-grid>
+
+    </c-layout-flow>
 </c-page>

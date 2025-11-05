@@ -1,0 +1,53 @@
+{
+  "component": "form-select",
+  "description": "Customizations for the form-select component",
+  "add_children_support": true,
+  "pass_through_attributes": [
+    {
+      "name": "name",
+      "target_element": "select",
+      "target_attribute": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute for form submission"
+    }
+  ],
+  "manual_enhancements": [
+    {
+      "type": "option_selection",
+      "description": "Add selected attribute logic to options based on value/defaultValue",
+      "location": "Inside options loop",
+      "reason": "React automatically syncs select value with options, but HTML requires explicit 'selected' attribute",
+      "required_variables": [
+        "selectedValue = value if value else defaultValue"
+      ],
+      "template_addition": "{% if selectedValue and option.value == selectedValue %} selected{% endif %}",
+      "applied_at_line": 42,
+      "example": "<option value=\"{{ option.value }}\"{% if selectedValue and option.value == selectedValue %} selected{% endif %}>{{ option.label }}</option>"
+    },
+    {
+      "type": "default_value_fix",
+      "description": "Changed options default from string 'defaultOptions' to empty array []",
+      "location": "Variable declarations",
+      "reason": "String default caused iteration over characters, creating empty options",
+      "original": "{% set options = _component_context.options | default('defaultOptions') %}",
+      "fixed": "{% set options = _component_context.options | default([]) %}",
+      "applied_at_line": 10
+    },
+    {
+      "type": "safe_iteration",
+      "description": "Added type checking before iterating options",
+      "location": "Options rendering block",
+      "reason": "Prevent iteration errors if options is a string or non-iterable",
+      "template_addition": "{% if options and options is iterable and options is not string %}",
+      "applied_at_line": 40
+    }
+  ],
+  "notes": [
+    "Added children/content support to allow passing custom options as nested content",
+    "React component only accepts options array prop, but Jinja version supports both options and children",
+    "Added pass-through attributes (name, placeholder, autocomplete) that map directly to the inner select element",
+    "Manual enhancements required for proper option selection behavior (see manual_enhancements section)",
+    "The conversion script cannot auto-detect the need for 'selected' attribute logic"
+  ]
+}

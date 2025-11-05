@@ -1,23 +1,38 @@
-{% set items_value = _component_context.get('items', []) %}
-{% set no_margin = _component_context.noMargin | default(false) %}
-{% set no_padding = _component_context.noPadding | default(false) %}
-{% set additional_class = _component_context.class | default('') %}
-{% set content = _component_context.content | default('') %}
-
-{# Build CSS classes for ordered list #}
-{% set css_classes = ['rvo-ol'] %}
-{% if no_margin %}{% set css_classes = css_classes + ['rvo-ol--no-margin'] %}{% endif %}
-{% if no_padding %}{% set css_classes = css_classes + ['rvo-ol--no-padding'] %}{% endif %}
-{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
-
-<ol class="{{ css_classes | join(' ') }}" data-roos-component="ol">
-    {% if content %}
-        {# Render nested content (e.g., c-li components) #}
-        {{ content | safe }}
-    {% else %}
-        {# Render items from array attribute #}
-        {% for item in items_value %}
-            <li>{{ item | safe }}</li>
-        {% endfor %}
-    {% endif %}
-</ol>
+{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: ol
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set type = _component_context.type | default('ordered') %}
+{% set items = _component_context.items | default(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']) %}
+{% set bulletType = _component_context.bulletType | default('icon') %}
+{% set bulletIcon = _component_context.bulletIcon | default('option-1') %}
+{% set noMargin = _component_context.noMargin | default(true) %}
+{% set noPadding = _component_context.noPadding | default(true) %}
+{% set children = _component_context.content | default('') %}
+{% set css_classes = [] %}
+{% if type == 'unordered' %}{% set css_classes = css_classes + ['rvo-ul'] %}{% endif %}
+{% if type == 'unordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ul--no-margin'] %}{% endif %}
+{% if type == 'unordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ul--no-padding'] %}{% endif %}
+{% if type == 'unordered' and bulletType == 'none' %}{% set css_classes = css_classes + ['rvo-ul--none'] %}{% endif %}
+{% if bulletIcon == 'option-1' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-1'] %}{% endif %}
+{% if bulletIcon == 'option-2' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-2'] %}{% endif %}
+{% if bulletIcon == 'option-3' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-3'] %}{% endif %}
+{% if type == 'ordered' %}{% set css_classes = css_classes + ['rvo-ol'] %}{% endif %}
+{% if type == 'ordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ol--no-padding'] %}{% endif %}
+{% if type == 'ordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ol--no-margin'] %}{% endif %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
+{% endif %}
+<ListTag
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="ol"
+    type="{{ type }}"
+    {{ events.render_extra_attributes(_component_context) }}>
+    {{ React.Children.map(parseChildren(children), (child, index) => <li key={index}>{child}</li>) if _component_context.content else items?.map((itemContent, index) => <li key={index}>{itemContent}</li>) }}
+</ListTag>
