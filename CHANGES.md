@@ -15,6 +15,8 @@
 - add support for shorthand boolean attributes
 - read version number from toml
 - source_path in component definition relative to rvo instead of absolute path
+- move component definitions to src/jinja-roos-components/definitions
+- update conversion script and autocomplete generation script to use new paths
 
 # [0.1] - 2025-11-04
 - First tagged version

@@ -14,12 +14,23 @@ from typing import Dict, Any
 
 
 def load_definitions() -> Dict[str, Any]:
-    """Load component definitions from overall_definitions.json."""
+    """Load component definitions from overall_definitions.json and individual definition files."""
     root_dir = Path(__file__).parent.parent
     definitions_path = root_dir / "src" / "jinja_roos_components" / "overall_definitions.json"
 
     with open(definitions_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+        data = json.load(f)
+
+    # Also load individual component definitions from definitions/ folder
+    definitions_dir = root_dir / "src" / "jinja_roos_components" / "definitions"
+    if definitions_dir.exists():
+        for definition_file in definitions_dir.glob("*.json"):
+            with open(definition_file, 'r', encoding='utf-8') as f:
+                component_def = json.load(f)
+                
+            data['components'].append(component_def)
+
+    return data
 
 def create_attribute_definition(attr: Dict[str, Any]) -> Dict[str, Any]:
     """Convert a definitions.json attribute to VSCode custom data format."""
@@ -110,7 +121,7 @@ def generate_vscode_custom_data() -> Dict[str, Any]:
 
         # Create merged definition for alias
         merged_def = target_comp.copy()
-        merged_def['description'] = alias.get('description', target_comp['description'])
+        merged_def['description'] = alias.get('description', target_comp.get('description', f"RVO {target_name} component"))
 
         # Apply default attributes to the merged definition
         default_attrs = alias.get('default_attributes', {})
@@ -132,7 +143,7 @@ def generate_vscode_custom_data() -> Dict[str, Any]:
 
 def main():
     """Generate VSCode custom data file."""
-    print("Generating VSCode custom data from overall_definitions.json...")
+    print("Generating VSCode custom data from overall_definitions.json and definitions/...")
     print("=" * 60)
 
     custom_data, components_added = generate_vscode_custom_data()

@@ -2,188 +2,6 @@
   "version": 1.1,
   "tags": [
     {
-      "name": "c-button",
-      "description": "RVO button component with Utrecht styling and comprehensive variants",
-      "attributes": [
-        {
-          "name": "kind",
-          "description": "Visual style variant of the button (default: `primary`)",
-          "values": [
-            {
-              "name": "primary"
-            },
-            {
-              "name": "secondary"
-            },
-            {
-              "name": "tertiary"
-            },
-            {
-              "name": "quaternary"
-            },
-            {
-              "name": "subtle"
-            },
-            {
-              "name": "warning-subtle"
-            },
-            {
-              "name": "warning"
-            }
-          ]
-        },
-        {
-          "name": "size",
-          "description": "Size of the button (default: `md`)",
-          "values": [
-            {
-              "name": "xs"
-            },
-            {
-              "name": "sm"
-            },
-            {
-              "name": "md"
-            }
-          ]
-        },
-        {
-          "name": "label",
-          "description": "Button text label"
-        },
-        {
-          "name": "disabled",
-          "description": "Whether the button is disabled (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "active",
-          "description": "Whether the button shows an active state (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "busy",
-          "description": "Whether the button shows a loading/busy state (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "showIcon",
-          "description": "Icon placement in button (default: `no`)",
-          "values": [
-            {
-              "name": "no"
-            },
-            {
-              "name": "before"
-            },
-            {
-              "name": "after"
-            }
-          ]
-        },
-        {
-          "name": "icon",
-          "description": "Icon name from RVO icon set"
-        },
-        {
-          "name": "fullWidth",
-          "description": "Whether button takes full width (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "type",
-          "description": "HTML button type (default: `button`)",
-          "values": [
-            {
-              "name": "button"
-            },
-            {
-              "name": "submit"
-            },
-            {
-              "name": "reset"
-            }
-          ]
-        },
-        {
-          "name": "class",
-          "description": "Additional CSS classes"
-        },
-        {
-          "name": "click",
-          "description": "JavaScript function to call on click event"
-        },
-        {
-          "name": "mousedown",
-          "description": "JavaScript function to call on mousedown event"
-        },
-        {
-          "name": "mouseup",
-          "description": "JavaScript function to call on mouseup event"
-        },
-        {
-          "name": "focus",
-          "description": "JavaScript function to call on focus event"
-        },
-        {
-          "name": "blur",
-          "description": "JavaScript function to call on blur event"
-        },
-        {
-          "name": "keydown",
-          "description": "JavaScript function to call on keydown event"
-        },
-        {
-          "name": "keyup",
-          "description": "JavaScript function to call on keyup event"
-        },
-        {
-          "name": "content",
-          "description": "Button content (slot)"
-        },
-        {
-          "name": "hover",
-          "description": "Whether the button shows hover state (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "c-card",
       "description": "RVO card component with comprehensive styling and layout options",
       "attributes": [
@@ -2923,120 +2741,6 @@
       ]
     },
     {
-      "name": "c-ol",
-      "description": "RVO ordered list component with proper ol element and styling",
-      "attributes": [
-        {
-          "name": "items",
-          "description": "Array of list items (strings) - used when not using nested c-li components"
-        },
-        {
-          "name": "noPadding",
-          "description": "Remove default padding (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "noMargin",
-          "description": "Remove default margins (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "class",
-          "description": "Additional CSS classes"
-        },
-        {
-          "name": "content",
-          "description": "Ordered list content (slot)"
-        }
-      ]
-    },
-    {
-      "name": "c-ul",
-      "description": "RVO unordered list component with proper ul element and styling options",
-      "attributes": [
-        {
-          "name": "items",
-          "description": "Array of list items (strings) - used when not using nested c-li components"
-        },
-        {
-          "name": "bulletType",
-          "description": "Bullet type for unordered lists (default: `disc`)",
-          "values": [
-            {
-              "name": "disc"
-            },
-            {
-              "name": "none"
-            },
-            {
-              "name": "icon"
-            }
-          ]
-        },
-        {
-          "name": "bulletIcon",
-          "description": "Icon type when bulletType is 'icon' (default: `option-1`)",
-          "values": [
-            {
-              "name": "option-1"
-            },
-            {
-              "name": "option-2"
-            },
-            {
-              "name": "option-3"
-            }
-          ]
-        },
-        {
-          "name": "noMargin",
-          "description": "Remove default margins (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "noPadding",
-          "description": "Remove default padding (default: `false`)",
-          "values": [
-            {
-              "name": "true"
-            },
-            {
-              "name": "false"
-            }
-          ]
-        },
-        {
-          "name": "class",
-          "description": "Additional CSS classes"
-        },
-        {
-          "name": "content",
-          "description": "Unordered list content (slot)"
-        }
-      ]
-    },
-    {
       "name": "c-li",
       "description": "RVO list item component for use within c-ol or c-ul",
       "attributes": [
@@ -3081,6 +2785,1418 @@
           "description": "Additional CSS classes"
         }
       ]
+    },
+    {
+      "name": "c-strong",
+      "description": "Semantic wrapper for bold/strong text - renders as span with bold styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Additional text utility classes (e.g., 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-b",
+      "description": "Semantic wrapper for bold text - renders as span with bold styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Additional text utility classes (e.g., 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-small",
+      "description": "Semantic wrapper for small text - renders as span with small text styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Additional text utility classes (e.g., 'bold', 'italic', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-i",
+      "description": "Semantic wrapper for italic text - renders as span with italic styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Additional text utility classes (e.g., 'bold', 'sm', or combined 'bold, sm')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-em",
+      "description": "Semantic wrapper for emphasized (italic) text - renders as span with italic styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Additional text utility classes (e.g., 'bold', 'sm', or combined 'bold, sm')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-span",
+      "description": "Generic span wrapper for applying utility classes - no default styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Text content"
+        },
+        {
+          "name": "text-style",
+          "description": "Text utility classes (e.g., 'bold', 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-div",
+      "description": "Generic div wrapper for applying utility classes - no default styling",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "Block content"
+        },
+        {
+          "name": "text-style",
+          "description": "Text utility classes (e.g., 'bold', 'italic', 'sm', or combined 'bold, italic')"
+        },
+        {
+          "name": "margin",
+          "description": "Margin utility classes (e.g., 'md', 'inline-end-sm', or combined 'md lg')"
+        },
+        {
+          "name": "padding",
+          "description": "Padding utility classes (e.g., 'md', 'inline-start-sm', or combined 'md lg')"
+        }
+      ]
+    },
+    {
+      "name": "c-paragraph",
+      "description": "RVO paragraph component",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "content attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        },
+        {
+          "name": "color",
+          "description": "color attribute (default: `logoblauw`)",
+          "values": [
+            {
+              "name": "logoblauw"
+            },
+            {
+              "name": "wit"
+            },
+            {
+              "name": "zwart"
+            },
+            {
+              "name": "grijs-500"
+            },
+            {
+              "name": "grijs-900"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "size attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "noSpacing",
+          "description": "noSpacing attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-ul",
+      "description": "RVO ul component",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Fixed to unordered type (default: `unordered`)",
+          "values": [
+            {
+              "name": "unordered"
+            },
+            {
+              "name": "ordered"
+            }
+          ]
+        },
+        {
+          "name": "items",
+          "description": "items attribute"
+        },
+        {
+          "name": "bulletType",
+          "description": "bulletType attribute (default: `disc`)",
+          "values": [
+            {
+              "name": "disc"
+            },
+            {
+              "name": "none"
+            },
+            {
+              "name": "icon"
+            }
+          ]
+        },
+        {
+          "name": "bulletIcon",
+          "description": "bulletIcon attribute (default: `option-1`)",
+          "values": [
+            {
+              "name": "option-1"
+            },
+            {
+              "name": "option-2"
+            },
+            {
+              "name": "option-3"
+            }
+          ]
+        },
+        {
+          "name": "noMargin",
+          "description": "noMargin attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "noPadding",
+          "description": "noPadding attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-field",
+      "description": "RVO field component",
+      "attributes": [
+        {
+          "name": "fieldId",
+          "description": "fieldId attribute"
+        },
+        {
+          "name": "label",
+          "description": "label attribute"
+        },
+        {
+          "name": "labelSize",
+          "description": "labelSize attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "labelType",
+          "description": "labelType attribute (default: `default`)",
+          "values": [
+            {
+              "name": "default"
+            },
+            {
+              "name": "optional"
+            },
+            {
+              "name": "required"
+            }
+          ]
+        },
+        {
+          "name": "helperText",
+          "description": "helperText attribute"
+        },
+        {
+          "name": "helperTextId",
+          "description": "helperTextId attribute"
+        },
+        {
+          "name": "expandableHelperText",
+          "description": "expandableHelperText attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "expandableHelperTextTitle",
+          "description": "expandableHelperTextTitle attribute"
+        },
+        {
+          "name": "warningText",
+          "description": "warningText attribute"
+        },
+        {
+          "name": "errorText",
+          "description": "errorText attribute"
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-ordered-unordered-list",
+      "description": "RVO ordered-unordered-list component",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "type attribute (default: `unordered`)",
+          "values": [
+            {
+              "name": "unordered"
+            },
+            {
+              "name": "ordered"
+            }
+          ]
+        },
+        {
+          "name": "items",
+          "description": "items attribute"
+        },
+        {
+          "name": "bulletType",
+          "description": "bulletType attribute (default: `disc`)",
+          "values": [
+            {
+              "name": "disc"
+            },
+            {
+              "name": "none"
+            },
+            {
+              "name": "icon"
+            }
+          ]
+        },
+        {
+          "name": "bulletIcon",
+          "description": "bulletIcon attribute (default: `option-1`)",
+          "values": [
+            {
+              "name": "option-1"
+            },
+            {
+              "name": "option-2"
+            },
+            {
+              "name": "option-3"
+            }
+          ]
+        },
+        {
+          "name": "noMargin",
+          "description": "noMargin attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "noPadding",
+          "description": "noPadding attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-horizontal-rule",
+      "description": "RVO horizontal-rule component"
+    },
+    {
+      "name": "c-progress-tracker",
+      "description": "RVO progress-tracker component",
+      "attributes": [
+        {
+          "name": "steps",
+          "description": "steps attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-max-width-layout",
+      "description": "RVO max-width-layout component",
+      "attributes": [
+        {
+          "name": "size",
+          "description": "size attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "content",
+          "description": "content attribute"
+        },
+        {
+          "name": "inlinePadding",
+          "description": "inlinePadding attribute (default: `none`)",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "centered",
+          "description": "centered attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-form-fieldset",
+      "description": "RVO form-fieldset component",
+      "attributes": [
+        {
+          "name": "legend",
+          "description": "legend attribute"
+        },
+        {
+          "name": "disabled",
+          "description": "disabled attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "fields",
+          "description": "fields attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-ol",
+      "description": "RVO ol component",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Fixed to ordered type (default: `unordered`)",
+          "values": [
+            {
+              "name": "unordered"
+            },
+            {
+              "name": "ordered"
+            }
+          ]
+        },
+        {
+          "name": "items",
+          "description": "items attribute"
+        },
+        {
+          "name": "bulletType",
+          "description": "bulletType attribute (default: `disc`)",
+          "values": [
+            {
+              "name": "disc"
+            },
+            {
+              "name": "none"
+            },
+            {
+              "name": "icon"
+            }
+          ]
+        },
+        {
+          "name": "bulletIcon",
+          "description": "bulletIcon attribute (default: `option-1`)",
+          "values": [
+            {
+              "name": "option-1"
+            },
+            {
+              "name": "option-2"
+            },
+            {
+              "name": "option-3"
+            }
+          ]
+        },
+        {
+          "name": "noMargin",
+          "description": "noMargin attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "noPadding",
+          "description": "noPadding attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-progress-tracker-step",
+      "description": "RVO progress-tracker-step component",
+      "attributes": [
+        {
+          "name": "state",
+          "description": "state attribute",
+          "values": [
+            {
+              "name": "start"
+            },
+            {
+              "name": "incomplete"
+            },
+            {
+              "name": "doing"
+            },
+            {
+              "name": "completed"
+            },
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "end"
+            }
+          ]
+        },
+        {
+          "name": "line",
+          "description": "line attribute",
+          "values": [
+            {
+              "name": "none"
+            },
+            {
+              "name": "straight"
+            },
+            {
+              "name": "substep-start"
+            },
+            {
+              "name": "substep-end"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "size attribute",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "label",
+          "description": "label attribute"
+        },
+        {
+          "name": "link",
+          "description": "link attribute"
+        },
+        {
+          "name": "onClick",
+          "description": "onClick attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-form-field",
+      "description": "RVO form-field component",
+      "attributes": [
+        {
+          "name": "fieldId",
+          "description": "fieldId attribute"
+        },
+        {
+          "name": "label",
+          "description": "label attribute"
+        },
+        {
+          "name": "labelSize",
+          "description": "labelSize attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "labelType",
+          "description": "labelType attribute (default: `default`)",
+          "values": [
+            {
+              "name": "default"
+            },
+            {
+              "name": "optional"
+            },
+            {
+              "name": "required"
+            }
+          ]
+        },
+        {
+          "name": "helperText",
+          "description": "helperText attribute"
+        },
+        {
+          "name": "helperTextId",
+          "description": "helperTextId attribute"
+        },
+        {
+          "name": "expandableHelperText",
+          "description": "expandableHelperText attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "expandableHelperTextTitle",
+          "description": "expandableHelperTextTitle attribute"
+        },
+        {
+          "name": "warningText",
+          "description": "warningText attribute"
+        },
+        {
+          "name": "errorText",
+          "description": "errorText attribute"
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-form-select",
+      "description": "RVO form-select component",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "id attribute"
+        },
+        {
+          "name": "disabled",
+          "description": "disabled attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "focus",
+          "description": "focus attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "invalid",
+          "description": "invalid attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "required",
+          "description": "required attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "options",
+          "description": "options attribute"
+        },
+        {
+          "name": "defaultValue",
+          "description": "defaultValue attribute"
+        },
+        {
+          "name": "value",
+          "description": "value attribute"
+        },
+        {
+          "name": "children",
+          "description": "Children/content support added via customization"
+        },
+        {
+          "name": "name",
+          "description": "Name attribute for form submission"
+        }
+      ]
+    },
+    {
+      "name": "c-button",
+      "description": "RVO button component",
+      "attributes": [
+        {
+          "name": "kind",
+          "description": "kind attribute (default: `primary`)",
+          "values": [
+            {
+              "name": "primary"
+            },
+            {
+              "name": "secondary"
+            },
+            {
+              "name": "tertiary"
+            },
+            {
+              "name": "quaternary"
+            },
+            {
+              "name": "subtle"
+            },
+            {
+              "name": "warning-subtle"
+            },
+            {
+              "name": "warning"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "size attribute (default: `xs`)",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "label",
+          "description": "label attribute"
+        },
+        {
+          "name": "active",
+          "description": "active attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "busy",
+          "description": "busy attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "focus",
+          "description": "focus attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "focusVisible",
+          "description": "focusVisible attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "hover",
+          "description": "hover attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "disabled",
+          "description": "disabled attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "showIcon",
+          "description": "showIcon attribute (default: `no`)",
+          "values": [
+            {
+              "name": "no"
+            },
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
+            }
+          ]
+        },
+        {
+          "name": "icon",
+          "description": "icon attribute"
+        },
+        {
+          "name": "iconAriaLabel",
+          "description": "iconAriaLabel attribute"
+        },
+        {
+          "name": "fullWidth",
+          "description": "fullWidth attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "alignToRightInGroup",
+          "description": "alignToRightInGroup attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "description": "Icon color (defaults to white) (default: `hemelblauw`)",
+          "values": [
+            {
+              "name": "hemelblauw"
+            },
+            {
+              "name": "hemelblauw-150"
+            },
+            {
+              "name": "hemelblauw-300"
+            },
+            {
+              "name": "hemelblauw-450"
+            },
+            {
+              "name": "hemelblauw-600"
+            },
+            {
+              "name": "hemelblauw-750"
+            },
+            {
+              "name": "logoblauw"
+            },
+            {
+              "name": "logoblauw-150"
+            },
+            {
+              "name": "logoblauw-300"
+            },
+            {
+              "name": "logoblauw-450"
+            },
+            {
+              "name": "logoblauw-600"
+            },
+            {
+              "name": "logoblauw-750"
+            },
+            {
+              "name": "lichtblauw"
+            },
+            {
+              "name": "lichtblauw-150"
+            },
+            {
+              "name": "lichtblauw-300"
+            },
+            {
+              "name": "lichtblauw-450"
+            },
+            {
+              "name": "lichtblauw-600"
+            },
+            {
+              "name": "lichtblauw-750"
+            },
+            {
+              "name": "donkerblauw"
+            },
+            {
+              "name": "donkerblauw-150"
+            },
+            {
+              "name": "donkerblauw-300"
+            },
+            {
+              "name": "donkerblauw-450"
+            },
+            {
+              "name": "donkerblauw-600"
+            },
+            {
+              "name": "donkerblauw-750"
+            },
+            {
+              "name": "groen"
+            },
+            {
+              "name": "groen-150"
+            },
+            {
+              "name": "groen-300"
+            },
+            {
+              "name": "groen-450"
+            },
+            {
+              "name": "groen-600"
+            },
+            {
+              "name": "groen-750"
+            },
+            {
+              "name": "oranje"
+            },
+            {
+              "name": "oranje-150"
+            },
+            {
+              "name": "oranje-300"
+            },
+            {
+              "name": "oranje-450"
+            },
+            {
+              "name": "oranje-600"
+            },
+            {
+              "name": "oranje-750"
+            },
+            {
+              "name": "donkergeel"
+            },
+            {
+              "name": "donkergeel-150"
+            },
+            {
+              "name": "donkergeel-300"
+            },
+            {
+              "name": "donkergeel-450"
+            },
+            {
+              "name": "donkergeel-600"
+            },
+            {
+              "name": "donkergeel-750"
+            },
+            {
+              "name": "rood"
+            },
+            {
+              "name": "rood-150"
+            },
+            {
+              "name": "rood-300"
+            },
+            {
+              "name": "rood-450"
+            },
+            {
+              "name": "rood-600"
+            },
+            {
+              "name": "rood-750"
+            },
+            {
+              "name": "wit"
+            },
+            {
+              "name": "grijs-050"
+            },
+            {
+              "name": "grijs-100"
+            },
+            {
+              "name": "grijs-200"
+            },
+            {
+              "name": "grijs-300"
+            },
+            {
+              "name": "grijs-400"
+            },
+            {
+              "name": "grijs-500"
+            },
+            {
+              "name": "grijs-600"
+            },
+            {
+              "name": "grijs-700"
+            },
+            {
+              "name": "grijs-800"
+            },
+            {
+              "name": "grijs-900"
+            },
+            {
+              "name": "zwart"
+            }
+          ]
+        },
+        {
+          "name": "type",
+          "description": "HTML button type attribute (default: `button`)",
+          "values": [
+            {
+              "name": "button"
+            },
+            {
+              "name": "submit"
+            },
+            {
+              "name": "reset"
+            }
+          ]
+        },
+        {
+          "name": "children",
+          "description": "Children/content support added via customization"
+        }
+      ]
+    },
+    {
+      "name": "c-status-icon",
+      "description": "RVO status-icon component",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "type attribute",
+          "values": [
+            {
+              "name": "info"
+            },
+            {
+              "name": "bevestiging"
+            },
+            {
+              "name": "foutmelding"
+            },
+            {
+              "name": "waarschuwing"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "size attribute",
+          "values": [
+            {
+              "name": "xs"
+            },
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            },
+            {
+              "name": "xl"
+            },
+            {
+              "name": "2xl"
+            },
+            {
+              "name": "3xl"
+            },
+            {
+              "name": "4xl"
+            }
+          ]
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "ignoreDefaultIconColor",
+          "description": "ignoreDefaultIconColor attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-label",
+      "description": "RVO label component",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "id attribute"
+        },
+        {
+          "name": "htmlFor",
+          "description": "htmlFor attribute"
+        },
+        {
+          "name": "content",
+          "description": "content attribute"
+        },
+        {
+          "name": "size",
+          "description": "size attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            }
+          ]
+        },
+        {
+          "name": "type",
+          "description": "type attribute (default: `default`)",
+          "values": [
+            {
+              "name": "default"
+            },
+            {
+              "name": "optional"
+            },
+            {
+              "name": "required"
+            }
+          ]
+        },
+        {
+          "name": "className",
+          "description": "className attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-feedback",
+      "description": "RVO feedback component",
+      "attributes": [
+        {
+          "name": "text",
+          "description": "text attribute"
+        },
+        {
+          "name": "type",
+          "description": "type attribute",
+          "values": [
+            {
+              "name": "warning"
+            },
+            {
+              "name": "error"
+            }
+          ]
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-form-field-select",
+      "description": "RVO form-field-select component"
     },
     {
       "name": "c-h1",
@@ -3405,6 +4521,102 @@
           "description": "Heading content (slot)"
         }
       ]
+    },
+    {
+      "name": "c-fieldset",
+      "description": "Alias for form-fieldset",
+      "attributes": [
+        {
+          "name": "legend",
+          "description": "legend attribute"
+        },
+        {
+          "name": "disabled",
+          "description": "disabled attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        },
+        {
+          "name": "fields",
+          "description": "fields attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        }
+      ]
+    },
+    {
+      "name": "c-p",
+      "description": "Alias for paragraph",
+      "attributes": [
+        {
+          "name": "content",
+          "description": "content attribute"
+        },
+        {
+          "name": "children",
+          "description": "children attribute"
+        },
+        {
+          "name": "color",
+          "description": "color attribute (default: `logoblauw`)",
+          "values": [
+            {
+              "name": "logoblauw"
+            },
+            {
+              "name": "wit"
+            },
+            {
+              "name": "zwart"
+            },
+            {
+              "name": "grijs-500"
+            },
+            {
+              "name": "grijs-900"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "size attribute (default: `sm`)",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "noSpacing",
+          "description": "noSpacing attribute (default: `false`)",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "c-hr",
+      "description": "Alias for horizontal-rule"
     }
   ]
 }
