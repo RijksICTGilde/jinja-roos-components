@@ -17,6 +17,7 @@
 - source_path in component definition relative to rvo instead of absolute path
 - move component definitions to src/jinja-roos-components/definitions
 - update conversion script and autocomplete generation script to use new paths
+- add `regenerate_components` script to run conversion on all converted components at once
 
 # [0.1] - 2025-11-04
 - First tagged version
