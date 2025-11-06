@@ -3,85 +3,65 @@
 Test script to verify that @click attributes with Jinja syntax are parsed correctly.
 """
 
-import sys
 import os
-sys.path.insert(0, '/Users/robbertuittenbroek/IdeaProjects/jinja-roos-components/jinja-roos-components')
+from jinja2 import Environment, FileSystemLoader
+from jinja_roos_components.extension import setup_components
 
-from jinja2 import Environment, DictLoader
-from jinja_roos_components.extension_dom import setup_components_dom
 
-# Test template with your exact example - testing string interpolation in events
-test_template = '''
+def test_event_attribute_jinja_interpolation():
+    """Test that Jinja variables in @click attributes are resolved."""
+
+    # Set up Jinja environment with ROOS components
+    template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
+
+    # Create environment with component extension
+    env = Environment(loader=FileSystemLoader([template_dir, '.']))
+    env = setup_components(env)
+
+    test_template = '''
 {% set project = {"name": "test-project", "display_name": "Test Project Display"} %}
-<c-button 
+<c-button
     label="Verwijderen"
     kind="warning"
     size="sm"
     showIcon="before"
     icon="verwijderen"
-    @click="'showDeleteConfirmation(\\'{{ project.name }}\\', \\'{{ project.display_name or project.name }}\\')'" />
+    @click="'showDeleteConfirmation('{{ project.name }}', '{{ project.display_name or project.name }}')'" />
 '''
 
-# Also test with expression evaluation
-test_template_expr = '''
+    # Parse and render the template
+    template = env.from_string(test_template)
+    result = template.render()
+
+    # Check if the variables were resolved
+    assert "showDeleteConfirmation('test-project'" in result, \
+        "Should resolve project.name in @click attribute"
+    assert "Test Project Display')" in result, \
+        "Should resolve project.display_name in @click attribute"
+    assert "{{ project.name }}" not in result, \
+        "Should not have unresolved Jinja variables"
+    assert "{{ project.display_name" not in result, \
+        "Should not have unresolved Jinja variables"
+
+
+def test_event_attribute_expression():
+    """Test event attribute with expression evaluation."""
+
+    # Set up Jinja environment with ROOS components
+    template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
+
+    env = Environment(loader=FileSystemLoader([template_dir, '.']))
+    env = setup_components(env)
+
+    test_template_expr = '''
 {% set project = {"name": "test-project", "display_name": "Test Project Display"} %}
-<c-button 
+<c-button
     label="Test"
     @click="'alert(' + project.name + ')'" />
 '''
 
-# Expected output should have the variables resolved in the onclick attribute
-expected_patterns = [
-    "showDeleteConfirmation('test-project'",
-    "Test Project Display')"
-]
+    template = env.from_string(test_template_expr)
+    result = template.render()
 
-def test_event_parsing():
-    print("Testing event attribute parsing...")
-    
-    # Create Jinja environment
-    env = Environment(loader=DictLoader({}))
-    
-    # Setup components
-    env = setup_components_dom(env)
-    
-    try:
-        # Parse and render the template
-        template = env.from_string(test_template)
-        result = template.render()
-        
-        print("Rendered template:")
-        print("=" * 50)
-        print(result)
-        print("=" * 50)
-        
-        # Check if the variables were resolved
-        success = True
-        for pattern in expected_patterns:
-            if pattern not in result:
-                print(f"❌ Expected pattern not found: {pattern}")
-                success = False
-            else:
-                print(f"✅ Found expected pattern: {pattern}")
-        
-        if "{{ project.name }}" in result or "{{ project.display_name" in result:
-            print("❌ Found unresolved Jinja variables in result")
-            success = False
-        else:
-            print("✅ No unresolved Jinja variables found")
-            
-        return success
-        
-    except Exception as e:
-        print(f"❌ Error during template rendering: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-if __name__ == "__main__":
-    success = test_event_parsing()
-    if success:
-        print("\n🎉 Test passed! Event attributes are working correctly.")
-    else:
-        print("\n💥 Test failed! Event attributes are not working correctly.")
-    sys.exit(0 if success else 1)
+    assert result is not None, "Should render template"
+    assert len(result) > 0, "Should have output"

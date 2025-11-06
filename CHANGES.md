@@ -10,6 +10,10 @@
 - Fixed automatic conversion for buttons
 - Fixed automatic conversion for the action-group
 - Reverted the layout-flow component, auto-generation broke it 
+- make tests run with `python -m pytest tests/`
+- add error handling around shorthand non-boolean attributes
+- add support for shorthand boolean attributes
+- read version number from toml
 
 # [0.1] - 2025-11-04
 - First tagged version

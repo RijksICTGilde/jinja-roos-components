@@ -183,20 +183,35 @@ class ComponentHTMLParser(html.parser.HTMLParser):
             # Read the attribute name
             while pos < len(attrs_str) and (attrs_str[pos].isalnum() or attrs_str[pos] in '-_'):
                 pos += 1
-            
-            if pos >= len(attrs_str):
-                break
-                
+
             attr_name = attrs_str[name_start:pos]
-            
-            # Skip whitespace and =
-            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r=':
+
+            if pos >= len(attrs_str):
+                # End of string after attribute name - it's a boolean attribute
+                attrs[attr_name] = None
+                break
+
+            # Skip whitespace after attribute name
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
                 pos += 1
-            
+
+            # Check if there's an = sign (attribute has a value) or not (boolean attribute)
+            if pos >= len(attrs_str) or attrs_str[pos] != '=':
+                # Boolean attribute (no value)
+                attrs[attr_name] = None
+                continue
+
+            # Skip the = sign
+            pos += 1
+
+            # Skip whitespace after =
+            while pos < len(attrs_str) and attrs_str[pos] in ' \t\n\r':
+                pos += 1
+
             if pos >= len(attrs_str):
                 attrs[attr_name] = ""
                 break
-            
+
             # Find attribute value - handle nested structures
             if attrs_str[pos] in ('"', "'"):
                 # Quoted value - use stack to track nested brackets/quotes
@@ -342,15 +357,19 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
 
             # Handle BOOLEAN attributes - auto-convert string boolean values
             if attr_def and attr_def.type == AttributeType.BOOLEAN:
-                # Convert common string boolean values to actual booleans
-                value_lower = value.lower().strip()
-                if value_lower in ('false', '0', '', 'no', 'off'):
-                    context_items.append(f'"{key}": False')
-                elif value_lower in ('true', '1', 'yes', 'on'):
+                # Handle shorthand notation (None value means true)
+                if value is None:
                     context_items.append(f'"{key}": True')
                 else:
-                    # Unknown value for boolean - treat as truthy if non-empty
-                    context_items.append(f'"{key}": {bool(value)}')
+                    # Convert common string boolean values to actual booleans
+                    value_lower = value.lower().strip()
+                    if value_lower in ('false', '0', '', 'no', 'off'):
+                        context_items.append(f'"{key}": False')
+                    elif value_lower in ('true', '1', 'yes', 'on'):
+                        context_items.append(f'"{key}": True')
+                    else:
+                        # Unknown value for boolean - treat as truthy if non-empty
+                        context_items.append(f'"{key}": {bool(value)}')
 
             elif attr_def and attr_def.type == AttributeType.OBJECT:
                 # Object attribute - handle JSON string parsing
@@ -378,7 +397,7 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
                         # Invalid JSON, treat as regular string
                         escaped_value = value.replace('"', '\\"')
                         context_items.append(f'"{key}": "{escaped_value}"')
-            elif '{{' in value or '{%' in value:
+            elif value is not None and ('{{' in value or '{%' in value):
                 # Regular attribute with Jinja expressions
                 import random
                 import string
@@ -387,6 +406,10 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
                 # Create a template that renders the attribute with current context
                 event_templates.append(f'{{% set {temp_var} %}}{value}{{% endset %}}')
                 context_items.append(f'"{key}": {temp_var}')
+            elif value is None:
+                # Handle shorthand notation for passthrough attributes (data-*, aria-*, etc.)
+                # Render as empty string so template can output just the attribute name
+                context_items.append(f'"{key}": ""')
             else:
                 # Regular string value
                 escaped_value = value.replace('"', '\\"')

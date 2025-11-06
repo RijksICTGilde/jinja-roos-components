@@ -8,11 +8,13 @@ This package provides a complete component system for Jinja2 templates with:
 - Easy integration with FastAPI, Flask, and other frameworks
 """
 
+from importlib.metadata import version
+
 from .extension import ComponentExtension, setup_components
 from .extension_dom import ComponentExtensionDOM, setup_components_dom
 from .registry import ComponentRegistry
 
-__version__ = "0.1.0"
+__version__ = version("jinja-roos-components")
 __all__ = ["ComponentExtension", "setup_components", "ComponentRegistry", "ComponentExtensionDOM", "setup_components_dom"]
 
 
