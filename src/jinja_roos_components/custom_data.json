@@ -88,12 +88,9 @@
           ]
         },
         {
-          "name": "showIcon",
-          "description": "Icon placement in button (default: `no`)",
+          "name": "icon-placement",
+          "description": "Icon placement in button (default: `before`)",
           "values": [
-            {
-              "name": "no"
-            },
             {
               "name": "before"
             },
@@ -105,6 +102,10 @@
         {
           "name": "icon",
           "description": "Icon name from RVO icon set"
+        },
+        {
+          "name": "iconColor",
+          "description": "Icon color from RVO color system (default: `hemelblauw`)"
         },
         {
           "name": "fullWidth",
@@ -1300,9 +1301,6 @@
           "description": "Icon placement relative to content",
           "values": [
             {
-              "name": ""
-            },
-            {
               "name": "before"
             },
             {
@@ -2121,7 +2119,7 @@
         },
         {
           "name": "color",
-          "description": "Icon color from RVO color system"
+          "description": "Icon color from RVO color system (default: `logoblauw`)"
         },
         {
           "name": "ariaLabel",
@@ -2316,12 +2314,9 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
-          "description": "Icon placement (default: `no`)",
+          "name": "icon-placement",
+          "description": "Icon placement (default: `before`)",
           "values": [
-            {
-              "name": "no"
-            },
             {
               "name": "before"
             },
@@ -2350,7 +2345,7 @@
         },
         {
           "name": "iconColor",
-          "description": "Icon color"
+          "description": "Icon color (default: `logoblauw`)"
         },
         {
           "name": "noUnderline",
