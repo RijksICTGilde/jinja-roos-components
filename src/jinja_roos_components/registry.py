@@ -167,7 +167,7 @@ class ComponentRegistry:
     def _register_default_components(self) -> None:
         """Register the default RVO-based components from JSON definitions."""
         # Load definitions from JSON file
-        definitions_path = Path(__file__).parent / "definitions.json"
+        definitions_path = Path(__file__).parent / "overall_definitions.json"
         with open(definitions_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
@@ -202,7 +202,7 @@ class ComponentRegistry:
     def _register_default_aliases(self) -> None:
         """Register the default component aliases from JSON definitions."""
         # Load definitions from JSON file
-        definitions_path = Path(__file__).parent / "definitions.json"
+        definitions_path = Path(__file__).parent / "overall_definitions.json"
         with open(definitions_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
@@ -217,13 +217,13 @@ class ComponentRegistry:
             self.register_alias(alias)
 
     def _register_conversion_components(self) -> None:
-        """Auto-discover and register components from conversion/definitions/ directory."""
-        # Find conversion definitions directory relative to this file
-        # src/jinja_roos_components/registry.py -> ../../conversion/definitions/
-        conversion_dir = Path(__file__).parent.parent.parent / "conversion" / "definitions"
+        """Auto-discover and register components from definitions/ directory."""
+        # Find definitions directory relative to this file
+        # src/jinja_roos_components/registry.py -> definitions/
+        conversion_dir = Path(__file__).parent / "definitions"
 
         if not conversion_dir.exists():
-            return  # No conversion definitions yet
+            return  # No definitions yet
 
         # Scan for all .json files
         for definition_file in conversion_dir.glob("*.json"):
@@ -238,14 +238,14 @@ class ComponentRegistry:
 
                 if component_name in self._components:
                     # Collision detected - raise exception
-                    main_definitions_path = Path(__file__).parent / "definitions.json"
+                    main_definitions_path = Path(__file__).parent / "overall_definitions.json"
                     raise ValueError(
                         f"Component definition collision detected for '{component_name}':\n"
                         f"  - Already defined in: {main_definitions_path}\n"
                         f"  - Conflicts with: {definition_file}\n"
                         f"\n"
-                        f"A component cannot be defined in both the main definitions.json file "
-                        f"and the conversion/definitions/ folder. Please remove one of the definitions.\n"
+                        f"A component cannot be defined in both the main overall_definitions.json file "
+                        f"and individual definition files in the definitions/ folder. Please remove one of the definitions.\n"
                         f"Hint: If this is a converted component, remove it from {main_definitions_path}"
                     )
 

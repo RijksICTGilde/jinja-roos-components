@@ -1,0 +1,70 @@
+{
+  "name": "status-icon",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/status-icon/src/template.tsx",
+  "converted_at": "2025-10-29T14:16:35.043583Z",
+  "conversion_hash": "9da8d9745d3d50148c803e143820c01f68f30fe913ead39a3deda0b7413ebe0a",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "type",
+      "type": "enum",
+      "required": true,
+      "description": "type attribute",
+      "enum_values": [
+        "info",
+        "bevestiging",
+        "foutmelding",
+        "waarschuwing"
+      ],
+      "is_example": true,
+      "example_value": "bevestiging"
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": true,
+      "description": "size attribute",
+      "enum_values": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl"
+      ],
+      "is_example": true,
+      "example_value": "sm"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "ignoreDefaultIconColor",
+      "type": "boolean",
+      "required": false,
+      "description": "ignoreDefaultIconColor attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Could not parse root JSX element",
+      "severity": "low",
+      "source_line": 0
+    }
+  ],
+  "example_values": {
+    "type": "bevestiging",
+    "size": "sm",
+    "ignoreDefaultIconColor": false
+  }
+}

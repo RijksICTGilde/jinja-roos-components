@@ -21,16 +21,16 @@ class ColorValidator:
         self._definitions_path: Optional[Path] = None
 
     def _load_colors(self) -> Set[str]:
-        """Load colors from the definitions.json file."""
+        """Load colors from the overall_definitions.json file."""
         if self._colors is not None:
             return self._colors
 
         colors = set()
 
         # Find the definitions file
-        definitions_file = self._find_definitions_file()
-        if not definitions_file:
-            logger.warning("Could not find definitions.json file, skipping color validation")
+        definitions_file = Path(__file__).parent / 'overall_definitions.json'
+        if not definitions_file.exists():
+            logger.warning("Could not find overall_definitions.json file, skipping color validation")
             return colors
 
         try:
@@ -58,25 +58,6 @@ class ColorValidator:
 
         self._colors = colors
         return colors
-
-    def _find_definitions_file(self) -> Optional[Path]:
-        """Find the definitions.json file."""
-        if self._definitions_path:
-            return self._definitions_path
-
-        # Try to find it relative to this module
-        current_dir = Path(__file__).parent
-        possible_paths = [
-            current_dir / 'definitions.json',
-            current_dir / '..' / 'definitions.json',
-        ]
-
-        for path in possible_paths:
-            if path.exists():
-                self._definitions_path = path
-                return path
-
-        return None
         
     def is_valid_color(self, color: str) -> bool:
         """Check if a color is valid in the RVO color system."""

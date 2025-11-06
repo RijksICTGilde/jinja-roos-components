@@ -1,0 +1,113 @@
+{
+  "name": "form-select",
+  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-select/src/template.tsx",
+  "converted_at": "2025-10-31T16:18:53.741313Z",
+  "conversion_hash": "29582daccf88f465e1242366ca5544e8f90a922e405200dcc315d0ccac18e754",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "id attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "field"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "disabled attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "focus",
+      "type": "boolean",
+      "required": false,
+      "description": "focus attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "required": false,
+      "description": "invalid attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "required attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "required": false,
+      "description": "options attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "defaultOptions"
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "required": false,
+      "description": "defaultValue attribute",
+      "default": ""
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "value attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "Children/content support added via customization",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute for form submission",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Dynamic className expression found - needs clsx parsing",
+      "severity": "low",
+      "source_line": 0
+    }
+  ],
+  "example_values": {
+    "id": "field",
+    "disabled": false,
+    "focus": false,
+    "invalid": false,
+    "required": false,
+    "options": "defaultOptions",
+    "children": "",
+    "name": ""
+  }
+}

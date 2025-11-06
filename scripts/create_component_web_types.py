@@ -17,9 +17,9 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 def load_definitions() -> Dict[str, Any]:
-    """Load component definitions from definitions.json."""
+    """Load component definitions from overall_definitions.json."""
     root_dir = Path(__file__).parent.parent
-    definitions_path = root_dir / "src" / "jinja_roos_components" / "definitions.json"
+    definitions_path = root_dir / "src" / "jinja_roos_components" / "overall_definitions.json"
 
     with open(definitions_path, 'r', encoding='utf-8') as f:
         return json.load(f)
@@ -79,7 +79,7 @@ def generate_web_types_for_component(component_name: str, component_def: Dict[st
     return web_types
 
 def find_component_in_definitions(component_name: str, definitions: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """Find a component definition by name in definitions.json."""
+    """Find a component definition by name in overall_definitions.json."""
     # Check regular components
     for comp in definitions.get('components', []):
         if comp['name'] == component_name:
@@ -127,7 +127,7 @@ def main():
     definitions = load_definitions()
 
     if sys.argv[1] == '--all':
-        # Process all components and aliases from definitions.json
+        # Process all components and aliases from overall_definitions.json
         all_components = []
 
         # Add all regular components
@@ -169,11 +169,11 @@ def main():
         # Find component in definitions
         component_def = find_component_in_definitions(component_name, definitions)
         if not component_def:
-            print(f"Error: Component '{component_name}' not found in definitions.json")
+            print(f"Error: Component '{component_name}' not found in overall_definitions.json")
             print(f"Available components: {', '.join(sorted([c['name'] for c in definitions.get('components', [])] + [a['name'] for a in definitions.get('aliases', [])]))}")
             sys.exit(1)
 
-        print(f"Loading component definition from definitions.json: {component_name}")
+        print(f"Loading component definition from overall_definitions.json: {component_name}")
 
         # Generate web-types
         web_types = generate_web_types_for_component(component_name, component_def)

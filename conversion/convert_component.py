@@ -389,7 +389,7 @@ class ComponentConverter:
         definition = self._generate_definition(
             component_info, base_components, nested_components, array_mappings, tsx_file
         )
-        definition_file = get_conversion_dir() / "definitions" / f"{self.output_name}.json"
+        definition_file = Path(__file__).parent.parent / "src" / "jinja_roos_components" / "definitions" / f"{self.output_name}.json"
         self.definition_generator.write_definition(definition, str(definition_file))
         print(f"   ✓ Written to: {definition_file}")
 
@@ -1252,12 +1252,12 @@ class ComponentConverter:
         return max(percentage, 50.0)
 
     def _register_aliases(self) -> None:
-        """Register component aliases in definitions.json."""
+        """Register component aliases in overall_definitions.json."""
         import json
         from pathlib import Path
 
-        # Get path to main definitions.json in src/jinja_roos_components
-        definitions_path = Path(__file__).parent.parent / "src" / "jinja_roos_components" / "definitions.json"
+        # Get path to main overall_definitions.json in src/jinja_roos_components
+        definitions_path = Path(__file__).parent.parent / "src" / "jinja_roos_components" / "overall_definitions.json"
 
         # Load existing definitions
         with open(definitions_path, 'r', encoding='utf-8') as f:

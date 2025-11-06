@@ -14,9 +14,9 @@ from typing import Dict, Any
 
 
 def load_definitions() -> Dict[str, Any]:
-    """Load component definitions from definitions.json."""
+    """Load component definitions from overall_definitions.json."""
     root_dir = Path(__file__).parent.parent
-    definitions_path = root_dir / "src" / "jinja_roos_components" / "definitions.json"
+    definitions_path = root_dir / "src" / "jinja_roos_components" / "overall_definitions.json"
 
     with open(definitions_path, 'r', encoding='utf-8') as f:
         return json.load(f)
@@ -132,7 +132,7 @@ def generate_vscode_custom_data() -> Dict[str, Any]:
 
 def main():
     """Generate VSCode custom data file."""
-    print("Generating VSCode custom data from definitions.json...")
+    print("Generating VSCode custom data from overall_definitions.json...")
     print("=" * 60)
 
     custom_data, components_added = generate_vscode_custom_data()
