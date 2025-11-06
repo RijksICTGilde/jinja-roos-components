@@ -5,5 +5,5 @@
 
 ### Items Requiring Review:
 
-1. **Dynamic className expression found - may need clsx parsing** (line 0)
+1. **Dynamic className expression found - needs clsx parsing** (line 0)
    - Severity: low

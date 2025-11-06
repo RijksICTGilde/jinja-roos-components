@@ -69,7 +69,7 @@
   ],
   "manual_review_items": [
     {
-      "issue": "Dynamic className expression found - may need clsx parsing",
+      "issue": "Dynamic className expression found - needs clsx parsing",
       "severity": "low",
       "source_line": 0
     }
