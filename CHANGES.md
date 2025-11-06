@@ -18,6 +18,7 @@
 - move component definitions to src/jinja-roos-components/definitions
 - update conversion script and autocomplete generation script to use new paths
 - add `regenerate_components` script to run conversion on all converted components at once
+- add tests for all components, some commented out because currently failing
 
 # [0.1] - 2025-11-04
 - First tagged version
