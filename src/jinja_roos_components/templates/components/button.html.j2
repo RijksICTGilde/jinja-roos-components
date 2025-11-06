@@ -46,6 +46,7 @@
 {% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
+my change
 {% if utility_classes %}
     {% set css_classes = css_classes + utility_classes.split() %}
 {% endif %}
