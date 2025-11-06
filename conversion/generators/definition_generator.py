@@ -57,7 +57,6 @@ class DefinitionGenerator:
         definition = {
             "name": self.component_name,
             "source_file": relative_source_file,
-            "converted_at": datetime.utcnow().isoformat() + "Z",
             "conversion_hash": compute_hash(source_content),
             "base_components": base_components,
             "nested_components": nested_components,

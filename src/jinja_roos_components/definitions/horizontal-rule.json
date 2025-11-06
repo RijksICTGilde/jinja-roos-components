@@ -1,7 +1,6 @@
 {
   "name": "horizontal-rule",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/horizontal-rule/src/template.tsx",
-  "converted_at": "2025-10-29T06:20:04.291147Z",
+  "source_file": "rvo/components/horizontal-rule/src/template.tsx",
   "conversion_hash": "c6f9fb06f7f029fea276e2e43359871d6a8ed3e5c770df7c71b24f9b5ef9bb45",
   "base_components": [],
   "nested_components": [],

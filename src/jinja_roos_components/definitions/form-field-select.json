@@ -1,7 +1,6 @@
 {
   "name": "form-field-select",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field-select/src/template.tsx",
-  "converted_at": "2025-10-29T15:06:41.141585Z",
+  "source_file": "rvo/components/form-field-select/src/template.tsx",
   "conversion_hash": "0a50c1449bc460b2328afe857c18831f103fca2951f48bba8d71a7555fe8fad0",
   "base_components": [],
   "nested_components": [

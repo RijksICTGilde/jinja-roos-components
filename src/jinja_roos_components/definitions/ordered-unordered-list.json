@@ -1,7 +1,6 @@
 {
   "name": "ordered-unordered-list",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/ordered-unordered-list/src/template.tsx",
-  "converted_at": "2025-11-03T09:36:46.903929Z",
+  "source_file": "rvo/components/ordered-unordered-list/src/template.tsx",
   "conversion_hash": "8371328c7a1b6927f56b50a6c9e45e5be23faff7f659b92887a830e33fa6e1a6",
   "base_components": [],
   "nested_components": [],

@@ -1,7 +1,6 @@
 {
   "name": "progress-tracker",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/template.tsx",
-  "converted_at": "2025-10-27T17:12:43.218399Z",
+  "source_file": "rvo/components/progress-tracker/src/template.tsx",
   "conversion_hash": "b4bd82feb52b256201b0649d5c27d3b88d8c1240c293d3b44994b4f9fb3e3b33",
   "base_components": [],
   "nested_components": [

@@ -1,7 +1,6 @@
 {
   "name": "form-field",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field/src/template.tsx",
-  "converted_at": "2025-10-29T15:00:40.322556Z",
+  "source_file": "rvo/components/form-field/src/template.tsx",
   "conversion_hash": "834d3344e6cb212269e2f1066740d70bb340f9c89fe347af1b52efac9a3626ba",
   "base_components": [
     {
