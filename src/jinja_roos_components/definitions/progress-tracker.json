@@ -8,7 +8,7 @@
       "name": "progress-tracker-step",
       "component_class": "ProgressTrackerStep",
       "source_path": "./progress-tracker-step/template",
-      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
+      "resolved_path": "rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
       "interface": "IProgressTrackerStepProps",
       "tag_name": "c-progress-tracker-step",
       "props": [
