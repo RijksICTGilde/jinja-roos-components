@@ -102,8 +102,37 @@ class CustomizationLoader:
         # Call the extraction function
         data = extractor()
 
+        # If extraction failed (returns empty), try fallback from definitions.json
+        if not data and source_function == 'extract_colors_from_tokens':
+            data = self._extract_colors_from_definitions()
+
         # Extract the specified field
         return [item[extract_field] for item in data if extract_field in item]
+
+    def _extract_colors_from_definitions(self) -> List[Dict[str, str]]:
+        """Fallback: Extract colors from definitions.json if token extraction fails.
+
+        Returns:
+            List of color dicts with template_name field
+        """
+        definitions_path = Path(__file__).parent.parent.parent / "src" / "jinja_roos_components" / "definitions.json"
+        if not definitions_path.exists():
+            return []
+
+        with open(definitions_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Extract colors and format them like the extractor would
+        colors = []
+        for color in data.get('colors', []):
+            colors.append({
+                'name': color['name'],
+                'template_name': color['name'].lower(),
+                'display_name': color['name'].title(),
+                'hex': color.get('value', ''),
+            })
+
+        return colors
 
     def apply_customizations(self, component_name: str, attributes: List[Any]) -> List[Any]:
         """Apply customizations to component attributes.

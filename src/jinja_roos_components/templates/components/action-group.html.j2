@@ -1,3 +1,5 @@
+{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
 {% set actions = _component_context.actions | default([]) %}
 {% set alignment = _component_context.alignment | default('start') %}
 {% set gap = _component_context.gap | default('md') %}
@@ -6,7 +8,7 @@
 {% set content = _component_context.content | default('') %}
 
 {# Build CSS classes #}
-{% set action_group_classes = ['rvo-action-group'] %}
+{% set action_group_classes = ['rvo-action-group', 'utrecht-button-group', 'utrecht-button-group--row'] %}
 
 {% if direction == 'vertical' %}
     {% set action_group_classes = action_group_classes + ['rvo-action-group--vertical'] %}
@@ -28,37 +30,25 @@
     {% set action_group_classes = action_group_classes + [additional_class] %}
 {% endif %}
 
-<div 
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set action_group_classes = action_group_classes + utility_classes.split() %}
+{% endif %}
+
+<div
     class="{{ action_group_classes | join(' ') }}"
     data-roos-component="action-group"
     data-roos-alignment="{{ alignment }}"
     data-roos-direction="{{ direction }}"
-    data-roos-gap="{{ gap }}">
-    
+    data-roos-gap="{{ gap }}"
+    {{ events.render_extra_attributes(_component_context) }}>
     {% if content %}
         {{ content | safe }}
     {% elif actions %}
         {% for action in actions %}
-            {% call c_button(
-                type=action.get('type'),
-                kind=action.get('kind'),
-                size=action.get('size'),
-                label=action.get('label'),
-                disabled=action.get('disabled'),
-                showIcon=action.get('showIcon'),
-                icon=action.get('icon'),
-                iconAriaLabel=action.get('iconAriaLabel'),
-                fullWidth=action.get('fullWidth'),
-                className=action.get('className'),
-                alignToRightInGroup=action.get('alignToRightInGroup'),
-                active=action.get('active'),
-                busy=action.get('busy'),
-                focus=action.get('focus'),
-                focusVisible=action.get('focusVisible'),
-                hover=action.get('hover'),
-                color=action.get('color')
-            ) %}{% endcall %}
+            {% set _component_context = action %}
+            {% include 'components/button.html.j2' %}
         {% endfor %}
     {% endif %}
-    
 </div>

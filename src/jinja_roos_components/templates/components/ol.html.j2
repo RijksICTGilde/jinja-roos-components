@@ -2,24 +2,24 @@
 {% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: ol
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
-{% set type = _component_context.type | default('ordered') %}
-{% set items = _component_context.items | default(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']) %}
-{% set bulletType = _component_context.bulletType | default('icon') %}
-{% set bulletIcon = _component_context.bulletIcon | default('option-1') %}
-{% set noMargin = _component_context.noMargin | default(true) %}
-{% set noPadding = _component_context.noPadding | default(true) %}
-{% set children = _component_context.content | default('') %}
+{% set type_attr = _component_context.get('type', 'ordered') %}
+{% set list_items = _component_context.get('items', []) %}
+{% set bulletType = _component_context.get('bulletType', 'icon') %}
+{% set bulletIcon = _component_context.get('bulletIcon', 'option-1') %}
+{% set noMargin = _component_context.get('noMargin', true) %}
+{% set noPadding = _component_context.get('noPadding', true) %}
+{% set children = _component_context.get('content', '') %}
 {% set css_classes = [] %}
-{% if type == 'unordered' %}{% set css_classes = css_classes + ['rvo-ul'] %}{% endif %}
-{% if type == 'unordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ul--no-margin'] %}{% endif %}
-{% if type == 'unordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ul--no-padding'] %}{% endif %}
-{% if type == 'unordered' and bulletType == 'none' %}{% set css_classes = css_classes + ['rvo-ul--none'] %}{% endif %}
-{% if bulletIcon == 'option-1' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-1'] %}{% endif %}
-{% if bulletIcon == 'option-2' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-2'] %}{% endif %}
-{% if bulletIcon == 'option-3' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-3'] %}{% endif %}
-{% if type == 'ordered' %}{% set css_classes = css_classes + ['rvo-ol'] %}{% endif %}
-{% if type == 'ordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ol--no-padding'] %}{% endif %}
-{% if type == 'ordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ol--no-margin'] %}{% endif %}
+{% if type_attr == 'unordered' %}{% set css_classes = css_classes + ['rvo-ul'] %}{% endif %}
+{% if type_attr == 'unordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ul--no-margin'] %}{% endif %}
+{% if type_attr == 'unordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ul--no-padding'] %}{% endif %}
+{% if type_attr == 'unordered' and bulletType == 'none' %}{% set css_classes = css_classes + ['rvo-ul--none'] %}{% endif %}
+{% if type_attr == 'unordered' and bulletType == 'icon' and bulletIcon == 'option-1' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-1'] %}{% endif %}
+{% if type_attr == 'unordered' and bulletType == 'icon' and bulletIcon == 'option-2' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-2'] %}{% endif %}
+{% if type_attr == 'unordered' and bulletType == 'icon' and bulletIcon == 'option-3' %}{% set css_classes = css_classes + ['rvo-ul--icon rvo-ul--icon-option-3'] %}{% endif %}
+{% if type_attr == 'ordered' %}{% set css_classes = css_classes + ['rvo-ol'] %}{% endif %}
+{% if type_attr == 'ordered' and noPadding %}{% set css_classes = css_classes + ['rvo-ol--no-padding'] %}{% endif %}
+{% if type_attr == 'ordered' and noMargin %}{% set css_classes = css_classes + ['rvo-ol--no-margin'] %}{% endif %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
 {% if utility_classes %}
@@ -29,10 +29,17 @@
 {% if _component_context.get('class') %}
     {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-<ListTag
+{% set tag_name = 'ul' if type_attr == 'unordered' else 'ol' %}
+<{{ tag_name }}
     class="{{ css_classes | join(' ') }}"
     data-roos-component="ol"
-    type="{{ type }}"
+    type="{{ type_attr }}"
     {{ events.render_extra_attributes(_component_context) }}>
-    {{ React.Children.map(parseChildren(children), (child, index) => <li key={index}>{child}</li>) if _component_context.content else items?.map((itemContent, index) => <li key={index}>{itemContent}</li>) }}
-</ListTag>
+        {% if children %}
+        {{ children | safe }}
+    {% elif list_items %}
+        {% for itemContent in list_items %}
+            <li>{{ itemContent }}</li>
+        {% endfor %}
+    {% endif %}
+</{{ tag_name }}>

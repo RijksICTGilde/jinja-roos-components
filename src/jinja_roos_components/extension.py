@@ -66,17 +66,7 @@ class ComponentExtension(Extension):
             logger.debug(f"Successfully processed template: {name}")
             return result
         except Exception as e:
-            # Log detailed error information and re-raise
-            logger.error(f"COMPONENT PREPROCESSING FAILED for template {name}: {e}")
-            logger.error(f"Template filename: {filename}")
-            logger.error(f"Template source length: {len(source)} characters")
-            
-            # Show first few lines of template for context
-            lines = source.split('\n')[:10]
-            logger.error(f"Template beginning:\n" + '\n'.join(f"{i+1:2d}: {line}" for i, line in enumerate(lines)))
-            
-            # Don't catch the exception - let it bubble up so we can see what's wrong
-            raise RuntimeError(f"Component preprocessing failed for template '{name}': {e}") from e
+            raise RuntimeError(f"Component processing failed for template {name} at {filename}: {e}") from e
     
     def _process_components(self, html: str) -> str:
         """

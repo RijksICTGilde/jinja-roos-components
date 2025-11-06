@@ -78,7 +78,20 @@ class ComponentExtensionDOM(Extension):
             
         except Exception as e:
             logger.error(f"Component preprocessing failed for template {name}: {e}")
-            raise RuntimeError(f"Component preprocessing failed for template '{name}': {e}") from e
+
+            # Show the raw source for debugging
+            error_details = f"Component preprocessing failed for template '{name}': {e}"
+            error_details += f"\n\nRaw template source ({len(source)} chars):\n"
+            error_details += "="*80 + "\n"
+            # Show with line numbers for easier debugging
+            lines = source.split('\n')
+            for i, line in enumerate(lines[:200], 1):  # First 200 lines
+                error_details += f"{i:3d}: {line}\n"
+            if len(lines) > 200:
+                error_details += f"... (truncated at line 200, total lines: {len(lines)})\n"
+            error_details += "="*80
+
+            raise RuntimeError(error_details) from e
     
     def _process_components_in_soup(self, soup: BeautifulSoup) -> None:
         """

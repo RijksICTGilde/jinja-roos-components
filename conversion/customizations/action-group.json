@@ -1,0 +1,8 @@
+{
+  "component": "action-group",
+  "description": "Simplify action-group to be a simple wrapper (buttonsLeft/Right are UXPin-only props)",
+  "attribute_removals": ["buttonsLeft", "buttonsRight"],
+  "ignore_base_component_classes": true,
+  "base_tag_override": "div",
+  "notes": "buttonsLeft and buttonsRight are marked @uxpinignoreprop and only used for design tool previews. In real usage, buttons are passed as children."
+}

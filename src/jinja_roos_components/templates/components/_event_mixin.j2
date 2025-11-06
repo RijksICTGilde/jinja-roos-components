@@ -104,7 +104,16 @@
     {%- endfor -%}
 {%- endmacro %}
 
+{# Macro to render generic HTML attributes (id, title, style, etc.) #}
+{% macro render_html_attributes(component_context) -%}
+    {%- if 'id' in component_context %} id="{{ component_context['id'] }}"{% endif -%}
+    {%- if 'title' in component_context %} title="{{ component_context['title'] }}"{% endif -%}
+    {%- if 'style' in component_context %} style="{{ component_context['style'] }}"{% endif -%}
+    {%- if 'role' in component_context %} role="{{ component_context['role'] }}"{% endif -%}
+    {%- if 'tabindex' in component_context %} tabindex="{{ component_context['tabindex'] }}"{% endif -%}
+{%- endmacro %}
+
 {# Combined macro for all extra attributes #}
 {% macro render_extra_attributes(component_context) -%}
-    {{ render_events(component_context) }} {{ render_data_attributes(component_context) }} {{ render_aria_attributes(component_context) }} {{ render_htmx_attributes(component_context) }}
+    {{ render_events(component_context) }} {{ render_data_attributes(component_context) }} {{ render_aria_attributes(component_context) }} {{ render_htmx_attributes(component_context) }} {{ render_html_attributes(component_context) }}
 {%- endmacro %}

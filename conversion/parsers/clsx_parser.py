@@ -89,10 +89,32 @@ class ClsxParser:
             class_name = match.group(1)
             condition = match.group(2).strip().rstrip(',')
 
-            # Treat the condition as a simple variable (boolean check)
-            # Handles patterns like: disabled, focus, invalid, !something, etc.
-            if condition.startswith('!'):
-                # Negated boolean
+            # Handle different condition types
+            # 1. Equality comparison: prop === 'value' or prop === value
+            if ' === ' in condition:
+                prop_part, value_part = condition.split(' === ', 1)
+                prop_name = prop_part.strip()
+                value = value_part.strip().strip('"\'')
+                self.mappings.append(ClassMapping(
+                    prop_name=prop_name,
+                    value=value,
+                    css_class=class_name,
+                    condition=condition
+                ))
+            # 2. Inequality comparison: prop !== 'value'
+            elif ' !== ' in condition:
+                prop_part, value_part = condition.split(' !== ', 1)
+                prop_name = prop_part.strip()
+                value_clean = value_part.strip().strip('"\'')
+                value = f'!{value_clean}'  # Mark as negated
+                self.mappings.append(ClassMapping(
+                    prop_name=prop_name,
+                    value=value,
+                    css_class=class_name,
+                    condition=condition
+                ))
+            # 3. Negated boolean: !prop
+            elif condition.startswith('!'):
                 prop_name = condition[1:].strip()
                 self.mappings.append(ClassMapping(
                     prop_name=prop_name,
@@ -100,8 +122,8 @@ class ClsxParser:
                     css_class=class_name,
                     condition=condition
                 ))
+            # 4. Simple boolean: prop
             else:
-                # Positive boolean or expression
                 prop_name = condition.strip()
                 self.mappings.append(ClassMapping(
                     prop_name=prop_name,

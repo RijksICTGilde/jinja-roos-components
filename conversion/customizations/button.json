@@ -6,7 +6,8 @@
       "type": "enum",
       "values": "all_rvo_colors",
       "required": false,
-      "description": "Custom color for the button (additional to kind-based styling)"
+      "default": "wit",
+      "description": "Icon color (defaults to white)"
     },
     "type": {
       "type": "enum",
@@ -17,10 +18,11 @@
     }
   },
   "default_overrides": {
-    "type": "button"
+    "type": "button",
+    "color": "wit"
   },
   "add_children_support": true,
-  "custom_content_template": "{% if showIcon == 'before' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}{{ children if children else label | safe }}{% if showIcon == 'after' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--hemelblauw\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}",
+  "custom_content_template": "{% if showIcon == 'before' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}{{ children if children else label | safe }}{% if showIcon == 'after' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}",
   "notes": [
     "Base RVO button uses 'kind' prop for styling variants",
     "Added 'color' attribute to allow custom color overrides with full RVO palette",

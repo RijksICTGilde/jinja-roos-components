@@ -195,16 +195,15 @@ class JinjaGenerator:
             # Special case: React 'children' prop maps to '_component_context.content' in Jinja
             if attr.name == 'children':
                 # Children is nested content, accessed via .content not .children
-                var_line = f"{{% set children = _component_context.content | default('') %}}"
+                # Use .get() for consistency - more reliable than | default filter
+                var_line = f"{{% set children = _component_context.get('content', '') %}}"
             elif default is not None:
                 # Format default value
                 default_str = self._format_default_value(default, attr)
-                # For reserved names, use .get() or ['key'] to avoid conflicts with dict methods
-                if safe_name != attr.name:
-                    # This is a reserved name - use .get() to avoid method conflicts
-                    var_line = f"{{% set {safe_name} = _component_context.get('{attr.name}') | default({default_str}) %}}"
-                else:
-                    var_line = f"{{% set {safe_name} = _component_context.{attr.name} | default({default_str}) %}}"
+                # Use .get(key, default) for all cases - more reliable than Jinja's | default filter
+                # .get() returns None when key is missing, and Jinja's default filter doesn't replace None
+                # Using .get(key, default) ensures the default is applied by Python, not Jinja
+                var_line = f"{{% set {safe_name} = _component_context.get('{attr.name}', {default_str}) %}}"
             else:
                 # No default - use .get() for dict-safe access
                 var_line = f"{{% set {safe_name} = _component_context.get('{attr.name}') %}}"
@@ -1120,7 +1119,8 @@ class JinjaGenerator:
                     default_str = f"'{default}'"
                 else:
                     default_str = str(default)
-                lines.append(f"{{% set {prop_name} = _component_context.{prop_name} | default({default_str}) %}}")
+                # Use .get(key, default) for consistency - more reliable than | default filter
+                lines.append(f"{{% set {prop_name} = _component_context.get('{prop_name}', {default_str}) %}}")
             else:
                 lines.append(f"{{% set {prop_name} = _component_context.get('{prop_name}') %}}")
 

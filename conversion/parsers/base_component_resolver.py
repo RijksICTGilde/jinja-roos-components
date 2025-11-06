@@ -81,14 +81,17 @@ class BaseComponentResolver:
                 - attributes: Dict of HTML attributes
                 - needs_review: List of items needing manual review
         """
-        # Try auto-detection first for Utrecht components
-        if library == '@utrecht/component-library-react':
+        # Prefer manual JSON mappings when available (more accurate than auto-detection)
+        if library in self.mappings and component_name in self.mappings[library]:
+            # Use manual mappings - fall through to the code below
+            pass
+        # Try auto-detection for Utrecht components without manual mappings
+        elif library == '@utrecht/component-library-react':
             auto_result = self._auto_detect_component(component_name, props)
             if auto_result:
                 return auto_result
-
-        # Fallback to manual JSON mappings
-        if library not in self.mappings or component_name not in self.mappings[library]:
+        # No mappings found
+        else:
             return {
                 'html_tag': 'div',
                 'css_classes': [],

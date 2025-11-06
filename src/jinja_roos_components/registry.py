@@ -237,8 +237,17 @@ class ComponentRegistry:
                     continue
 
                 if component_name in self._components:
-                    # Main definitions.json takes precedence
-                    continue
+                    # Collision detected - raise exception
+                    main_definitions_path = Path(__file__).parent / "definitions.json"
+                    raise ValueError(
+                        f"Component definition collision detected for '{component_name}':\n"
+                        f"  - Already defined in: {main_definitions_path}\n"
+                        f"  - Conflicts with: {definition_file}\n"
+                        f"\n"
+                        f"A component cannot be defined in both the main definitions.json file "
+                        f"and the conversion/definitions/ folder. Please remove one of the definitions.\n"
+                        f"Hint: If this is a converted component, remove it from {main_definitions_path}"
+                    )
 
                 # Convert attributes from conversion format to ComponentDefinition format
                 attributes = []

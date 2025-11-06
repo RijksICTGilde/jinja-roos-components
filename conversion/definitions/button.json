@@ -1,7 +1,7 @@
 {
   "name": "button",
   "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/button/src/template.tsx",
-  "converted_at": "2025-11-03T08:41:17.249831Z",
+  "converted_at": "2025-11-06T08:37:53.991915Z",
   "conversion_hash": "9f6262f02f8ff8410176a7fa39fb1fd4bff97350132e01f84d2d29f346ad0fed",
   "base_components": [
     {
@@ -166,8 +166,70 @@
       "name": "color",
       "type": "enum",
       "required": false,
-      "description": "Custom color for the button (additional to kind-based styling)",
-      "default": ""
+      "description": "Icon color (defaults to white)",
+      "enum_values": [
+        "hemelblauw",
+        "hemelblauw-150",
+        "hemelblauw-300",
+        "hemelblauw-450",
+        "hemelblauw-600",
+        "hemelblauw-750",
+        "logoblauw",
+        "logoblauw-150",
+        "logoblauw-300",
+        "logoblauw-450",
+        "logoblauw-600",
+        "logoblauw-750",
+        "lichtblauw",
+        "lichtblauw-150",
+        "lichtblauw-300",
+        "lichtblauw-450",
+        "lichtblauw-600",
+        "lichtblauw-750",
+        "donkerblauw",
+        "donkerblauw-150",
+        "donkerblauw-300",
+        "donkerblauw-450",
+        "donkerblauw-600",
+        "donkerblauw-750",
+        "groen",
+        "groen-150",
+        "groen-300",
+        "groen-450",
+        "groen-600",
+        "groen-750",
+        "oranje",
+        "oranje-150",
+        "oranje-300",
+        "oranje-450",
+        "oranje-600",
+        "oranje-750",
+        "donkergeel",
+        "donkergeel-150",
+        "donkergeel-300",
+        "donkergeel-450",
+        "donkergeel-600",
+        "donkergeel-750",
+        "rood",
+        "rood-150",
+        "rood-300",
+        "rood-450",
+        "rood-600",
+        "rood-750",
+        "wit",
+        "grijs-050",
+        "grijs-100",
+        "grijs-200",
+        "grijs-300",
+        "grijs-400",
+        "grijs-500",
+        "grijs-600",
+        "grijs-700",
+        "grijs-800",
+        "grijs-900",
+        "zwart"
+      ],
+      "default": "hemelblauw"
     },
     {
       "name": "type",
@@ -189,7 +251,28 @@
       "default": ""
     }
   ],
-  "manual_review_items": [],
+  "manual_review_items": [
+    {
+      "issue": "Unmapped prop: label",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: icon",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: iconAriaLabel",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: color",
+      "severity": "medium",
+      "source_line": 0
+    }
+  ],
   "example_values": {
     "kind": "primary",
     "size": "md",

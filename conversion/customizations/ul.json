@@ -2,7 +2,8 @@
   "component": "ordered-unordered-list",
   "description": "Unordered list variant of ordered-unordered-list",
   "default_overrides": {
-    "type": "unordered"
+    "type": "unordered",
+    "items": []
   },
   "attribute_overrides": {
     "type": {
@@ -10,5 +11,5 @@
       "description": "Fixed to unordered type"
     }
   },
-  "notes": "Unordered list (<ul>) variant with type fixed to 'unordered'"
+  "notes": "Unordered list (<ul>) variant with type fixed to 'unordered'. Items defaults to empty list so 'if list_items' only matches when there are actual items."
 }
