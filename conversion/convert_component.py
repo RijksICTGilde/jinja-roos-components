@@ -254,12 +254,20 @@ class ComponentConverter:
 
         # Step 4b: Extract props passed to base component from JSX
         base_component_props = {}
+        ternary_mappings = []
         if base_components:
             base_component_props = self._extract_base_component_props(component_info, base_components[0])
             if base_component_props:
                 props_summary = ', '.join(f"{k}={v[:20]}..." if len(str(v)) > 20 else f"{k}={v}"
                                           for k, v in base_component_props.items())
                 print(f"\n   ✓ Props on base component: {props_summary}")
+
+                # Extract ternary expressions from base props
+                from conversion.parsers.ternary_parser import TernaryParser
+                ternary_parser = TernaryParser()
+                ternary_mappings = ternary_parser.extract_from_base_props(base_component_props)
+                if ternary_mappings:
+                    print(f"   ✓ Found {len(ternary_mappings)} ternary expressions in base props")
 
         # Step 5: Resolve base component structure (generic tree walking)
         print("\n🏗  Resolving base component structure...")
@@ -277,6 +285,60 @@ class ComponentConverter:
             # Add clsx base classes to the beginning
             base_classes = clsx_base_classes + [c for c in base_classes if c not in clsx_base_classes]
 
+        # Step 4c: Resolve ternary mappings to class mappings (after base_classes extracted)
+        if ternary_mappings and base_components:
+            print("\n🔄 Resolving ternary expressions to CSS classes...")
+            from conversion.parsers.ternary_parser import TernaryParser
+            ternary_parser = TernaryParser()
+            ternary_class_count = 0
+
+            # Build name mappings for converting prop names
+            name_mappings = {}
+            if component_info.props_interface:
+                for prop in component_info.props_interface:
+                    prop_name = prop.name if hasattr(prop, 'name') else prop['name']
+                    safe_name = getattr(prop, 'safe_name', None) or prop_name
+                    if safe_name != prop_name:
+                        name_mappings[prop_name] = safe_name
+
+            for tern_mapping in ternary_mappings:
+                first_base = base_components[0]
+
+                # Resolve the true value case
+                test_props = {tern_mapping.prop_name: tern_mapping.true_value}
+                resolution = self.base_resolver.resolve(
+                    first_base['library'],
+                    first_base['component'],
+                    test_props
+                )
+
+                if resolution and resolution.get('css_classes'):
+                    # Convert JS condition to Jinja
+                    jinja_condition = ternary_parser._convert_condition_to_jinja(
+                        tern_mapping.condition,
+                        name_mappings
+                    )
+
+                    # Filter out base classes already included
+                    for css_class in resolution['css_classes']:
+                        if css_class not in base_classes and not any(
+                            m.css_class == css_class and m.condition == jinja_condition
+                            for m in class_mappings
+                        ):
+                            # Create a class mapping using the converted Jinja condition
+                            # Use __COMPOUND__ to indicate complex condition (handled by template generator)
+                            from conversion.parsers.clsx_parser import ClassMapping
+                            class_mappings.append(ClassMapping(
+                                prop_name='__COMPOUND__',
+                                value='',  # No simple value for ternary
+                                css_class=css_class,
+                                condition=jinja_condition
+                            ))
+                            ternary_class_count += 1
+
+            if ternary_class_count > 0:
+                print(f"   ✓ Added {ternary_class_count} CSS class mappings from ternary expressions")
+
         # Step 4b: Extract switch statement mappings (after getting base classes to filter)
         print("\n🔀 Extracting switch statement logic...")
         switch_raw_mappings = self._extract_raw_switch_mappings(component_info)
@@ -289,8 +351,19 @@ class ComponentConverter:
         # Step 4c: Extract JSX attribute expressions (like hint={...})
         print("\n📋 Extracting JSX attribute logic...")
         jsx_attr_mappings = self._extract_jsx_attr_mappings(component_info, base_components, base_classes)
-        class_mappings.extend(jsx_attr_mappings)
-        print(f"   ✓ Found {len(jsx_attr_mappings)} JSX attr mappings (total: {len(class_mappings)})")
+
+        # Filter out JSX attr mappings that were handled by ternary parser
+        ternary_prop_names = {tm.prop_name for tm in ternary_mappings} if ternary_mappings else set()
+        filtered_jsx_attr_mappings = [
+            m for m in jsx_attr_mappings
+            if m.prop_name not in ternary_prop_names
+        ]
+
+        if len(jsx_attr_mappings) > len(filtered_jsx_attr_mappings):
+            print(f"   ℹ Filtered out {len(jsx_attr_mappings) - len(filtered_jsx_attr_mappings)} JSX attr mappings (handled by ternary parser)")
+
+        class_mappings.extend(filtered_jsx_attr_mappings)
+        print(f"   ✓ Found {len(filtered_jsx_attr_mappings)} JSX attr mappings (total: {len(class_mappings)})")
 
         # Step 6: Build class logic
         print("\n🎨 Building CSS class logic...")
@@ -587,16 +660,58 @@ class ComponentConverter:
         if not props_str:
             return {}
 
-        # Parse props using a simple attribute parser
+        # Parse props handling nested braces
         props = {}
-        # Pattern for prop="value" or prop={value}
-        prop_pattern = r'(\w+)=(?:"([^"]*)"|{([^}]*)})'
+        i = 0
+        while i < len(props_str):
+            # Skip whitespace
+            while i < len(props_str) and props_str[i].isspace():
+                i += 1
 
-        for match in re.finditer(prop_pattern, props_str):
-            prop_name = match.group(1)
-            # Get either quoted value or braced value
-            prop_value = match.group(2) if match.group(2) is not None else match.group(3)
-            props[prop_name] = prop_value
+            if i >= len(props_str):
+                break
+
+            # Match prop name
+            prop_match = re.match(r'(\w+)=', props_str[i:])
+            if not prop_match:
+                # Skip to next whitespace or equals
+                while i < len(props_str) and not props_str[i].isspace() and props_str[i] != '=':
+                    i += 1
+                continue
+
+            prop_name = prop_match.group(1)
+            i += len(prop_match.group(0))
+
+            # Now parse the value - could be "string" or {expression}
+            if i < len(props_str) and props_str[i] == '"':
+                # String value
+                i += 1  # Skip opening quote
+                value_start = i
+                while i < len(props_str) and props_str[i] != '"':
+                    if props_str[i] == '\\':
+                        i += 2  # Skip escaped char
+                    else:
+                        i += 1
+                prop_value = props_str[value_start:i]
+                i += 1  # Skip closing quote
+                props[prop_name] = prop_value
+
+            elif i < len(props_str) and props_str[i] == '{':
+                # Braced expression - count braces to handle nesting
+                brace_count = 0
+                value_start = i + 1
+                while i < len(props_str):
+                    if props_str[i] == '{':
+                        brace_count += 1
+                    elif props_str[i] == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            break
+                    i += 1
+
+                prop_value = props_str[value_start:i]
+                i += 1  # Skip closing brace
+                props[prop_name] = prop_value
 
         return props
 
@@ -690,14 +805,17 @@ class ComponentConverter:
 
         # Merge RVO props (like className) into the structure
         if rvo_props and 'className' in rvo_props:
-            # Add RVO classes to the outermost element
-            rvo_classes = rvo_props['className'].strip('"').split()
-            if resolution.get('wrapper'):
-                # Add to wrapper
-                resolution['wrapper']['classes'].extend(rvo_classes)
-            else:
-                # Add to primary element classes
-                resolution['css_classes'].extend(rvo_classes)
+            class_name_value = rvo_props['className'].strip('"')
+            # Skip if className contains clsx() - those are handled by clsx parser
+            if 'clsx(' not in class_name_value:
+                # Add RVO classes to the outermost element
+                rvo_classes = class_name_value.split()
+                if resolution.get('wrapper'):
+                    # Add to wrapper
+                    resolution['wrapper']['classes'].extend(rvo_classes)
+                else:
+                    # Add to primary element classes
+                    resolution['css_classes'].extend(rvo_classes)
 
         # Build element structure for template generation
         elements = []

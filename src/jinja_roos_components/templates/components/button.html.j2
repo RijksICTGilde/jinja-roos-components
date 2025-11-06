@@ -36,11 +36,14 @@
 {% if fullWidth %}{% set css_classes = css_classes + ['utrecht-button--rvo-full-width'] %}{% endif %}
 {% if showIcon != 'no' and showIcon == 'before' %}{% set css_classes = css_classes + ['utrecht-button--icon-before'] %}{% endif %}
 {% if showIcon != 'no' and showIcon == 'after' %}{% set css_classes = css_classes + ['utrecht-button--icon-after'] %}{% endif %}
+{% if kind == 'warning' or kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
 {% if kind == 'primary' %}{% set css_classes = css_classes + ['utrecht-button--primary-action'] %}{% endif %}
 {% if kind == 'warning' %}{% set css_classes = css_classes + ['utrecht-button--primary-action'] %}{% endif %}
 {% if kind == 'secondary' %}{% set css_classes = css_classes + ['utrecht-button--secondary-action'] %}{% endif %}
 {% if kind == 'subtle' %}{% set css_classes = css_classes + ['utrecht-button--subtle'] %}{% endif %}
 {% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--subtle'] %}{% endif %}
+{% if kind == 'warning' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
+{% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
 {% if utility_classes %}

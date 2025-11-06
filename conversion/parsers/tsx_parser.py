@@ -73,7 +73,7 @@ class TsxParser:
         component_name = self._extract_component_name(tsx_file_path)
 
         # Extract JSX content (the return statement)
-        jsx_content = self._extract_jsx_return(tsx_content)
+        jsx_content = self._extract_jsx_return(tsx_content, component_name)
 
         # Distinguish between actual defaults and example values
         actual_defaults, example_values = self.component_defaults_parser.parse_component_function(
@@ -163,20 +163,70 @@ class TsxParser:
 
         return component_name
 
-    def _extract_jsx_return(self, content: str) -> str:
+    def _extract_jsx_return(self, content: str, component_name: str) -> str:
         """Extract the JSX return statement from component.
 
         Args:
             content: File content
+            component_name: Name of the component to extract (e.g., 'button')
 
         Returns:
             JSX content as string
         """
+        import re
+
+        # Convert component name to PascalCase for matching
+        pascal_name = ''.join(word.capitalize() for word in component_name.split('-'))
+
         # Find the main component function/const
         # Look for patterns like:
         # 1. export const Button: React.FC = ({ ... }) => { return (...) }
         # 2. export const Button = ({ ... }) => { return (...) }
         # 3. export const Button = ({ ... }) => (...)  <-- immediate return
+
+        # First, find the component declaration
+        component_pattern = rf'export\s+const\s+{pascal_name}[:\s=].*?(?:\)\s*=>\s*\(|\)\s*=>\s*\{{)'
+        component_match = re.search(component_pattern, content, re.DOTALL)
+
+        if not component_match:
+            # Fallback to old behavior if we can't find the specific component
+            return self._extract_jsx_return_fallback(content)
+
+        # Get content starting from the component declaration
+        component_start = component_match.start()
+        component_content = content[component_start:]
+
+        # First try arrow function with immediate JSX return: ) => (
+        arrow_return_match = re.search(r'\)\s*=>\s*\(', component_content)
+        if arrow_return_match and arrow_return_match.start() < 500:  # Should be near the start
+            start = arrow_return_match.end() - 1  # Start at the '('
+            jsx = self._extract_until_matching_paren(component_content[start:])
+            return jsx.strip()
+
+        # Fallback to explicit return statement
+        return_match = re.search(r'return\s*\(', component_content)
+        if not return_match:
+            # Try without parentheses
+            return_match = re.search(r'return\s*<', component_content)
+            if not return_match:
+                return ""
+
+        start = return_match.end()
+        if component_content[start - 1] == '(':
+            start -= 1
+
+        # Extract until matching closing
+        if component_content[start] == '(':
+            jsx = self._extract_until_matching_paren(component_content[start:])
+        else:
+            # Extract until end of JSX (find semicolon or closing brace)
+            jsx = self._extract_jsx_element(component_content[start:])
+
+        return jsx.strip()
+
+    def _extract_jsx_return_fallback(self, content: str) -> str:
+        """Fallback JSX extraction when component name matching fails."""
+        import re
 
         # First try arrow function with immediate JSX return: ) => (
         arrow_return_match = re.search(r'\)\s*=>\s*\(', content)
