@@ -24,6 +24,7 @@
 - rename event_mixin to _generic_attributes and namespace from 'events' to 'attrs'
 - fix attribute passthrough (data-*, aria-*, @events, hx-*) for all 58 components (26 were missing)
 - added documentation in docs/ATTRIBUTE_PASSTHROUGH.md
+- added setup so tests work on my machine: uv run pytest tests
 
 # [0.1] - 2025-11-04
 - First tagged version
