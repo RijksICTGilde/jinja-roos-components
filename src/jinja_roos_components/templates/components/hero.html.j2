@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set size = _component_context.size | default('md') %}
 {% set image = _component_context.image | default({}) %}
 {% set title = _component_context.title | default('') %}
@@ -25,11 +26,12 @@
     {% set hero_classes = hero_classes + [additional_class] %}
 {% endif %}
 
-<section 
+<section
     class="{{ hero_classes | join(' ') }}"
     data-roos-component="hero"
     data-roos-size="{{ size }}"
-    {% if image.src %}data-roos-has-image="true"{% endif %}>
+    {% if image.src %}data-roos-has-image="true"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if image.src %}
         <div class="rvo-hero__image-container">

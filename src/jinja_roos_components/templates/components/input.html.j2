@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set type = _component_context.type | default('text') %}
@@ -39,7 +40,7 @@
             <span class="rvo-textinput-prefix">{{ prefix }}</span>
         {% endif %}
         
-        <input 
+        <input
             {% if id %}id="{{ id }}"{% endif %}
             {% if name %}name="{{ name }}"{% endif %}
             class="{{ css_classes | join(' ') }}"
@@ -56,28 +57,7 @@
                 inputmode="numeric"
                 pattern="[0-9.,]*"
             {% endif %}
-            {% if _component_context.get('@input') %}
-                {% if roos_htmx %}
-                    {% if _component_context['@input'].startswith('hx-') %}
-                        {{ _component_context['@input'] | safe }}
-                    {% else %}
-                        oninput="{{ _component_context['@input'] }}"
-                    {% endif %}
-                {% else %}
-                    oninput="{{ _component_context['@input'] }}"
-                {% endif %}
-            {% endif %}
-            {% if _component_context.get('@change') %}
-                {% if roos_htmx %}
-                    {% if _component_context['@change'].startswith('hx-') %}
-                        {{ _component_context['@change'] | safe }}
-                    {% else %}
-                        onchange="{{ _component_context['@change'] }}"
-                    {% endif %}
-                {% else %}
-                    onchange="{{ _component_context['@change'] }}"
-                {% endif %}
-            {% endif %}
+            {{ attrs.render_extra_attributes(_component_context) }}
         />
         
         {% if suffix %}
@@ -85,7 +65,7 @@
         {% endif %}
     </div>
 {% else %}
-    <input 
+    <input
         {% if id %}id="{{ id }}"{% endif %}
         {% if name %}name="{{ name }}"{% endif %}
         class="{{ css_classes | join(' ') }}"
@@ -103,27 +83,6 @@
             pattern="[0-9.,]*"
         {% endif %}
         data-roos-component="input"
-        {% if _component_context.get('@input') %}
-            {% if roos_htmx %}
-                {% if _component_context['@input'].startswith('hx-') %}
-                    {{ _component_context['@input'] | safe }}
-                {% else %}
-                    oninput="{{ _component_context['@input'] }}"
-                {% endif %}
-            {% else %}
-                oninput="{{ _component_context['@input'] }}"
-            {% endif %}
-        {% endif %}
-        {% if _component_context.get('@change') %}
-            {% if roos_htmx %}
-                {% if _component_context['@change'].startswith('hx-') %}
-                    {{ _component_context['@change'] | safe }}
-                {% else %}
-                    onchange="{{ _component_context['@change'] }}"
-                {% endif %}
-            {% else %}
-                onchange="{{ _component_context['@change'] }}"
-            {% endif %}
-        {% endif %}
+        {{ attrs.render_extra_attributes(_component_context) }}
     />
 {% endif %}

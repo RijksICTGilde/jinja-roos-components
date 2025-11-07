@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set content = _component_context.content | default('') %}
 {% set type = _component_context.type | default('') %}
 {% set icon_placement = _component_context.iconPlacement | default('') %}
@@ -42,17 +43,7 @@
     class="{{ css_classes | join(' ') }}"
     data-roos-component="tag"
     {% if type %}data-roos-type="{{ type }}"{% endif %}
-    {% if _component_context.get('@click') %}
-        {% if roos_htmx %}
-            {% if _component_context['@click'].startswith('hx-') %}
-                {{ _component_context['@click'] | safe }}
-            {% else %}
-                onclick="{{ _component_context['@click'] }}"
-            {% endif %}
-        {% else %}
-            onclick="{{ _component_context['@click'] }}"
-        {% endif %}
-    {% endif %}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if icon_placement == 'before' and icon_markup %}
         {{ icon_markup | safe }}

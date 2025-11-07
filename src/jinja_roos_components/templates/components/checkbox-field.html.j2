@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
@@ -16,9 +17,11 @@
     {% set field_classes = field_classes + [additional_class] %}
 {% endif %}
 
-<div role="group" 
+<div role="group"
      aria-labelledby="{{ id }}-label"
-     class="{{ field_classes | join(' ') }}">
+     class="{{ field_classes | join(' ') }}"
+     data-roos-component="checkbox-field"
+     {{ attrs.render_extra_attributes(_component_context) }}>
     
     {# Label and helper/error text #}
     <div class="rvo-form-field__label">

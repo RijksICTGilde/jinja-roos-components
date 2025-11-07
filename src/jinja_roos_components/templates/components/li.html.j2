@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set additional_class = _component_context.class | default('') %}
 {% set content = _component_context.content | default('') %}
 
@@ -5,6 +6,6 @@
 {% set css_classes = [] %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
-<li{% if css_classes %} class="{{ css_classes | join(' ') }}"{% endif %} data-roos-component="li">
+<li{% if css_classes %} class="{{ css_classes | join(' ') }}"{% endif %} data-roos-component="li" {{ attrs.render_extra_attributes(_component_context) }}>
     {{ content | safe }}
 </li>

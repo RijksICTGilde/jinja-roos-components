@@ -1,6 +1,7 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set content = _component_context.content | default('') %}
 {% set additional_class = _component_context.class | default('') %}
 
-<li{% if additional_class %} class="{{ additional_class }}"{% endif %} data-roos-component="list-item">
+<li{% if additional_class %} class="{{ additional_class }}"{% endif %} data-roos-component="list-item" {{ attrs.render_extra_attributes(_component_context) }}>
     {{ content | safe }}
 </li>

@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set size = _component_context.size | default('md') %}
 {% set direction = _component_context.direction | default('horizontal') %}
 {% set items = _component_context.get('items', []) %}
@@ -27,11 +28,12 @@
 
 {% set nav_classes = ['rvo-menubar', 'rvo-menubar--' + size] %}
 
-<div 
+<div
     class="{{ background_classes | join(' ') }}"
     data-roos-component="menubar"
     data-roos-size="{{ size }}"
-    data-roos-direction="{{ direction }}">
+    data-roos-direction="{{ direction }}"
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if direction == 'horizontal' and max_width != 'none' %}
         <div class="rvo-max-width-layout{% if max_width %} rvo-max-width-layout--{{ max_width }}{% endif %}">

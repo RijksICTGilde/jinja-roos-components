@@ -1,12 +1,14 @@
 # Event Handling in ROOS Components
 
+> **Note:** This document focuses on event handling specifics. For comprehensive information about all attribute passthrough features (data-*, aria-*, hx-*, etc.), see [ATTRIBUTE_PASSTHROUGH.md](ATTRIBUTE_PASSTHROUGH.md).
+
 The ROOS component library supports comprehensive JavaScript event handling through the `@` prefix notation, similar to modern frameworks like Vue.js.
 
 ## Features
 
 ### Supported Event Types
 
-The event mixin (`components/_event_mixin.j2`) supports all standard HTML events:
+The generic attributes mixin (`components/_generic_attributes.j2`) supports all standard HTML events:
 
 #### Mouse Events
 - `@click` - Mouse click
@@ -121,37 +123,35 @@ When HTMX is enabled (`roos_htmx=true`), the following attributes are also suppo
 ### Component Extension
 The ComponentExtension (`extension.py`) recognizes attributes with the `@` prefix and passes them to the component context.
 
-### Event Mixin
-The `_event_mixin.j2` template provides macros that:
+### Generic Attributes Mixin
+The `_generic_attributes.j2` template provides macros that:
 1. `render_events()` - Renders all JavaScript event handlers
 2. `render_data_attributes()` - Renders data-* attributes
 3. `render_aria_attributes()` - Renders aria-* attributes
-4. `render_extra_attributes()` - Combines all above
+4. `render_htmx_attributes()` - Renders hx-* attributes
+5. `render_html_attributes()` - Renders generic HTML attributes (id, title, style, role, tabindex)
+6. `render_extra_attributes()` - Combines all above
 
 ### Using in Components
-Components import and use the event mixin:
+Components import and use the generic attributes mixin:
 
 ```jinja2
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 
-<button 
+<button
     class="{{ button_classes }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ label }}
 </button>
 ```
 
 ## Components with Event Support
 
-The following components have full event support:
-- `button.html.j2`
-- `text-input-field.html.j2`
-- `select-field.html.j2`
-- `textarea-field.html.j2`
+**52 components** currently have full attribute passthrough support (including event handling). See [ATTRIBUTE_PASSTHROUGH.md](ATTRIBUTE_PASSTHROUGH.md#components-with-passthrough-support) for the complete list.
 
 Other components can easily be updated by:
-1. Importing the event mixin
-2. Adding `{{ events.render_extra_attributes(_component_context) }}` to the main element
+1. Importing the generic attributes mixin
+2. Adding `{{ attrs.render_extra_attributes(_component_context) }}` to the main element
 
 ## Security Note
 

@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set items = _component_context.get('items', []) %}
 {% set additional_class = _component_context.get('class', '') %}
 {% set content = _component_context.get('content', '') %}
@@ -8,9 +9,10 @@
     {% set dl_classes = dl_classes + [additional_class] %}
 {% endif %}
 
-<dl 
+<dl
     class="{{ dl_classes | join(' ') }}"
-    data-roos-component="data-list">
+    data-roos-component="data-list"
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if content %}
         {{ content | safe }}
