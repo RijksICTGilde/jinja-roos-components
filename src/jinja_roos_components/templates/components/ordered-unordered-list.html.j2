@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: ordered-unordered-list
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
@@ -34,7 +34,7 @@
     class="{{ css_classes | join(' ') }}"
     data-roos-component="ordered-unordered-list"
     type="{{ type_attr }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
         {% if children %}
         {{ children | safe }}
     {% elif list_items %}

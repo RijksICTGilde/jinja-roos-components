@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set columns = _component_context.columns | default('1') %}
 {% set gap = _component_context.gap | default('md') %}
 {% set additional_class = _component_context.class | default('') %}
@@ -47,6 +47,6 @@
     data-roos-component="layout-grid"
     data-roos-columns="{{ columns }}"
     data-roos-gap="{{ gap }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ _component_context.content | safe }}
 </div>

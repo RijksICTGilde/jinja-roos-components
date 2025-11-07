@@ -19,6 +19,9 @@
 - update conversion script and autocomplete generation script to use new paths
 - add `regenerate_components` script to run conversion on all converted components at once
 - add tests for all components, some commented out because currently failing
+- add docs on component composition
+- rename event_mixin to _generic_attributes
+- fix select _generic_attributes
 
 # [0.1] - 2025-11-04
 - First tagged version

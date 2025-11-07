@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% import 'components/_attribute_mixin.j2' as attributes %}
 {% set actions = _component_context.actions | default([]) %}
 {% set alignment = _component_context.alignment | default('start') %}
@@ -42,7 +42,7 @@
     data-roos-alignment="{{ alignment }}"
     data-roos-direction="{{ direction }}"
     data-roos-gap="{{ gap }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {% if content %}
         {{ content | safe }}
     {% elif actions %}

@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: horizontal-rule
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 
@@ -6,4 +6,4 @@
 <hr
     class="{{ css_classes | join(' ') }}"
     data-roos-component="horizontal-rule"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>

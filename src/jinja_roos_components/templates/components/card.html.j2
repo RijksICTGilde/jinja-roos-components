@@ -1,4 +1,4 @@
-{% from "components/_event_mixin.j2" import render_extra_attributes %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 
 {% set title = _component_context.title | default('') %}
 {% set content = _component_context.content | default('') %}
@@ -49,7 +49,7 @@
 <div class="{{ css_classes | join(' ') }}" data-roos-component="card"
      {% if element_id %}id="{{ element_id }}"{% endif %}
      {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
-     {{ render_extra_attributes(_component_context) }}>
+     {{ attrs.render_extra_attributes(_component_context) }}>
     
     {# Background image container #}
     {% if has_background_image %}

@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: form-field-select
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {# This is a composition component that wraps nested components #}
@@ -26,7 +26,7 @@
     expandableHelperTextTitle="{{ expandableHelperTextTitle }}"
     warningText="{{ warningText }}"
     errorText="{{ errorText }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     <c-select
         fieldId="{{ fieldId }}"
         label="{{ label }}"

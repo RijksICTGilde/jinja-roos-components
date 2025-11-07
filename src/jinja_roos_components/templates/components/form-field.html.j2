@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: form-field
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {% set fieldId = _component_context.fieldId | default('fieldId') %}
@@ -17,6 +17,6 @@
 <div
     class="{{ css_classes | join(' ') }}"
     data-roos-component="form-field"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ fieldLabelId }}{{ labelSize }}{{ labelType as any }}{{ fieldId }}{{ label }}{{ helperTextMarkup }}{% if errorText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{% if warningText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{{ (className && <div className={className}>{parseContentMarkup(children)}</div>) if (className && <div className={className}>{parseContentMarkup(children)}</div>) else parseContentMarkup(children) | safe }}
 </div>

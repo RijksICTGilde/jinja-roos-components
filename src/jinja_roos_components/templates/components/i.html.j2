@@ -1,5 +1,5 @@
 {% import 'components/_attribute_mixin.j2' as attributes %}
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Semantic wrapper for italic text - renders as span with italic styling #}
 {% set content = _component_context.content | default('') %}
 {% set css_classes = ['rvo-text--italic'] %}
@@ -8,4 +8,4 @@
 {% if utility_classes %}
     {% set css_classes = css_classes + utility_classes.split() %}
 {% endif %}
-<span class="{{ css_classes | join(' ') }}" data-roos-component="i" {{ events.render_extra_attributes(_component_context) }}>{{ content | safe }}</span>
+<span class="{{ css_classes | join(' ') }}" data-roos-component="i" {{ attrs.render_extra_attributes(_component_context) }}>{{ content | safe }}</span>

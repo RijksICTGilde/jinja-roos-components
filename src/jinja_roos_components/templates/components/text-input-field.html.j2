@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
@@ -98,6 +98,6 @@
            {% if name %}name="{{ name }}"{% endif %}
            {% if disabled %}disabled{% endif %}
            {% if readonly %}readonly{% endif %}
-           {{ events.render_extra_attributes(_component_context) }} />
+           {{ attrs.render_extra_attributes(_component_context) }} />
     
 </div>

@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: label
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {% set id = _component_context.get('id') %}
@@ -17,6 +17,6 @@
     data-roos-component="label"
     id="{{ id }}"
     type="{{ type }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ parseContentMarkup(children if parseContentMarkup(children else content) | safe }}
 </label>

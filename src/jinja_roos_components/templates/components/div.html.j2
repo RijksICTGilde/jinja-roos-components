@@ -1,5 +1,5 @@
 {% import 'components/_attribute_mixin.j2' as attributes %}
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Generic div wrapper for utility classes - no default styling #}
 {% set content = _component_context.content | default('') %}
 {% set css_classes = [] %}
@@ -8,4 +8,4 @@
 {% if utility_classes %}
     {% set css_classes = utility_classes.split() %}
 {% endif %}
-<div{% if css_classes %} class="{{ css_classes | join(' ') }}"{% endif %} data-roos-component="div" {{ events.render_extra_attributes(_component_context) }}>{{ content | safe }}</div>
+<div{% if css_classes %} class="{{ css_classes | join(' ') }}"{% endif %} data-roos-component="div" {{ attrs.render_extra_attributes(_component_context) }}>{{ content | safe }}</div>
