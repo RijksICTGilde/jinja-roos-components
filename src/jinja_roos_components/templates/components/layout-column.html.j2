@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set size = _component_context.size | default('') %}
 {% set additional_class = _component_context.class | default('') %}
 
@@ -66,6 +66,6 @@
     class="{{ css_classes | join(' ') }}"
     data-roos-component="layout-column"
     data-roos-size="{{ size }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ _component_context.content | safe }}
 </div>

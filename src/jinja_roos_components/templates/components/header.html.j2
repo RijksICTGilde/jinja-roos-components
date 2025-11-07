@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set link = _component_context.link | default('#') %}
 {% set text = _component_context.text | default('Rijksorganisatie voor Ontwikkeling, Digitalisering en Innovatie') %}
 {% set subtitle = _component_context.subtitle | default('Ministerie van Binnenlandse Zaken en Koninkrijksrelaties') %}
@@ -9,7 +10,7 @@
     {% set css_classes = css_classes + [additional_class] %}
 {% endif %}
 
-<header class="{{ css_classes | join(' ') }}">
+<header class="{{ css_classes | join(' ') }}" {{ attrs.render_extra_attributes(_component_context) }}>
     <div class="rvo-header__logo-wrapper">
         <a href="{{ link }}" class="rvo-header__logo-link rvo-link rvo-link--no-underline">
             <div class="rvo-logo rvo-header__logo-img">

@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set gap = _component_context.gap | default('md') %}
 {% set size = _component_context.size | default('lg') %}
 {% set row = _component_context.row | default(false) %}
@@ -50,13 +51,14 @@
     {% set css_classes = css_classes + [additional_class] %}
 {% endif %}
 
-<div 
+<div
     class="{{ css_classes | join(' ') }}"
     data-roos-component="layout-flow"
     data-roos-gap="{{ gap }}"
     data-roos-size="{{ size }}"
     data-roos-row="{{ row }}"
-    {% if not content %}style="min-height: 100px;"{% endif %}>
+    {% if not content %}style="min-height: 100px;"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if content %}
         {{ content | safe }}

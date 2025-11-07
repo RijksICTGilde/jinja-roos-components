@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: progress-tracker-step
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {% set state = _component_context.state | default('incomplete') %}
@@ -26,6 +26,6 @@
 <div
     class="{{ css_classes | join(' ') }}"
     data-roos-component="progress-tracker-step"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {% if state == 'incomplete' or state == 'doing' or state == 'completed' %}    <c-link href="{{ link }}" class="rvo-progress-tracker__step-link" @click="{{ onClick }}">{{ label }}</c-link>{% else %}    {{ label }}{% endif %}
 </div>

@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {# Auto-generated from React component: form-fieldset
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {% set legend = _component_context.legend | default('') %}
@@ -11,7 +11,7 @@
     <fieldset
         class="{{ css_classes | join(' ') }}"
         {% if disabled %}disabled{% endif %}
-        {{ events.render_extra_attributes(_component_context) }}>
+        {{ attrs.render_extra_attributes(_component_context) }}>
         {% if legend %}<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">{{ legend }}</legend>{% endif %}{{ _component_context.content if _component_context.content else '' }}{# TODO_CONVERSION: Handle fields.map rendering #}
     </fieldset>
 </div>

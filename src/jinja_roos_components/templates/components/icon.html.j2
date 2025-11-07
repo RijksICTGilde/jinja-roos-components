@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set icon = _component_context.icon | default('') %}
 {% set size = _component_context.size | default('md') %}
 {% set color = _component_context.color | default('') %}
@@ -44,7 +45,7 @@
     {% set computed_aria_label = (icon_name | title | replace('-', ' ')) %}
 {% endif %}
 
-<span 
+<span
     class="{{ css_classes | join(' ') }}"
     role="img"
     aria-label="{{ computed_aria_label }}"
@@ -52,5 +53,6 @@
     data-roos-icon="{{ icon_name }}"
     {% if size %}data-roos-size="{{ size }}"{% endif %}
     {% if color %}data-roos-color="{{ color }}"{% endif %}
-    {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}>
+    {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
 </span>

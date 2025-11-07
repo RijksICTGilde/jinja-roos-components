@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set primary_menu = _component_context.primaryMenu | default([]) %}
 {% set secondary_menu = _component_context.secondaryMenu | default([]) %}
 {% set max_width = _component_context.maxWidth | default('') %}
@@ -20,10 +21,11 @@
     {% set container_classes = container_classes + ['rvo-footer__container--lg'] %}
 {% endif %}
 
-<footer 
+<footer
     class="{{ footer_classes | join(' ') }}"
     data-roos-component="footer"
-    {% if max_width %}data-roos-max-width="{{ max_width }}"{% endif %}>
+    {% if max_width %}data-roos-max-width="{{ max_width }}"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     <div class="{{ container_classes | join(' ') }}">
         

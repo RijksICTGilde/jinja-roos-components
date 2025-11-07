@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
@@ -95,6 +95,6 @@
               {% if readonly %}readonly{% endif %}
               {% if has_error or error_text %}aria-invalid="true"{% endif %}
               {% if helper_text %}aria-describedby="{{ id }}-helper"{% endif %}
-              {{ events.render_extra_attributes(_component_context) }}>{{ value }}</textarea>
+              {{ attrs.render_extra_attributes(_component_context) }}>{{ value }}</textarea>
     
 </div>

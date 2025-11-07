@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
@@ -30,11 +31,12 @@
     {% set input_classes = input_classes + ['utrecht-textbox--invalid'] %}
 {% endif %}
 
-<div 
+<div
     class="{{ field_classes | join(' ') }}"
     data-roos-component="date-input-field"
     data-roos-size="{{ size }}"
-    {% if has_error or error_message %}data-roos-has-error="true"{% endif %}>
+    {% if has_error or error_message %}data-roos-has-error="true"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if label %}
         <div class="rvo-form-field__label">

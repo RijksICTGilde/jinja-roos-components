@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set tabs = _component_context.tabs | default([]) %}
 {% set active_tab = _component_context.activeTab | default(0) %}
 {% set additional_class = _component_context.class | default('') %}
@@ -9,10 +10,11 @@
     {% set tabs_classes = tabs_classes + [additional_class] %}
 {% endif %}
 
-<div 
+<div
     class="{{ tabs_classes | join(' ') }}"
     data-roos-component="tabs"
-    data-roos-active-tab="{{ active_tab }}">
+    data-roos-active-tab="{{ active_tab }}"
+    {{ attrs.render_extra_attributes(_component_context) }}>
     
     {% if tabs | length > 0 %}
         <nav class="rvo-tabs__nav" role="tablist">

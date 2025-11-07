@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
@@ -76,7 +76,7 @@
             {% if has_error or error_message %}aria-invalid="true"{% endif %}
             {% if error_message %}aria-describedby="{{ id }}-error"{% endif %}
             {% if helper_text %}aria-describedby="{{ id }}-help"{% endif %}
-            {{ events.render_extra_attributes(_component_context) }}>
+            {{ attrs.render_extra_attributes(_component_context) }}>
             
             {% if placeholder %}
                 <option value="">{{ placeholder }}</option>

@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set items_value = _component_context.get('items', []) %}
 {% set additional_class = _component_context.class | default('') %}
 {% set content = _component_context.content | default('') %}
@@ -6,7 +7,7 @@
 {% set css_classes = ['rvo-item-list'] %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
-<ul class="{{ css_classes | join(' ') }}" data-roos-component="list">
+<ul class="{{ css_classes | join(' ') }}" data-roos-component="list" {{ attrs.render_extra_attributes(_component_context) }}>
     {% if content %}
         {# Render nested content (e.g., c-list-item components) #}
         {{ content | safe }}

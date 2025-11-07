@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set gap = _component_context.gap | default('md') %}
 {% set columns = _component_context.columns | default('') %}
 {% set division = _component_context.division | default('') %}
@@ -37,12 +38,13 @@
 {% endif %}
 
 <div class="{{ container_classes | join(' ') }}">
-    <div 
+    <div
         class="{{ grid_classes | join(' ') }}"
         data-roos-component="grid"
         data-roos-gap="{{ gap }}"
         {% if columns %}data-roos-columns="{{ columns }}"{% endif %}
-        {% if division %}style="--division: {{ division }};"{% endif %}>
+        {% if division %}style="--division: {{ division }};"{% endif %}
+        {{ attrs.render_extra_attributes(_component_context) }}>
         
         {% if content %}
             {{ content | safe }}

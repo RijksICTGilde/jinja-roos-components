@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set disabled = _component_context.disabled | default(false) %}
@@ -23,7 +24,7 @@
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
 
 <div class="rvo-textarea-wrapper" data-roos-component="textarea">
-    <textarea 
+    <textarea
         {% if id %}id="{{ id }}"{% endif %}
         {% if name %}name="{{ name }}"{% endif %}
         class="{{ css_classes | join(' ') }}"
@@ -35,28 +36,7 @@
         {% if readonly %}readonly{% endif %}
         {% if invalid %}aria-invalid="true"{% endif %}
         {% if max_length %}maxlength="{{ max_length }}"{% endif %}
-        {% if _component_context.get('@input') %}
-            {% if roos_htmx %}
-                {% if _component_context['@input'].startswith('hx-') %}
-                    {{ _component_context['@input'] | safe }}
-                {% else %}
-                    oninput="{{ _component_context['@input'] }}"
-                {% endif %}
-            {% else %}
-                oninput="{{ _component_context['@input'] }}"
-            {% endif %}
-        {% endif %}
-        {% if _component_context.get('@change') %}
-            {% if roos_htmx %}
-                {% if _component_context['@change'].startswith('hx-') %}
-                    {{ _component_context['@change'] | safe }}
-                {% else %}
-                    onchange="{{ _component_context['@change'] }}"
-                {% endif %}
-            {% else %}
-                onchange="{{ _component_context['@change'] }}"
-            {% endif %}
-        {% endif %}
+        {{ attrs.render_extra_attributes(_component_context) }}
     >{{ value }}</textarea>
     
     {% if max_length_indicator and max_length %}

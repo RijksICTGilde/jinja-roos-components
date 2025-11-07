@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: button
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
@@ -58,6 +58,6 @@
     data-roos-component="button"
     {% if disabled %}disabled{% endif %}
     type="{{ type_attr }}"
-    {{ events.render_extra_attributes(_component_context) }}>
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {% if showIcon == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{{ children if children else label | safe }}{% if showIcon == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
 </button>

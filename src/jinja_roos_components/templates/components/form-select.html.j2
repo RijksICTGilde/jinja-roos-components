@@ -1,4 +1,4 @@
-{% import 'components/_event_mixin.j2' as events %}
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: form-select
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
@@ -36,7 +36,7 @@
         {% if disabled %}disabled{% endif %}
         {% if required %}required{% endif %}
         {% if name %}name="{{ name }}"{% endif %}
-        {{ events.render_extra_attributes(_component_context) }}>
+        {{ attrs.render_extra_attributes(_component_context) }}>
         {% if options and options is iterable and options is not string %}
         {% for option in options %}
             <option value="{{ option.value }}"{% if selectedValue and option.value == selectedValue %} selected{% endif %}>{{ option.label }}</option>

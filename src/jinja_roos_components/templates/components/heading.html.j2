@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set type = _component_context.type | default('h1') %}
 {% set text_content = _component_context.textContent | default('') %}
 {% set content = _component_context.content | default('') %}
@@ -18,10 +19,11 @@
 {# Determine content to display #}
 {% set display_content = content or text_content %}
 
-<{{ type }} 
+<{{ type }}
     class="{{ heading_classes | join(' ') }}"
     data-roos-component="heading"
     data-roos-type="{{ type }}"
-    data-roos-no-margins="{{ no_margins }}">
+    data-roos-no-margins="{{ no_margins }}"
+    {{ attrs.render_extra_attributes(_component_context) }}>
     {{ display_content | safe }}
 </{{ type }}>

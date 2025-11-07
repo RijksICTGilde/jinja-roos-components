@@ -1,3 +1,4 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
 {% set id = _component_context.id | default('') %}
 {% set name = _component_context.name | default('') %}
 {% set disabled = _component_context.disabled | default(false) %}
@@ -29,17 +30,7 @@
         {% if invalid %}aria-invalid="true"{% endif %}
         {% if default_value %}data-default-value="{{ default_value }}"{% endif %}
         {% if value %}data-value="{{ value }}"{% endif %}
-        {% if _component_context.get('@change') %}
-            {% if roos_htmx %}
-                {% if _component_context['@change'].startswith('hx-') %}
-                    {{ _component_context['@change'] | safe }}
-                {% else %}
-                    onchange="{{ _component_context['@change'] }}"
-                {% endif %}
-            {% else %}
-                onchange="{{ _component_context['@change'] }}"
-            {% endif %}
-        {% endif %}>
+        {{ attrs.render_extra_attributes(_component_context) }}>
         
         {% if placeholder %}
             <option value="" disabled {% if not value and not default_value %}selected{% endif %}>
