@@ -21,16 +21,16 @@ class IconValidator:
         self._definitions_path: Optional[Path] = None
 
     def _load_icons(self) -> Set[str]:
-        """Load icons from the definitions.json file."""
+        """Load icons from the overall_definitions.json file."""
         if self._icons is not None:
             return self._icons
 
         icons = set()
 
         # Find the definitions file
-        definitions_file = self._find_definitions_file()
-        if not definitions_file:
-            logger.warning("Could not find definitions.json file, skipping icon validation")
+        definitions_file = Path(__file__).parent / 'overall_definitions.json'
+        if not definitions_file.exists():
+            logger.warning("Could not find overall_definitions.json file, skipping icon validation")
             return icons
 
         try:
@@ -58,25 +58,6 @@ class IconValidator:
 
         self._icons = icons
         return icons
-
-    def _find_definitions_file(self) -> Optional[Path]:
-        """Find the definitions.json file."""
-        if self._definitions_path:
-            return self._definitions_path
-
-        # Try to find it relative to this module
-        current_dir = Path(__file__).parent
-        possible_paths = [
-            current_dir / 'definitions.json',
-            current_dir / '..' / 'definitions.json',
-        ]
-
-        for path in possible_paths:
-            if path.exists():
-                self._definitions_path = path
-                return path
-
-        return None
         
     def is_valid_icon(self, icon: str) -> bool:
         """Check if an icon is valid in the RVO icon system."""

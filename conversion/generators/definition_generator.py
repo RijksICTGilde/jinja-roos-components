@@ -51,10 +51,12 @@ class DefinitionGenerator:
         # Use actual_defaults if provided, otherwise fall back to default_args
         defaults_to_use = actual_defaults if actual_defaults is not None else default_args
 
+        # Extract relative path from 'rvo' onwards
+        relative_source_file = self._extract_relative_path(source_file)
+
         definition = {
             "name": self.component_name,
-            "source_file": source_file,
-            "converted_at": datetime.utcnow().isoformat() + "Z",
+            "source_file": relative_source_file,
             "conversion_hash": compute_hash(source_content),
             "base_components": base_components,
             "nested_components": nested_components,
@@ -67,6 +69,24 @@ class DefinitionGenerator:
             definition["example_values"] = example_values
 
         return definition
+
+    def _extract_relative_path(self, source_file: str) -> str:
+        """Extract relative path from 'rvo' folder onwards.
+
+        Args:
+            source_file: Full path to source file
+
+        Returns:
+            Relative path starting from 'rvo' folder
+        """
+        # Find 'rvo' in the path and extract from there onwards
+        parts = source_file.split('/')
+        try:
+            rvo_index = parts.index('rvo')
+            return '/'.join(parts[rvo_index:])
+        except ValueError:
+            # If 'rvo' not found, return the full path as fallback
+            return source_file
 
     def _convert_attributes(
         self,

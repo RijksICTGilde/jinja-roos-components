@@ -1,7 +1,6 @@
 {
   "name": "max-width-layout",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/max-width-layout/src/template.tsx",
-  "converted_at": "2025-10-29T11:04:52.466411Z",
+  "source_file": "rvo/components/max-width-layout/src/template.tsx",
   "conversion_hash": "96e92c33806b15a9b665ae4b49a9a4440af9c532e630a3cd2ee6d829269d88f7",
   "base_components": [],
   "nested_components": [],
@@ -70,7 +69,7 @@
   ],
   "manual_review_items": [
     {
-      "issue": "Dynamic className expression found - may need clsx parsing",
+      "issue": "Dynamic className expression found - needs clsx parsing",
       "severity": "low",
       "source_line": 0
     }

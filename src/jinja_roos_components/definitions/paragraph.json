@@ -1,7 +1,6 @@
 {
   "name": "paragraph",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/paragraph/src/template.tsx",
-  "converted_at": "2025-10-28T13:47:59.933171Z",
+  "source_file": "rvo/components/paragraph/src/template.tsx",
   "conversion_hash": "7202ca43d6e37f783df94cd7d264f2def1886d0fa5f2777f63fe09de3133a479",
   "base_components": [],
   "nested_components": [],
@@ -64,7 +63,7 @@
   ],
   "manual_review_items": [
     {
-      "issue": "Dynamic className expression found - may need clsx parsing",
+      "issue": "Dynamic className expression found - needs clsx parsing",
       "severity": "low",
       "source_line": 0
     }

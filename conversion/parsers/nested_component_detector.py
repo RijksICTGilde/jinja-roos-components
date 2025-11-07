@@ -68,11 +68,14 @@ class NestedComponentDetector:
                 # Convert component name to kebab-case for tag naming
                 tag_name = self._to_kebab_case(import_info['component'])
 
+                # Extract relative path from 'rvo' onwards
+                resolved_path = self._extract_relative_path(component_file) if component_file else None
+
                 nested_components.append({
                     'name': tag_name,
                     'component_class': import_info['component'],
                     'source_path': import_info['source'],
-                    'resolved_path': component_file,  # Full absolute path to component file
+                    'resolved_path': resolved_path,
                     'interface': interface_name,
                     'tag_name': f'c-{tag_name}',
                     'props': props_list
@@ -178,3 +181,21 @@ class NestedComponentDetector:
         # Insert hyphens before uppercase letters (except first)
         kebab = re.sub(r'(?<!^)(?=[A-Z])', '-', pascal_case)
         return kebab.lower()
+
+    def _extract_relative_path(self, source_file: str) -> str:
+        """Extract relative path from 'rvo' folder onwards.
+
+        Args:
+            source_file: Full path to source file
+
+        Returns:
+            Relative path starting from 'rvo' folder
+        """
+        # Find 'rvo' in the path and extract from there onwards
+        parts = source_file.split('/')
+        try:
+            rvo_index = parts.index('rvo')
+            return '/'.join(parts[rvo_index:])
+        except ValueError:
+            # If 'rvo' not found, return the full path as fallback
+            return source_file

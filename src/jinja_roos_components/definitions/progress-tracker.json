@@ -1,7 +1,6 @@
 {
   "name": "progress-tracker",
-  "source_file": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/template.tsx",
-  "converted_at": "2025-10-27T17:12:43.218399Z",
+  "source_file": "rvo/components/progress-tracker/src/template.tsx",
   "conversion_hash": "b4bd82feb52b256201b0649d5c27d3b88d8c1240c293d3b44994b4f9fb3e3b33",
   "base_components": [],
   "nested_components": [
@@ -9,7 +8,7 @@
       "name": "progress-tracker-step",
       "component_class": "ProgressTrackerStep",
       "source_path": "./progress-tracker-step/template",
-      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
+      "resolved_path": "rvo/components/progress-tracker/src/progress-tracker-step/template.tsx",
       "interface": "IProgressTrackerStepProps",
       "tag_name": "c-progress-tracker-step",
       "props": [

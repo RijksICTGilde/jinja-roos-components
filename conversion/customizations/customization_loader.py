@@ -110,12 +110,12 @@ class CustomizationLoader:
         return [item[extract_field] for item in data if extract_field in item]
 
     def _extract_colors_from_definitions(self) -> List[Dict[str, str]]:
-        """Fallback: Extract colors from definitions.json if token extraction fails.
+        """Fallback: Extract colors from overall_definitions.json if token extraction fails.
 
         Returns:
             List of color dicts with template_name field
         """
-        definitions_path = Path(__file__).parent.parent.parent / "src" / "jinja_roos_components" / "definitions.json"
+        definitions_path = Path(__file__).parent.parent.parent / "src" / "jinja_roos_components" / "overall_definitions.json"
         if not definitions_path.exists():
             return []
 
