@@ -41,10 +41,23 @@ class ComponentHTMLParser(html.parser.HTMLParser):
         """Handle opening tags."""
         if not tag.startswith('c-'):
             return
-            
+
         component_name = tag[2:]  # Remove 'c-' prefix
         if not self.registry.has_component(component_name):
-            return
+            # Get line number for better error messages
+            line_num = self.source[:self.current_pos].count('\n') + 1
+            col_num = self.current_pos - self.source.rfind('\n', 0, self.current_pos)
+
+            available = ', '.join(sorted(self.registry.get_all_component_names())[:10])
+            if len(self.registry.get_all_component_names()) > 10:
+                available += '...'
+
+            raise ValueError(
+                f"Unknown component '<{tag}>' at line {line_num}, column {col_num}. "
+                f"This component does not exist in the registry. "
+                f"Available components: {available}. "
+                f"This error prevents infinite loops when templates reference non-existent components."
+            )
             
         # Find the actual position in source
         tag_start = self.source.find(f'<{tag}', self.current_pos)
@@ -179,10 +192,39 @@ class ComponentHTMLParser(html.parser.HTMLParser):
             name_start = pos
             if attrs_str[pos] in (':@'):
                 pos += 1
-            
-            # Read the attribute name
-            while pos < len(attrs_str) and (attrs_str[pos].isalnum() or attrs_str[pos] in '-_'):
-                pos += 1
+
+            # Read the attribute name - validate each character
+            while pos < len(attrs_str):
+                char = attrs_str[pos]
+
+                if char.isalnum() or char in '-_':
+                    # Valid attribute name character
+                    pos += 1
+                elif char in ' \t\n\r' or char == '=':
+                    # Valid terminator for attribute name (whitespace or equals)
+                    break
+                else:
+                    # Invalid character encountered while parsing attribute name
+                    if pos == name_start:
+                        # We haven't read any valid attribute name yet
+                        context_start = max(0, pos - 20)
+                        context_end = min(len(attrs_str), pos + 20)
+                        context = attrs_str[context_start:context_end]
+                        raise ValueError(
+                            f"Invalid attribute syntax: unexpected character '{char}' at position {pos}. "
+                            f"Expected attribute name to start with letter, number, or colon/at-sign. "
+                            f"Context: ...{context}..."
+                        )
+                    else:
+                        # We were reading an attribute name and hit an invalid character
+                        context_start = max(0, pos - 20)
+                        context_end = min(len(attrs_str), pos + 20)
+                        context = attrs_str[context_start:context_end]
+                        raise ValueError(
+                            f"Invalid attribute syntax: unexpected character '{char}' at position {pos} "
+                            f"while parsing attribute name. "
+                            f"Context: ...{context}..."
+                        )
 
             attr_name = attrs_str[name_start:pos]
 

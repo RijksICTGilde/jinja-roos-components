@@ -19,6 +19,7 @@
 - update conversion script and autocomplete generation script to use new paths
 - add `regenerate_components` script to run conversion on all converted components at once
 - add tests for all components, some commented out because currently failing
+- raise an error on handling unknown components so we avoid entering a never ending lookup loop
 - add docs on component composition
 - rename event_mixin to _generic_attributes and namespace from 'events' to 'attrs'
 - fix attribute passthrough (data-*, aria-*, @events, hx-*) for all 58 components (26 were missing)

@@ -15,7 +15,7 @@
 {% set labelType = _component_context.get('labelType') %}
 {% set warningText = _component_context.get('warningText') %}
 
-<c-field
+<c-form-field
     fieldId="{{ fieldId }}"
     label="{{ label }}"
     labelSize="{{ labelSize }}"
@@ -39,4 +39,4 @@
         warningText="{{ warningText }}"
         errorText="{{ errorText }}"
     ></c-select>
-</c-field>
+</c-form-field>
