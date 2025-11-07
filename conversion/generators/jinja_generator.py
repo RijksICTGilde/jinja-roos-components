@@ -163,7 +163,7 @@ class JinjaGenerator:
         Returns:
             Header comment
         """
-        return f"""{{% import 'components/_event_mixin.j2' as events %}}
+        return f"""{{% import 'components/_generic_attributes.j2' as attrs %}}
 {{% import 'components/_attribute_mixin.j2' as attributes %}}
 {'{#'} Auto-generated from React component: {self.component_name}
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve {'#}'}"""
@@ -358,7 +358,7 @@ class JinjaGenerator:
                     inner_attrs.append(attr_str)
 
         # Add event handlers via mixin
-        inner_attrs.append('{{ events.render_extra_attributes(_component_context) }}')
+        inner_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
 
         # Build inner tag
         opening_tag = f"<{tag}"
@@ -456,7 +456,7 @@ class JinjaGenerator:
                     inner_attrs.append(attr_str)
 
         # Add event handlers via mixin
-        inner_attrs.append('{{ events.render_extra_attributes(_component_context) }}')
+        inner_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
 
         # Build dynamic opening tag
         opening_tag = "<{{ tag_name }}"
@@ -1178,7 +1178,7 @@ class JinjaGenerator:
             lines = [f"<{outer_tag}"]
             for attr in outer_attrs:
                 lines.append(f"    {attr}")
-            lines.append("    {{ events.render_extra_attributes(_component_context) }}>")
+            lines.append("    {{ attrs.render_extra_attributes(_component_context) }}>")
 
             lines.append(f"    <{inner_tag}")
             for attr in inner_attrs:
