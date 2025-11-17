@@ -201,32 +201,166 @@ Attributes go on the semantic form control (input/select/textarea), not the wrap
 
 ### Field Components (Label + Input)
 
-Field wrapper components (like `c-text-input-field`, `c-select-field`) pass attributes to the **field wrapper** (the outer container with `role="group"`), not the inner form elements.
+Field components behave differently depending on whether they wrap a single input or multiple inputs:
 
-**Example:**
+#### Single-Input Field Components
+
+For components wrapping a single form control (`c-text-input-field`, `c-select-field`, `c-textarea-field`, `c-date-input-field`, `c-file-input-field`), passthrough attributes go to the **form control element** (input, select, or textarea), not the wrapper.
+
+**Why:** The form control is the interactive element. Testing selectors, event handlers, validation attributes, and ARIA attributes must be on the actual input for proper functionality with testing frameworks, analytics tools, validation libraries, and screen readers.
+
+**Example - Text Input Field:**
+```html
+<c-text-input-field
+    id="email"
+    label="Email Address"
+    @input="validateEmail()"
+    @blur="checkAvailability()"
+    data-testid="email-input"
+    data-validate="email">
+</c-text-input-field>
+```
+
+**Renders:**
+```html
+<div role="group" aria-labelledby="email-label" class="utrecht-form-field">
+    <label id="email-label">Email Address</label>
+    <input
+        id="email"
+        type="text"
+        class="utrecht-textbox"
+        oninput="validateEmail()"
+        onblur="checkAvailability()"
+        data-testid="email-input"
+        data-validate="email" />
+</div>
+```
+
+**Example - Select Field:**
+```html
+<c-select-field
+    id="country"
+    label="Country"
+    @change="updateRegions()"
+    data-region-selector="true"
+    hx-post="/api/regions"
+    hx-target="#region-field">
+    <option value="nl">Netherlands</option>
+    <option value="be">Belgium</option>
+</c-select-field>
+```
+
+**Renders:**
+```html
+<div class="utrecht-form-field">
+    <label id="country-label">Country</label>
+    <div class="rvo-select-wrapper">
+        <select
+            id="country"
+            class="utrecht-select"
+            onchange="updateRegions()"
+            data-region-selector="true"
+            hx-post="/api/regions"
+            hx-target="#region-field">
+            <option value="nl">Netherlands</option>
+            <option value="be">Belgium</option>
+        </select>
+    </div>
+</div>
+```
+
+#### Multi-Input Field Components
+
+For components containing multiple form controls (`c-checkbox-field`, `c-radio-button-field`), passthrough attributes go to the **wrapper group** (the outer container with `role="group"`).
+
+**Why:** A single attribute can't logically apply to multiple inputs. The semantic field container is the appropriate target for group-level attributes and events.
+
+**Example - Checkbox Field:**
 ```html
 <c-checkbox-field
-    id="terms"
-    label="Terms and Conditions"
-    @click="trackInteraction()"
-    data-field-group="legal">
+    id="preferences"
+    label="Preferences"
+    @change="updatePreferences()"
+    data-field-group="user-settings">
+    <!-- multiple checkbox options -->
 </c-checkbox-field>
 ```
+
 **Renders:**
 ```html
 <div
     role="group"
-    aria-labelledby="terms-label"
+    aria-labelledby="preferences-label"
     class="utrecht-form-field"
     data-roos-component="checkbox-field"
-    onclick="trackInteraction()"
-    data-field-group="legal">
-    <label id="terms-label">Terms and Conditions</label>
-    <!-- checkbox inputs -->
+    onchange="updatePreferences()"
+    data-field-group="user-settings">
+    <label id="preferences-label">Preferences</label>
+    <input type="checkbox" id="pref1" />
+    <input type="checkbox" id="pref2" />
+    <!-- more checkboxes -->
 </div>
 ```
 
-**Note:** For multi-input field components like `c-checkbox-field` and `c-radio-button-field`, attributes apply to the entire group wrapper, not individual inputs. This is because applying the same attributes to multiple inputs in a loop doesn't make semantic sense.
+#### Common Use Cases for Field Component Passthrough
+
+**Testing Selectors:**
+```html
+<c-text-input-field
+    id="username"
+    label="Username"
+    data-testid="signup-username"
+    data-cy="username-field">
+</c-text-input-field>
+```
+The `data-testid` and `data-cy` attributes go directly on the `<input>`, making it easy to select in Playwright, Cypress, or other testing frameworks.
+
+**Form Validation:**
+```html
+<c-text-input-field
+    id="email"
+    label="Email"
+    data-validate="email"
+    data-validate-message="Please enter a valid email"
+    @input="validateOnChange()">
+</c-text-input-field>
+```
+Validation libraries typically hook into the actual form element, so attributes must be on the `<input>`.
+
+**Analytics Tracking:**
+```html
+<c-select-field
+    id="product"
+    label="Product"
+    data-analytics-event="product-selection"
+    data-analytics-category="signup-flow"
+    @change="trackSelection()">
+</c-select-field>
+```
+Event tracking attributes land on the `<select>` element where the change event actually fires.
+
+**HTMX Integration:**
+```html
+<c-text-input-field
+    id="search"
+    label="Search"
+    hx-post="/api/search"
+    hx-trigger="keyup changed delay:500ms"
+    hx-target="#results"
+    @htmx:afterRequest="updateCount()">
+</c-text-input-field>
+```
+HTMX attributes must be on the `<input>` to properly trigger on user input events.
+
+#### When Passthrough Attributes Are NOT Needed
+
+Field components already handle these automatically via their props. Only use passthrough if you need to **override** the automatic behavior:
+
+- `aria-invalid` (auto-generated from `hasError` or `invalid` props)
+- `aria-describedby` (auto-linked to `helperText`/`errorText`)
+- `aria-labelledby` (auto-linked to `label`)
+- `aria-required` (auto-generated from `required` prop)
+- `required`, `disabled`, `readonly` (use the explicit props instead)
 
 ## Components with Passthrough Support
 
@@ -252,9 +386,10 @@ Field wrapper components (like `c-text-input-field`, `c-select-field`) pass attr
 
 ## Practical Examples
 
-### Complete Form Example
+### Complete Form Example with Testing and Validation
 
 ```html
+<!-- Text input with validation and testing selectors -->
 <c-text-input-field
     id="username"
     name="username"
@@ -262,22 +397,34 @@ Field wrapper components (like `c-text-input-field`, `c-select-field`) pass attr
     @input="checkAvailability()"
     @blur="validateField()"
     @focus="clearErrors()"
-    data-field-type="username"
-    data-required="true"
-    aria-required="true"
-    aria-describedby="username-help">
+    data-testid="signup-username"
+    data-validate="alphanumeric"
+    data-min-length="3">
 </c-text-input-field>
 
+<!-- Select field with HTMX dynamic loading -->
 <c-select-field
     id="country"
     name="country"
     label="Country"
     @change="updateRegions()"
-    data-category="location"
-    aria-label="Select your country">
+    hx-post="/api/regions"
+    hx-target="#region-container"
+    data-testid="country-selector"
+    data-analytics="country-selection">
     <option value="nl">Netherlands</option>
     <option value="be">Belgium</option>
 </c-select-field>
+
+<!-- Multi-input checkbox group -->
+<c-checkbox-field
+    id="preferences"
+    label="Email Preferences"
+    @change="savePreferences()"
+    data-field-group="notifications"
+    data-testid="email-prefs-group">
+    <!-- checkbox options -->
+</c-checkbox-field>
 ```
 
 ### Navigation with HTMX
