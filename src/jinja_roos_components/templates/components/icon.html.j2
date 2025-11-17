@@ -1,58 +1,51 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
-{% set icon = _component_context.icon | default('') %}
-{% set size = _component_context.size | default('md') %}
-{% set color = _component_context.color | default('') %}
-{% set aria_label = _component_context.ariaLabel | default('') %}
-{% set additional_class = _component_context.class | default('') %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: icon
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set icon = _component_context.get('icon', 'home') %}
+{% set size = _component_context.get('size', 'md') %}
+{% set color = _component_context.get('color', 'hemelblauw') %}
+{% set className = _component_context.get('className') %}
+{% set ariaLabel = _component_context.get('ariaLabel', '') %}
+{% set iconName = (icon.split(' > ')[1] | replace(' ', '-') | lower) if ' > ' in icon else icon %}
+{% set css_classes = ['utrecht-icon', 'rvo-icon'] %}
+{% set css_classes = css_classes + ['rvo-icon-' + iconName] %}
+{% if size and size == 'xs' %}{% set css_classes = css_classes + ['rvo-icon--xs'] %}{% endif %}
+{% if size and size == 'sm' %}{% set css_classes = css_classes + ['rvo-icon--sm'] %}{% endif %}
+{% if size and size == 'md' %}{% set css_classes = css_classes + ['rvo-icon--md'] %}{% endif %}
+{% if size and size == 'lg' %}{% set css_classes = css_classes + ['rvo-icon--lg'] %}{% endif %}
+{% if size and size == 'xl' %}{% set css_classes = css_classes + ['rvo-icon--xl'] %}{% endif %}
+{% if size and size == '2xl' %}{% set css_classes = css_classes + ['rvo-icon--2xl'] %}{% endif %}
+{% if size and size == '3xl' %}{% set css_classes = css_classes + ['rvo-icon--3xl'] %}{% endif %}
+{% if size and size == '4xl' %}{% set css_classes = css_classes + ['rvo-icon--4xl'] %}{% endif %}
+{% if color == 'hemelblauw' %}{% set css_classes = css_classes + ['rvo-icon--hemelblauw'] %}{% endif %}
+{% if color == 'donkerblauw' %}{% set css_classes = css_classes + ['rvo-icon--donkerblauw'] %}{% endif %}
+{% if color == 'lintblauw' %}{% set css_classes = css_classes + ['rvo-icon--lintblauw'] %}{% endif %}
+{% if color == 'wit' %}{% set css_classes = css_classes + ['rvo-icon--wit'] %}{% endif %}
+{% if color == 'zwart' %}{% set css_classes = css_classes + ['rvo-icon--zwart'] %}{% endif %}
+{% if color == 'grijs-700' %}{% set css_classes = css_classes + ['rvo-icon--grijs-700'] %}{% endif %}
 
-{# Check if color is a named RVO color or hex color #}
+{#MANUAL_START#}
 {% set color_lower = color.lower() if color else '' %}
 {% set is_named_color = color_lower in rvo_color_names %}
 {% set is_hex_color = color.startswith('#') if color else false %}
 {% set resolved_color = 'var(--rvo-color-' + color_lower + ')' if is_named_color else color %}
+{#MANUAL_END#}
 
-{# Build icon name from complex icon names (e.g., "Category > Icon Name") #}
-{% set icon_name = icon %}
-{% if ' > ' in icon %}
-    {% set icon_parts = icon.split(' > ') %}
-    {% set icon_name = icon_parts[1] | lower | replace(' ', '-') %}
-{% else %}
-    {% set icon_name = icon | lower | replace(' ', '-') %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
 {% endif %}
-
-{# Build CSS classes #}
-{% set css_classes = ['utrecht-icon', 'rvo-icon'] %}
-
-{% if icon_name %}
-    {% set css_classes = css_classes + ['rvo-icon-' + icon_name] %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-
-{% if size %}
-    {% set css_classes = css_classes + ['rvo-icon--' + size] %}
-{% endif %}
-
-{% if is_named_color %}
-    {% set css_classes = css_classes + ['rvo-icon--' + color] %}
-{% endif %}
-
-{% if additional_class %}
-    {% set css_classes = css_classes + [additional_class] %}
-{% endif %}
-
-{# Generate aria-label if not provided #}
-{% set computed_aria_label = aria_label %}
-{% if not computed_aria_label and icon_name %}
-    {% set computed_aria_label = (icon_name | title | replace('-', ' ')) %}
-{% endif %}
-
 <span
     class="{{ css_classes | join(' ') }}"
-    role="img"
-    aria-label="{{ computed_aria_label }}"
     data-roos-component="icon"
-    data-roos-icon="{{ icon_name }}"
-    {% if size %}data-roos-size="{{ size }}"{% endif %}
-    {% if color %}data-roos-color="{{ color }}"{% endif %}
+    {#MANUAL_START#}
     {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
+    {#MANUAL_END#}
     {{ attrs.render_extra_attributes(_component_context) }}>
 </span>

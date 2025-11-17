@@ -551,7 +551,9 @@ class ClsxParser:
                 # Find the attribute to get enum values
                 attr = next((a for a in attributes if a.name == mapping.prop_name), None)
                 if not attr or not attr.enum_values:
-                    # Can't expand without enum values, skip
+                    # Can't expand without enum values, but keep the template literal
+                    # so the class builder can handle it (e.g., for computed variables like iconName)
+                    expanded.append(mapping)
                     continue
 
                 # Parse condition to get excluded values

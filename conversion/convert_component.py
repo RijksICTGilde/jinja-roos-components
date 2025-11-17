@@ -39,27 +39,35 @@ class ComponentConverter:
         """Initialize converter.
 
         Args:
-            component_name: Name of component to convert from RVO (or full path to tsx file)
+            component_name: Name of component to convert from RVO (or full path to tsx file, or custom/component-name)
             output_name: Custom name for the output component (defaults to component_name)
             aliases: List of alias names to register for this component
             source_file: Optional full path to the source tsx file (for nested components)
         """
-        # Handle full path or just component name
-        component_path = Path(component_name)
-        if component_path.is_absolute() and component_path.suffix in ('.tsx', '.ts'):
-            # Full path to tsx file provided
-            self.source_file_override = str(component_path)
-            # Extract component name from the parent directory
-            # e.g., /path/to/progress-tracker-step/template.tsx -> progress-tracker-step
-            self.component_name = component_path.parent.name
-        elif source_file:
-            # Explicit source file provided
-            self.source_file_override = source_file
-            self.component_name = component_name
-        else:
-            # Just a component name
+        # Check if this is a custom component (no React source)
+        self.is_custom_component = component_name.startswith('custom/')
+
+        if self.is_custom_component:
+            # Extract component name after 'custom/' prefix
+            self.component_name = component_name[7:]  # Remove 'custom/' prefix
             self.source_file_override = None
-            self.component_name = component_name
+        else:
+            # Handle full path or just component name
+            component_path = Path(component_name)
+            if component_path.is_absolute() and component_path.suffix in ('.tsx', '.ts'):
+                # Full path to tsx file provided
+                self.source_file_override = str(component_path)
+                # Extract component name from the parent directory
+                # e.g., /path/to/progress-tracker-step/template.tsx -> progress-tracker-step
+                self.component_name = component_path.parent.name
+            elif source_file:
+                # Explicit source file provided
+                self.source_file_override = source_file
+                self.component_name = component_name
+            else:
+                # Just a component name
+                self.source_file_override = None
+                self.component_name = component_name
 
         self.output_name = output_name or self.component_name
         self.aliases = aliases or []
@@ -80,6 +88,10 @@ class ComponentConverter:
 
     def convert(self) -> None:
         """Run the full conversion process."""
+        # Route to custom component converter if this is a custom component
+        if self.is_custom_component:
+            return self.convert_custom()
+
         print(f"\n🔄 Converting component: {self.component_name}")
         if self.output_name != self.component_name:
             print(f"   Output name: {self.output_name}")
@@ -365,20 +377,27 @@ class ComponentConverter:
         class_mappings.extend(filtered_jsx_attr_mappings)
         print(f"   ✓ Found {len(filtered_jsx_attr_mappings)} JSX attr mappings (total: {len(class_mappings)})")
 
-        # Step 6: Build class logic
-        print("\n🎨 Building CSS class logic...")
-        self._build_class_logic(component_info, base_classes, class_mappings, switch_raw_mappings)
-        print(f"   ✓ Class builder configured")
-
-        # Step 6a: Extract content rendering logic
+        # Step 6: Extract content rendering logic (before class logic to detect variable transforms)
         print("\n📝 Extracting content rendering logic...")
-        content_elements = self._extract_content(component_info, tsx_file)
+        content_elements, component_refs = self._extract_content(component_info, tsx_file)
         print(f"   ✓ Found {len(content_elements)} content elements")
+        if component_refs:
+            comp_ref_count = sum(1 for ref in component_refs.values() if ref.get('component'))
+            var_transform_count = sum(1 for ref in component_refs.values() if ref.get('type') == 'variable_transform')
+            if comp_ref_count > 0:
+                print(f"   ✓ Found {comp_ref_count} component reference(s)")
+            if var_transform_count > 0:
+                print(f"   ✓ Found {var_transform_count} variable transform(s)")
+
+        # Step 6a: Build class logic (after extracting content so we have variable transforms)
+        print("\n🎨 Building CSS class logic...")
+        self._build_class_logic(component_info, base_classes, class_mappings, switch_raw_mappings, component_refs)
+        print(f"   ✓ Class builder configured")
 
         # Step 7: Generate Jinja template
         print("\n📝 Generating Jinja template...")
         jinja_content = self._generate_jinja_template(
-            component_info, component_structure, content_elements, nested_components, array_mappings
+            component_info, component_structure, content_elements, nested_components, array_mappings, component_refs
         )
         output_file = get_output_template_dir() / f"{self.output_name}.html.j2"
         write_file(output_file, jinja_content)
@@ -420,6 +439,254 @@ class ComponentConverter:
         print(f"   - Definition: {definition_file}")
         print(f"   - Review: {review_file}")
         print()
+
+    def convert_custom(self) -> None:
+        """Convert a custom component from custom definition JSON only (no React source)."""
+        print(f"\n🎨 Converting custom component: {self.component_name}")
+        if self.aliases:
+            print(f"   Aliases: {', '.join(self.aliases)}")
+        print("=" * 60)
+
+        # Step 1: Load custom definition file
+        print("\n📁 Loading custom definition file...")
+        customs_dir = Path(__file__).parent / "customs"
+        custom_file = customs_dir / f"{self.component_name}.json"
+
+        if not custom_file.exists():
+            raise FileNotFoundError(
+                f"Custom definition file not found: conversion/customs/{self.component_name}.json\n"
+                f"Create this file to define the custom component structure."
+            )
+
+        import json
+        with open(custom_file, 'r', encoding='utf-8') as f:
+            customization = json.load(f)
+        print(f"   ✓ Loaded: customs/{self.component_name}.json")
+
+        # Step 2: Extract component structure from customization
+        print("\n📋 Extracting component structure...")
+        html_tag = customization.get('html_tag', 'div')
+        css_classes = customization.get('css_classes', [])
+        wrapper = customization.get('wrapper')
+        conditional_children = customization.get('conditional_children', [])
+        add_children_support = customization.get('add_children_support', False)
+        attribute_additions = customization.get('attribute_additions', {})
+
+        # Merge aliases from customization
+        customization_aliases = customization.get('aliases', [])
+        for alias in customization_aliases:
+            if alias not in self.aliases:
+                self.aliases.append(alias)
+
+        print(f"   ✓ HTML tag: <{html_tag}>")
+        print(f"   ✓ CSS classes: {', '.join(css_classes) if css_classes else 'none'}")
+        if wrapper:
+            print(f"   ✓ Wrapper: <{wrapper.get('html_tag')}>")
+        if add_children_support:
+            print(f"   ✓ Children support: enabled")
+        if attribute_additions:
+            print(f"   ✓ Attributes: {len(attribute_additions)}")
+
+        # Step 3: Build attributes list
+        from conversion.parsers.interface_parser import AttributeInfo
+        attributes = []
+
+        # Add children attribute if needed
+        if add_children_support:
+            attributes.append(AttributeInfo(
+                name='children',
+                types=['string'],
+                required=False,
+                description='Child content for the component',
+                enum_values=None,
+                is_function=False
+            ))
+
+        # Add custom attributes
+        for attr_name, attr_def in attribute_additions.items():
+            attr = AttributeInfo(
+                name=attr_name,
+                types=[attr_def.get('type', 'string')],
+                required=attr_def.get('required', False),
+                description=attr_def.get('description', ''),
+                enum_values=None,
+                is_function=False
+            )
+
+            # Handle enum values
+            if attr_def.get('type') == 'enum' and 'values' in attr_def:
+                if isinstance(attr_def['values'], str):
+                    # Token reference - resolve it
+                    attr.enum_values = self.customization_loader.resolve_token_reference(attr_def['values'])
+                else:
+                    # Direct list
+                    attr.enum_values = attr_def['values']
+
+            attributes.append(attr)
+
+        # Step 4: Generate Jinja template from customization
+        print("\n📝 Generating Jinja template from customization...")
+        template_content = self._generate_custom_template(
+            html_tag=html_tag,
+            css_classes=css_classes,
+            wrapper=wrapper,
+            conditional_children=conditional_children,
+            attributes=attributes,
+            add_children_support=add_children_support
+        )
+
+        output_file = get_output_template_dir() / f"{self.output_name}.html.j2"
+        write_file(output_file, template_content)
+        print(f"   ✓ Written to: {output_file}")
+
+        # Step 5: Generate definition
+        print("\n📋 Generating component definition...")
+        definition = {
+            "name": self.output_name,
+            "source_file": f"custom/{self.component_name}",
+            "conversion_hash": "custom_component",
+            "base_components": [],
+            "nested_components": [],
+            "attributes": [
+                {
+                    "name": attr.name,
+                    "type": attr.types[0] if attr.types else "string",
+                    "required": attr.required,
+                    "description": attr.description,
+                    **({"enum_values": attr.enum_values} if attr.enum_values else {}),
+                    **({"default": attribute_additions[attr.name].get('default')}
+                       if attr.name in attribute_additions and 'default' in attribute_additions[attr.name]
+                       else {})
+                }
+                for attr in attributes
+            ],
+            "manual_review_items": []
+        }
+
+        definition_file = Path(__file__).parent.parent / "src" / "jinja_roos_components" / "definitions" / f"{self.output_name}.json"
+        self.definition_generator.write_definition(definition, str(definition_file))
+        print(f"   ✓ Written to: {definition_file}")
+
+        # Step 6: Register aliases if provided
+        if self.aliases:
+            print("\n🏷  Registering aliases...")
+            self._register_aliases()
+            print(f"   ✓ Registered {len(self.aliases)} alias(es): {', '.join(self.aliases)}")
+
+        # Summary
+        print("\n" + "=" * 60)
+        print(f"✅ Custom component conversion complete!")
+        print("\n📦 Output files:")
+        print(f"   - Template: {output_file}")
+        print(f"   - Definition: {definition_file}")
+        print()
+
+    def _generate_custom_template(
+        self,
+        html_tag: str,
+        css_classes: List[str],
+        wrapper: Optional[Dict],
+        conditional_children: List[Dict],
+        attributes: List,
+        add_children_support: bool
+    ) -> str:
+        """Generate Jinja template for a custom component.
+
+        Args:
+            html_tag: Main HTML tag
+            css_classes: Base CSS classes
+            wrapper: Wrapper configuration (recursive)
+            conditional_children: Conditional child elements
+            attributes: List of AttributeInfo objects
+            add_children_support: Whether to support children content
+
+        Returns:
+            Jinja template content as string
+        """
+        lines = []
+
+        # Standard imports
+        lines.append("{% import 'components/_attribute_mixin.j2' as attributes %}")
+        lines.append("{% import 'components/_generic_attributes.j2' as attrs %}")
+        lines.append("")
+
+        # Extract variables from context
+        if add_children_support:
+            lines.append("{% set content = _component_context.children | default(_component_context.content) | default('') %}")
+
+        for attr in attributes:
+            if attr.name != 'children':
+                default_val = "false" if attr.types[0] == "boolean" else "''"
+                lines.append(f"{{% set {attr.name} = _component_context.get('{attr.name}', {default_val}) %}}")
+
+        if attributes and attributes[0].name != 'children':
+            lines.append("")
+
+        # Build CSS classes array
+        lines.append("{% set css_classes = [" + ", ".join(f"'{cls}'" for cls in css_classes) + "] %}")
+
+        # Add utility classes
+        lines.append("{% set utility_classes = attributes.render_utility_classes(_component_context) %}")
+        lines.append("{% if utility_classes %}")
+        lines.append("    {% set css_classes = css_classes + utility_classes.split() %}")
+        lines.append("{% endif %}")
+        lines.append("")
+
+        # Render wrappers (recursive)
+        wrapper_depth = 0
+        current_wrapper = wrapper
+        while current_wrapper:
+            wrapper_tag = current_wrapper.get('html_tag', 'div')
+            wrapper_classes = current_wrapper.get('css_classes', [])
+            indent = "    " * wrapper_depth
+
+            if wrapper_classes:
+                lines.append(f"{indent}<{wrapper_tag} class=\"{' '.join(wrapper_classes)}\">")
+            else:
+                lines.append(f"{indent}<{wrapper_tag}>")
+
+            wrapper_depth += 1
+            current_wrapper = current_wrapper.get('wrapper')
+
+        # Main element
+        indent = "    " * wrapper_depth
+        lines.append(f"{indent}<{html_tag} class=\"{{{{ css_classes | join(' ') }}}}\" data-roos-component=\"{self.output_name}\" {{{{ attrs.render_extra_attributes(_component_context) }}}}>")
+
+        # Conditional children
+        content_indent = "    " * (wrapper_depth + 1)
+        for cond_child in conditional_children:
+            child_tag = cond_child.get('tag', 'div')
+            child_classes = ' '.join(cond_child.get('classes', []))
+            condition = cond_child.get('condition')
+            content = cond_child.get('content', '')
+
+            lines.append(f"{content_indent}{{% if {condition} %}}")
+            if child_classes:
+                lines.append(f"{content_indent}    <{child_tag} class=\"{child_classes}\">{content}</{child_tag}>")
+            else:
+                lines.append(f"{content_indent}    <{child_tag}>{content}</{child_tag}>")
+            lines.append(f"{content_indent}{{% endif %}}")
+
+        # Content
+        if add_children_support:
+            lines.append(f"{content_indent}{{{{ content | safe }}}}")
+
+        # Close main element
+        lines.append(f"{indent}</{html_tag}>")
+
+        # Close wrappers
+        for i in range(wrapper_depth - 1, -1, -1):
+            indent = "    " * i
+            # Get wrapper tag from the chain
+            current_wrapper = wrapper
+            for j in range(i):
+                if current_wrapper:
+                    current_wrapper = current_wrapper.get('wrapper')
+
+            wrapper_tag = current_wrapper.get('html_tag', 'div') if current_wrapper else 'div'
+            lines.append(f"{indent}</{wrapper_tag}>")
+
+        return '\n'.join(lines) + '\n'
 
     def _locate_source_files(self) -> tuple[str, str | None]:
         """Locate source TSX and defaultArgs files.
@@ -969,7 +1236,7 @@ class ComponentConverter:
             base_classes
         )
 
-    def _build_class_logic(self, component_info, base_classes: List[str], class_mappings: List, switch_mappings: List = None) -> None:
+    def _build_class_logic(self, component_info, base_classes: List[str], class_mappings: List, switch_mappings: List = None, component_refs: Dict = None) -> None:
         """Build CSS class logic for component.
 
         Args:
@@ -977,9 +1244,24 @@ class ComponentConverter:
             base_classes: Base CSS classes
             class_mappings: Extracted class mappings from clsx
             switch_mappings: Optional raw switch mappings for computed variables
+            component_refs: Optional component references (for variable transforms used in templates)
         """
         # Add base classes to Jinja generator
         self.jinja_generator.class_builder.add_base_classes(base_classes)
+
+        # Add variable transforms as computed variables (needed for template literals)
+        if component_refs:
+            for var_name, ref_info in component_refs.items():
+                if ref_info.get('type') == 'variable_transform':
+                    source_var = ref_info.get('source_var')
+                    # Special handling for iconName transformation
+                    if var_name == 'iconName' and source_var == 'icon':
+                        # Generate Jinja for icon transformation
+                        jinja_expr = f"({source_var}.split(' > ')[1] | replace(' ', '-') | lower) if ' > ' in {source_var} else {source_var}"
+                        self.jinja_generator.class_builder.add_computed_var(
+                            var_name,
+                            jinja_expr
+                        )
 
         # Add switch mappings as computed variables
         if switch_mappings:
@@ -1125,7 +1407,7 @@ class ComponentConverter:
             tsx_file: Path to TSX file
 
         Returns:
-            List of ContentElement objects
+            Tuple of (content_elements, component_refs)
         """
         # Extract content elements from JSX
         content_elements = self.content_parser.extract_from_jsx(component_info.jsx_content)
@@ -1158,12 +1440,18 @@ class ComponentConverter:
                         if element.component_props is None:
                             element.component_props = {}
                         element.component_props['_function_args'] = ref_info['args']
+                    elif ref_info.get('type') == 'jsx_fragment':
+                        # JSX fragment - parse the content and store for inlining
+                        element.type = 'jsx_fragment'
+                        element.jsx_content = ref_info['content']
                     else:
-                        # Simple component reference
+                        # Component reference (e.g., iconMarkup = Icon({ ... }))
+                        # Update element type to 'component' so it renders as a component tag
+                        element.type = 'component'
                         element.component_name = ref_info['component']
                         element.component_props = ref_info['props']
 
-        return content_elements
+        return content_elements, component_refs
 
     def _generate_jinja_template(
         self,
@@ -1171,7 +1459,8 @@ class ComponentConverter:
         component_structure: Dict[str, Any],
         content_elements: List = None,
         nested_components: List[Dict] = None,
-        array_mappings: Dict[str, Dict] = None
+        array_mappings: Dict[str, Dict] = None,
+        component_refs: Dict[str, Dict] = None
     ) -> str:
         """Generate Jinja template content.
 
@@ -1181,6 +1470,7 @@ class ComponentConverter:
             content_elements: List of ContentElement objects
             nested_components: List of nested component metadata
             array_mappings: Dict mapping array attributes to component info
+            component_refs: Dict of variable names to component reference info
 
         Returns:
             Jinja template as string
@@ -1199,7 +1489,8 @@ class ComponentConverter:
             nested_components=nested_components or [],
             array_mappings=array_mappings or {},
             add_children_support=self.add_children_support,
-            custom_content_template=custom_content_template
+            custom_content_template=custom_content_template,
+            component_refs=component_refs
         )
 
     def _generate_definition(

@@ -1,0 +1,59 @@
+{
+  "name": "sort-descending-icon",
+  "source_file": "rvo/components/table/src/icons.tsx",
+  "conversion_hash": "23e22c182f07d2856f789255b4792610f5695814306f3587caa0411beccf624c",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [],
+  "manual_review_items": [],
+  "example_values": {
+    "description": "Table description.",
+    "columns": [
+      {
+        "label": "Title",
+        "sortable": true,
+        "size": "md"
+      },
+      {
+        "label": "Text",
+        "sortable": true,
+        "sortDirection": "ASC"
+      },
+      {
+        "label": "Price ($)",
+        "sortable": true,
+        "type": "numeric"
+      },
+      {
+        "label": "Link",
+        "sortable": true
+      }
+    ],
+    "rows": [
+      [
+        "Title value 1",
+        "Text value 1",
+        "57",
+        "<a href=\"#\" class=\"rvo-link\">Link 1</a>"
+      ],
+      [
+        "Title value 2",
+        "Text value 2",
+        "12.50",
+        "<a href=\"#\" class=\"rvo-link\">Link 2</a>"
+      ],
+      [
+        "Title value 3",
+        "Text value 3",
+        "90",
+        "<a href=\"#\" class=\"rvo-link\">Link 3</a>"
+      ],
+      [
+        "Title value 4",
+        "Text value 4",
+        "1.50",
+        "<a href=\"#\" class=\"rvo-link\">Link 4</a>"
+      ]
+    ]
+  }
+}

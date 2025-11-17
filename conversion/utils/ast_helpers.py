@@ -113,29 +113,30 @@ def extract_import_names(import_line: str) -> List[str]:
 
     Args:
         import_line: Import statement like "import { Button, Textbox } from '...';"
+                                       or "import TabItem, { ITabItemProps } from '...';"
 
     Returns:
-        List of imported names like ['Button', 'Textbox']
+        List of imported names like ['Button', 'Textbox'] or ['TabItem', 'ITabItemProps']
     """
+    names = []
+
+    # Handle default import (either "import Foo from" or "import Foo, { ... } from")
+    default_match = re.search(r"import\s+(\w+)\s*[,\s]", import_line)
+    if default_match:
+        names.append(default_match.group(1))
+
     # Handle named imports
-    match = re.search(r"import\s+\{([^}]+)\}", import_line)
-    if match:
-        imports = match.group(1)
-        names = []
+    named_match = re.search(r"import\s+(?:\w+\s*,\s*)?\{([^}]+)\}", import_line)
+    if named_match:
+        imports = named_match.group(1)
         for item in imports.split(','):
             item = item.strip()
             # Handle "Button as UtrechtButton"
             if ' as ' in item:
                 item = item.split(' as ')[0].strip()
             names.append(item)
-        return names
 
-    # Handle default import
-    match = re.search(r"import\s+(\w+)\s+from", import_line)
-    if match:
-        return [match.group(1)]
-
-    return []
+    return names
 
 
 def normalize_type_name(type_str: str) -> str:

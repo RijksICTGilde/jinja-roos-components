@@ -1,0 +1,13 @@
+{
+  "component": "thead",
+  "tag_name": "thead",
+  "description": "HTML table head element with RVO styling",
+  "html_tag": "thead",
+  "css_classes": ["rvo-table-head"],
+  "add_children_support": true,
+  "attribute_additions": {},
+  "notes": [
+    "Custom wrapper component for HTML thead element",
+    "Container for table header rows"
+  ]
+}

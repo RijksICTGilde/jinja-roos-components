@@ -1,0 +1,13 @@
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{% import 'components/_generic_attributes.j2' as attrs %}
+
+{% set content = _component_context.children | default(_component_context.content) | default('') %}
+{% set css_classes = ['rvo-table-row'] %}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+
+<tr class="{{ css_classes | join(' ') }}" data-roos-component="tr" {{ attrs.render_extra_attributes(_component_context) }}>
+    {{ content | safe }}
+</tr>

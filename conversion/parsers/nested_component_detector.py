@@ -37,12 +37,17 @@ class NestedComponentDetector:
         nested_components = []
         source_path = Path(source_file_path)
 
+        # Read full source file for detecting function calls
+        from conversion.utils.file_helpers import read_file
+        full_source = read_file(source_file_path)
+
         # Find local component imports (paths starting with './')
         local_imports = self._find_local_component_imports(imports)
 
         for import_info in local_imports:
-            # Check if this component is used in JSX
-            if self._is_component_used_in_jsx(import_info['component'], jsx_content):
+            # Check if this component is used either in JSX or as function call
+            if (self._is_component_used_in_jsx(import_info['component'], jsx_content) or
+                self._is_component_called_as_function(import_info['component'], full_source)):
                 # Try to load the nested component's file
                 component_file = self._resolve_component_path(
                     import_info['source'],
@@ -68,14 +73,15 @@ class NestedComponentDetector:
                 # Convert component name to kebab-case for tag naming
                 tag_name = self._to_kebab_case(import_info['component'])
 
-                # Extract relative path from 'rvo' onwards
-                resolved_path = self._extract_relative_path(component_file) if component_file else None
+                # Extract relative path from 'rvo' onwards for display
+                relative_path = self._extract_relative_path(component_file) if component_file else None
 
                 nested_components.append({
                     'name': tag_name,
                     'component_class': import_info['component'],
                     'source_path': import_info['source'],
-                    'resolved_path': resolved_path,
+                    'resolved_path': component_file,  # Keep absolute path for file operations
+                    'relative_path': relative_path,  # Relative path for display
                     'interface': interface_name,
                     'tag_name': f'c-{tag_name}',
                     'props': props_list
@@ -132,6 +138,23 @@ class NestedComponentDetector:
         # Pattern: <ComponentName or <ComponentName> or <ComponentName/>
         pattern = rf'<{component_name}[\s/>]'
         return bool(re.search(pattern, jsx_content))
+
+    def _is_component_called_as_function(self, component_name: str, source_content: str) -> bool:
+        """Check if a component is called as a function.
+
+        Detects patterns like: ComponentName({ ... })
+        This is an alternative to JSX syntax for rendering components.
+
+        Args:
+            component_name: Component name (e.g., 'Icon')
+            source_content: Full source file content
+
+        Returns:
+            True if component is called as a function
+        """
+        # Pattern: ComponentName({ or ComponentName ({
+        pattern = rf'\b{component_name}\s*\(\{{'
+        return bool(re.search(pattern, source_content))
 
     def _resolve_component_path(self, import_path: str, source_file: Path) -> Optional[str]:
         """Resolve relative import path to absolute file path.

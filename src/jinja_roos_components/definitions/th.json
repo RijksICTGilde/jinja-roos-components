@@ -1,0 +1,28 @@
+{
+  "name": "th",
+  "source_file": "custom/th",
+  "conversion_hash": "custom_component",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "Child content for the component"
+    },
+    {
+      "name": "scope",
+      "type": "enum",
+      "required": false,
+      "description": "Scope of the header cell for accessibility",
+      "enum_values": [
+        "col",
+        "row",
+        "colgroup",
+        "rowgroup"
+      ]
+    }
+  ],
+  "manual_review_items": []
+}

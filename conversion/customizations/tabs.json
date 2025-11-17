@@ -1,0 +1,19 @@
+{
+  "component": "tabs",
+  "description": "Tabs component with tab navigation",
+  "default_overrides": {
+    "tabs": [],
+    "activeTab": 0
+  },
+  "attribute_overrides": {
+    "tabs": {
+      "required": false,
+      "description": "Optional array of tab items. If not provided, children can be used instead."
+    },
+    "activeTab": {
+      "required": false,
+      "description": "Index of the active tab (0-based). Defaults to 0 (first tab)."
+    }
+  },
+  "notes": "Tabs defaults to empty list so 'if tabs' only matches when there are actual tabs. activeTab defaults to 0 (first tab). Both tabs and activeTab are optional."
+}

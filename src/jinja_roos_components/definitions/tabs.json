@@ -1,0 +1,80 @@
+{
+  "name": "tabs",
+  "source_file": "rvo/components/tabs/src/template.tsx",
+  "conversion_hash": "420465a1f981164bcded735c6ac0b28eb04af948116c0b0828fe666f949bf678",
+  "base_components": [],
+  "nested_components": [
+    {
+      "name": "tab-item",
+      "component_class": "TabItem",
+      "source_path": "./tab-item/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/tabs/src/tab-item/template.tsx",
+      "relative_path": "rvo/components/tabs/src/tab-item/template.tsx",
+      "interface": "ITabItemProps",
+      "tag_name": "c-tab-item",
+      "props": [
+        "label",
+        "href",
+        "selected",
+        "onClick"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "tabs",
+      "type": "string",
+      "required": false,
+      "description": "Optional array of tab items. If not provided, children can be used instead.",
+      "item_type": "object",
+      "item_props": [
+        "label",
+        "href"
+      ],
+      "maps_to_component": "tab-item",
+      "component_tag": "c-tab-item",
+      "default": "",
+      "is_example": true,
+      "example_value": [
+        {
+          "label": "Tab 1",
+          "href": "#tab-1"
+        },
+        {
+          "label": "Tab 2",
+          "href": "#tab-2"
+        }
+      ]
+    },
+    {
+      "name": "activeTab",
+      "type": "number",
+      "required": false,
+      "description": "Index of the active tab (0-based). Defaults to 0 (first tab).",
+      "default": 0,
+      "is_example": true,
+      "example_value": 0
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "tabs": [
+      {
+        "label": "Tab 1",
+        "href": "#tab-1"
+      },
+      {
+        "label": "Tab 2",
+        "href": "#tab-2"
+      }
+    ],
+    "activeTab": 0
+  }
+}
