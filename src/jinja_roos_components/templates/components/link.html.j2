@@ -1,64 +1,60 @@
-{% set href = _component_context.href | default('#') %}
-{% set content = _component_context.content | default('') %}
-{% set target = _component_context.target | default('') %}
-{% set icon = _component_context.icon | default('') %}
-{% set show_icon = _component_context.showIcon | default('no') %}
-{% set icon_size = _component_context.iconSize | default('sm') %}
-{% set icon_color = _component_context.iconColor | default('') %}
-{% set no_underline = _component_context.noUnderline | default(false) %}
-{% set color = _component_context.color | default('') %}
-{% set weight = _component_context.weight | default('') %}
-{% set full_container = _component_context.fullContainer | default(false) %}
-{% set additional_class = _component_context.class | default('') %}
-
-{# Build CSS classes #}
-{% set link_classes = ['rvo-link'] %}
-
-{% if no_underline %}
-    {% set link_classes = link_classes + ['rvo-link--no-underline'] %}
-{% endif %}
-
-{% if show_icon != 'no' and icon %}
-    {% set link_classes = link_classes + ['rvo-link--with-icon'] %}
-{% endif %}
-
-{% if color %}
-    {% set link_classes = link_classes + ['rvo-link--' + color] %}
-{% endif %}
-
-{% if weight %}
-    {% set link_classes = link_classes + ['rvo-link--' + weight] %}
-{% endif %}
-
-{% if full_container %}
-    {% set link_classes = link_classes + ['rvo-link--full-container'] %}
-{% endif %}
-
-{% if additional_class %}
-    {% set link_classes = link_classes + [additional_class] %}
-{% endif %}
-
 {% import 'components/_generic_attributes.j2' as attrs %}
-<a href="{{ href }}"
-   class="{{ link_classes | join(' ') }}"
-   {% if target %}target="{{ target }}"{% endif %}
-   data-roos-component="link"
-   {% if icon %}data-roos-icon="{{ icon }}"{% endif %}
-   {% if show_icon != 'no' %}data-roos-show-icon="{{ show_icon }}"{% endif %}
-   {{ attrs.render_extra_attributes(_component_context) }}>
-   
-    {% if show_icon == 'before' and icon %}
-        <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ icon_size }}{% if icon_color %} rvo-icon--{{ icon_color }}{% endif %} rvo-link__icon--before"
-              role="img"
-              aria-label="{{ icon | title | replace('-', ' ') }}"></span>
-    {% endif %}
-    
-    {{ content | safe }}
-    
-    {% if show_icon == 'after' and icon %}
-        <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ icon_size }}{% if icon_color %} rvo-icon--{{ icon_color }}{% endif %} rvo-link__icon--after"
-              role="img"
-              aria-label="{{ icon | title | replace('-', ' ') }}"></span>
-    {% endif %}
-    
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: link
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set content = _component_context.get('content', 'Dit is een link') %}
+{% set href = _component_context.get('href', '#') %}
+{% set color = _component_context.get('color', 'hemelblauw') %}
+{% set weight = _component_context.get('weight', 'bold') %}
+{% set showIcon = _component_context.get('showIcon', 'no') %}
+{% set icon = _component_context.get('icon', 'home') %}
+{% set iconSize = _component_context.get('iconSize', 'md') %}
+{% set iconColor = _component_context.get('iconColor', 'hemelblauw') %}
+{% set iconAriaLabel = _component_context.get('iconAriaLabel', '') %}
+{% set role = _component_context.get('role') %}
+{% set hover = _component_context.get('hover', false) %}
+{% set active = _component_context.get('active', false) %}
+{% set focus = _component_context.get('focus', false) %}
+{% set noUnderline = _component_context.get('noUnderline', false) %}
+{% set fullContainerLink = _component_context.get('fullContainerLink', false) %}
+{% set className = _component_context.get('className') %}
+{% set target = _component_context.get('target') %}
+{% set children = _component_context.get('content', '') %}
+{% set LinkComponent = _component_context.get('LinkComponent') %}
+{% set iconClassName_classes = [] %}
+{% if showIcon == 'before' %}{% set iconClassName_classes = iconClassName_classes + ['rvo-link__icon--before'] %}{% endif %}
+{% if showIcon == 'after' %}{% set iconClassName_classes = iconClassName_classes + ['rvo-link__icon--after'] %}{% endif %}
+{% set iconClassName = iconClassName_classes | join(' ') %}
+{% set iconMarkup %}<c-icon icon="{{ icon }}" size="{{ iconSize }}" color="{{ iconColor }}" class="{{ iconClassName }}" ariaLabel="{{ iconAriaLabel }}"></c-icon>{% endset %}
+{% set css_classes = ['rvo-link'] %}
+{% if active %}{% set css_classes = css_classes + ['rvo-link--active'] %}{% endif %}
+{% if hover %}{% set css_classes = css_classes + ['rvo-link--hover'] %}{% endif %}
+{% if focus %}{% set css_classes = css_classes + ['rvo-link--focus'] %}{% endif %}
+{% if noUnderline %}{% set css_classes = css_classes + ['rvo-link--no-underline'] %}{% endif %}
+{% if color == 'donkerblauw' %}{% set css_classes = css_classes + ['rvo-link--donkerblauw'] %}{% endif %}
+{% if color == 'lintblauw' %}{% set css_classes = css_classes + ['rvo-link--lintblauw'] %}{% endif %}
+{% if color == 'wit' %}{% set css_classes = css_classes + ['rvo-link--wit'] %}{% endif %}
+{% if color == 'zwart' %}{% set css_classes = css_classes + ['rvo-link--zwart'] %}{% endif %}
+{% if color == 'grijs-700' %}{% set css_classes = css_classes + ['rvo-link--grijs-700'] %}{% endif %}
+{% if weight == 'normal' %}{% set css_classes = css_classes + ['rvo-link--normal'] %}{% endif %}
+{% if fullContainerLink %}{% set css_classes = css_classes + ['rvo-link--full-card-link'] %}{% endif %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
+{% endif %}
+<a
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="link"
+    href="{{ href }}"
+    role="{{ role }}"
+    target="{{ target }}"
+    {{ attrs.render_extra_attributes(_component_context) }}>
+    {% if showIcon == 'before' %}{{iconMarkup}}{% endif %}
+    {{ children or content | safe }}
+    {% if showIcon == 'after' %}{{iconMarkup}}{% endif %}
 </a>

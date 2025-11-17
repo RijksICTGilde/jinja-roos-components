@@ -38,6 +38,12 @@ class ContentParser:
         """
         self.elements = []
 
+        # Check if this is a wrapper element (li, div, etc.) with a PascalCase component inside
+        # Pattern: <li ...><Link .../></li>
+        wrapper_component = self._try_parse_wrapper_with_component(jsx_content)
+        if wrapper_component:
+            return [wrapper_component]
+
         # Find the main component's opening and closing tags
         # Extract everything between them
         content_match = self._extract_component_children(jsx_content)
@@ -529,32 +535,32 @@ class ContentParser:
                 condition = parts[0].strip()
                 map_expr = parts[1].strip()
 
-        # Extract array name, item variable, and component
-        # Pattern: arrayName.map((itemVar) => or arrayName?.map((itemVar, index) =>
-        # Also handles object destructuring: arrayName.map(({ prop1, prop2 }) =>
-        # Captures both self-closing and regular tags with children
-        # Support optional chaining: items?.map(...)
-        map_pattern = r'(\w+)\??\.map\(\s*\(([^)]+)\)\s*=>\s*(?:\(?\s*)?<(\w+)\s*([^/>]*?)(?:/>|>(.*?)</\3>)'
-
-        match = re.search(map_pattern, map_expr, re.DOTALL)
-        if not match:
-            # Try React.Children.map pattern
-            children_pattern = r'React\.Children\.map\((\w+),\s*\((\w+)(?:,\s*\w+)?\)\s*=>\s*.*?<(\w+)\s*([^/>]*?)\s*/?>.*?\)'
-            match = re.search(children_pattern, map_expr, re.DOTALL)
-            if match:
-                array_name = match.group(1)
-                item_var = match.group(2)
-                component_name = match.group(3)
-                props_str = match.group(4).strip()
-            else:
-                return None
+        # Try React.Children.map pattern first (it's more specific)
+        children_pattern = r'React\.Children\.map\((\w+),\s*\((\w+)(?:,\s*\w+)?\)\s*=>\s*.*?<(\w+)\s*([^/>]*?)\s*/?>.*?\)'
+        match = re.search(children_pattern, map_expr, re.DOTALL)
+        if match:
+            array_name = match.group(1)
+            item_var = match.group(2)
+            component_name = match.group(3)
+            props_str = match.group(4).strip()
+            children_str = None
         else:
+            # Use a more robust approach for regular .map()
+            # Pattern: arrayName.map((params) => ...component...)
+            map_start_pattern = r'(\w+)\??\.map\(\s*\(([^)]*(?:\([^)]*\)[^)]*)*)\)\s*=>\s*(?:\(?\s*)?<(\w+)'
+            match = re.search(map_start_pattern, map_expr)
+            if not match:
+                return None
+
             array_name = match.group(1)
             raw_params = match.group(2).strip()
             component_name = match.group(3)
-            props_str = match.group(4).strip()
-            # Children content (if not self-closing tag)
-            children_str = match.group(5).strip() if len(match.groups()) >= 5 and match.group(5) else None
+
+            # Find where the component tag starts
+            tag_start = match.end() - len(component_name) - 1  # -1 for the <
+
+            # Extract the component props and closing using balanced parsing
+            props_str, children_str = self._extract_component_tag_parts(map_expr[tag_start:], component_name)
 
             # Handle object destructuring: { prop1, prop2 } or { prop1, prop2 }, index
             if raw_params.startswith('{'):
@@ -606,6 +612,279 @@ class ContentParser:
             component_props=component_props,
             condition=condition
         )
+
+    def _extract_component_tag_parts(self, jsx: str, component_name: str) -> tuple:
+        """Extract props and children from a component tag using balanced parsing.
+
+        Args:
+            jsx: JSX starting with <ComponentName, e.g., "<TabItem key=... />"
+            component_name: Name of the component
+
+        Returns:
+            Tuple of (props_str, children_str)
+        """
+        # We're at <ComponentName...
+        # Find the end of the opening tag
+        i = len(component_name) + 1  # Skip "<ComponentName"
+
+        # Skip whitespace
+        while i < len(jsx) and jsx[i].isspace():
+            i += 1
+
+        # Extract attributes until we hit /> or >
+        props_start = i
+        depth = 0  # Track nested {...}
+        in_string = False
+        string_char = None
+
+        while i < len(jsx):
+            char = jsx[i]
+
+            # Track strings
+            if char in ('"', "'", '`') and (i == 0 or jsx[i-1] != '\\'):
+                if not in_string:
+                    in_string = True
+                    string_char = char
+                elif char == string_char:
+                    in_string = False
+
+            if not in_string:
+                if char in '{':
+                    depth += 1
+                elif char in '}':
+                    depth -= 1
+                elif char == '/' and i + 1 < len(jsx) and jsx[i+1] == '>' and depth == 0:
+                    # Self-closing tag
+                    props_str = jsx[props_start:i].strip()
+                    return props_str, None
+                elif char == '>' and depth == 0:
+                    # Opening tag closed, might have children
+                    props_str = jsx[props_start:i].strip()
+
+                    # Look for children until </ComponentName>
+                    children_start = i + 1
+                    closing_tag = f'</{component_name}>'
+                    closing_pos = jsx.find(closing_tag, children_start)
+                    if closing_pos > -1:
+                        children_str = jsx[children_start:closing_pos].strip()
+                        return props_str, children_str
+                    else:
+                        # No closing tag found - might be a parsing issue
+                        return props_str, None
+
+            i += 1
+
+        # Shouldn't reach here, but return what we have
+        return jsx[props_start:].strip(), None
+
+    def _try_parse_wrapper_with_component(self, jsx_content: str) -> Optional[ContentElement]:
+        """Try to parse wrapper element containing a component.
+
+        Pattern: <li role="presentation"><Link ...>content</Link></li>
+
+        Args:
+            jsx_content: JSX content
+
+        Returns:
+            ContentElement with component info or None
+        """
+        import re
+
+        # Strip outer parentheses if present
+        jsx_clean = jsx_content.strip()
+        if jsx_clean.startswith('(') and jsx_clean.endswith(')'):
+            jsx_clean = jsx_clean[1:-1].strip()
+
+        # Pattern: <lowercase_tag ...> <PascalCaseComponent ...> ... </PascalCaseComponent> </lowercase_tag>
+        # First, find the outer tag (wrapper)
+        outer_match = re.match(r'^\s*<([a-z]+)\s+([^>]*)>(.*)</\1>\s*$', jsx_clean, re.DOTALL)
+        if not outer_match:
+            return None
+
+        wrapper_tag = outer_match.group(1)
+        inner_content = outer_match.group(3).strip()
+
+        # Now check if inner_content is a PascalCase component
+        component_match = re.match(r'^<([A-Z]\w+)', inner_content)
+        if not component_match:
+            return None
+
+        component_name = component_match.group(1)
+
+        # Extract the full component JSX
+        component_jsx = self._extract_balanced_tag(inner_content, component_name)
+        if not component_jsx:
+            return None
+
+        # Parse the component attributes and content
+        component_element = self._parse_component_tag(component_jsx, component_name)
+        if not component_element:
+            return None
+
+        # Return as a nested component content element
+        return component_element
+
+    def _parse_component_tag(self, jsx: str, component_name: str) -> Optional[ContentElement]:
+        """Parse a component tag to extract props and content.
+
+        Args:
+            jsx: Component JSX like "<Link href={href} active={selected}>label</Link>"
+            component_name: Component name
+
+        Returns:
+            ContentElement with component info
+        """
+        import re
+
+        # Extract the opening tag
+        opening_match = re.match(r'^<' + component_name + r'\s+([^>]*?)>(.*)</' + component_name + r'>\s*$', jsx, re.DOTALL)
+        if not opening_match:
+            # Try self-closing tag
+            opening_match = re.match(r'^<' + component_name + r'\s+([^/]*?)/>\s*$', jsx)
+            if not opening_match:
+                return None
+            attrs_str = opening_match.group(1)
+            children = None
+        else:
+            attrs_str = opening_match.group(1)
+            children = opening_match.group(2).strip()
+
+        # Parse attributes
+        props = self._parse_jsx_attributes(attrs_str)
+
+        # Store children separately, not as a prop
+        if children:
+            props['_children'] = {'value': children, 'type': 'jsx'}
+
+        return ContentElement(
+            type='component',
+            component_name=component_name,
+            component_props=props
+        )
+
+    def _parse_jsx_attributes(self, attrs_str: str) -> Dict[str, str]:
+        """Parse JSX attributes string to dict.
+
+        Args:
+            attrs_str: Attribute string like 'href={href} active={selected} className="..."'
+
+        Returns:
+            Dict of prop_name -> prop_value
+            - For expressions {value}, returns the value
+            - For string literals "value", returns the quoted string
+            - Includes a special '_type' key to distinguish them
+        """
+        import re
+
+        props = {}
+
+        # Handle spread operators like {...props}
+        if '{...' in attrs_str:
+            props['_spread'] = True
+
+        # Pattern for JSX attributes: name={value} or name="value"
+        # Need to handle nested braces in expressions
+        i = 0
+        while i < len(attrs_str):
+            # Skip whitespace
+            while i < len(attrs_str) and attrs_str[i].isspace():
+                i += 1
+
+            if i >= len(attrs_str):
+                break
+
+            # Check for spread
+            if attrs_str[i:i+4] == '{...':
+                # Skip spread operators
+                end = attrs_str.find('}', i)
+                if end > 0:
+                    i = end + 1
+                continue
+
+            # Match attribute name (including hyphens for aria-*, data-*, etc.)
+            name_match = re.match(r'([\w-]+)=', attrs_str[i:])
+            if not name_match:
+                i += 1
+                continue
+
+            prop_name = name_match.group(1)
+            i += len(name_match.group(0))
+
+            # Now get the value - either {expression} or "string"
+            if i < len(attrs_str) and attrs_str[i] == '{':
+                # Expression - need to find matching }
+                expr_start = i + 1
+                depth = 1
+                i += 1
+                while i < len(attrs_str) and depth > 0:
+                    if attrs_str[i] == '{':
+                        depth += 1
+                    elif attrs_str[i] == '}':
+                        depth -= 1
+                    i += 1
+
+                prop_value = attrs_str[expr_start:i-1].strip()
+                props[prop_name] = {'value': prop_value, 'type': 'expression'}
+
+            elif i < len(attrs_str) and attrs_str[i] == '"':
+                # String literal
+                i += 1
+                string_start = i
+                while i < len(attrs_str) and attrs_str[i] != '"':
+                    if attrs_str[i] == '\\':
+                        i += 2  # Skip escaped char
+                    else:
+                        i += 1
+
+                prop_value = attrs_str[string_start:i]
+                props[prop_name] = {'value': prop_value, 'type': 'string'}
+                i += 1  # Skip closing "
+            else:
+                i += 1
+
+        return props
+
+    def _extract_balanced_tag(self, jsx: str, tag_name: str) -> Optional[str]:
+        """Extract a balanced tag from JSX.
+
+        Args:
+            jsx: JSX string starting with <TagName
+            tag_name: Tag name to extract
+
+        Returns:
+            Full tag JSX or None
+        """
+        if not jsx.startswith(f'<{tag_name}'):
+            return None
+
+        # Find matching closing tag
+        depth = 0
+        i = 0
+        while i < len(jsx):
+            # Check for opening tag
+            if jsx[i:i+len(tag_name)+1] == f'<{tag_name}':
+                # Make sure it's actually a tag (followed by whitespace or >)
+                if i + len(tag_name) + 1 < len(jsx) and (jsx[i + len(tag_name) + 1].isspace() or jsx[i + len(tag_name) + 1] == '>'):
+                    depth += 1
+                    i += len(tag_name) + 1
+                    continue
+            # Check for closing tag
+            elif jsx[i:i+len(tag_name)+2] == f'</{tag_name}':
+                depth -= 1
+                if depth == 0:
+                    # Found the matching closing tag
+                    end_pos = jsx.find('>', i) + 1
+                    return jsx[:end_pos]
+                i += len(tag_name) + 2
+                continue
+            # Check for self-closing tag
+            elif jsx[i:i+2] == '/>':
+                depth -= 1
+                if depth == 0:
+                    return jsx[:i+2]
+            i += 1
+
+        return None
 
     def resolve_component_references(self, source_content: str) -> Dict[str, Dict]:
         """Resolve component variable references to their definitions.
@@ -686,6 +965,107 @@ class ContentParser:
                 'component': component_name,
                 'props': props
             }
+
+        # Pattern 3: JSX fragment assignment
+        # const varName = (<>...</>) or const varName = (<...>...</...>)
+        # This captures intermediate JSX that needs to be inlined
+        jsx_fragment_pattern = r'const\s+(\w+)(?::\s*[^=]+)?\s*=\s*\(([\s\S]*?)\);'
+
+        for match in re.finditer(jsx_fragment_pattern, source_content):
+            var_name = match.group(1)
+            jsx_content = match.group(2).strip()
+
+            # Check if it's JSX (starts with < or is a fragment <>)
+            if jsx_content.startswith('<'):
+                references[var_name] = {
+                    'type': 'jsx_fragment',
+                    'content': jsx_content
+                }
+
+        # Pattern 4: Component function call
+        # const varName = ComponentName({ prop: value, ... });
+        # This references a component (should already be in nested_components)
+        # Extract the component name and props for recursive rendering
+        function_call_pattern = r'const\s+(\w+)(?::\s*[^=]+)?\s*=\s*([A-Z]\w+)\s*\(\s*\{([\s\S]*?)\}\s*\)\s*;'
+
+        for match in re.finditer(function_call_pattern, source_content):
+            var_name = match.group(1)
+            component_name = match.group(2)
+            props_str = match.group(3).strip()
+
+            # Parse props from object notation (prop: value)
+            props = {}
+            # Handle multi-line props with proper comma handling
+            for prop_match in re.finditer(r'(\w+):\s*([^,\n]+)', props_str):
+                prop_name = prop_match.group(1).strip()
+                prop_value = prop_match.group(2).strip()
+                # Remove TypeScript 'as' type casts
+                prop_value = re.sub(r'\s+as\s+\w+', '', prop_value)
+                props[prop_name] = prop_value
+
+            references[var_name] = {
+                'component': component_name,  # Will be looked up in nested_components
+                'props': props
+            }
+
+        # Pattern 5: Computed string variable with conditional concatenation
+        # let varName = '';
+        # if (condition) { varName += 'value1'; }
+        # if (condition2) { varName += 'value2'; }
+        # This is common for building CSS class strings
+        computed_var_pattern = r'let\s+(\w+)\s*=\s*[\'"][\'"]\s*;([\s\S]*?)(?=(?:const|let|var|\n\s*const|\n\s*let|\n\s*var|$))'
+
+        for match in re.finditer(computed_var_pattern, source_content):
+            var_name = match.group(1)
+            following_code = match.group(2)
+
+            # Look for all conditional assignments: if (condition) { varName += 'value'; }
+            conditional_assigns = []
+            assign_pattern = rf'if\s*\(([^)]+)\)\s*\{{\s*{var_name}\s*\+=\s*[\'"]([^\'"]+)[\'"]\s*;?\s*\}}'
+
+            for assign_match in re.finditer(assign_pattern, following_code):
+                condition = assign_match.group(1).strip()
+                value = assign_match.group(2).strip()
+                conditional_assigns.append({
+                    'condition': condition,
+                    'value': value
+                })
+
+            if conditional_assigns:
+                references[var_name] = {
+                    'type': 'computed_string',
+                    'initial_value': '',
+                    'conditionals': conditional_assigns
+                }
+
+        # Pattern 6: Variable transformation with initial assignment and conditional mutation
+        # let varName = sourceVar as string;
+        # if (sourceVar.method(...)) { varName = sourceVar.transform(...); }
+        # Example: let iconName = icon as string; if (icon.indexOf(' > ') > -1) { iconName = icon.split(...); }
+        transform_pattern = r'let\s+(\w+)\s*=\s*(\w+)(?:\s+as\s+\w+)?\s*;'
+
+        for match in re.finditer(transform_pattern, source_content):
+            var_name = match.group(1)
+            source_var = match.group(2)
+
+            # Look for conditional reassignment of this variable
+            # Pattern: if (condition) { varName = expression; } (can be multi-line)
+            # Use a more flexible pattern that handles nested parentheses
+            reassign_pattern = rf'if\s*\(.*?{source_var}.*?\)\s*{{\s*{var_name}\s*=\s*([^;]+?);\s*}}'
+
+            reassign_match = re.search(reassign_pattern, source_content[match.end():match.end()+500], re.DOTALL)
+
+            if reassign_match:
+                transform_expr = reassign_match.group(1).strip()
+
+                # Mark this as a variable transformation
+                # For now, we'll generate it inline in templates that use it
+                # Store metadata about the transformation
+                references[var_name] = {
+                    'type': 'variable_transform',
+                    'source_var': source_var,
+                    'transform_expr': transform_expr
+                }
 
         return references
 

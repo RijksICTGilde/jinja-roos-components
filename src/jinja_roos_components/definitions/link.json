@@ -1,0 +1,234 @@
+{
+  "name": "link",
+  "source_file": "rvo/components/link/src/template.tsx",
+  "conversion_hash": "7ce781f2f77d81090d128fbf02b6f3f8b018871f8a1ce48b819c224aed4142ee",
+  "base_components": [],
+  "nested_components": [
+    {
+      "name": "icon",
+      "component_class": "Icon",
+      "source_path": "../../icon/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/icon/src/template.tsx",
+      "relative_path": "rvo/components/icon/src/template.tsx",
+      "interface": "IIconProps",
+      "tag_name": "c-icon",
+      "props": [
+        "icon",
+        "size",
+        "color",
+        "className",
+        "ariaLabel",
+        "onClick"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "content attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "Dit is een link"
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "href attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "#"
+    },
+    {
+      "name": "color",
+      "type": "enum",
+      "required": false,
+      "description": "color attribute",
+      "enum_values": [
+        "hemelblauw",
+        "donkerblauw",
+        "lintblauw",
+        "wit",
+        "zwart",
+        "grijs-700"
+      ],
+      "default": "hemelblauw",
+      "is_example": true,
+      "example_value": "hemelblauw"
+    },
+    {
+      "name": "weight",
+      "type": "enum",
+      "required": false,
+      "description": "weight attribute",
+      "enum_values": [
+        "normal",
+        "bold"
+      ],
+      "default": "normal",
+      "is_example": true,
+      "example_value": "bold"
+    },
+    {
+      "name": "showIcon",
+      "type": "enum",
+      "required": false,
+      "description": "showIcon attribute",
+      "enum_values": [
+        "no",
+        "before",
+        "after"
+      ],
+      "default": "no",
+      "is_example": true,
+      "example_value": "no"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "icon attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "home"
+    },
+    {
+      "name": "iconSize",
+      "type": "enum",
+      "required": false,
+      "description": "iconSize attribute",
+      "enum_values": [
+        "sm",
+        "md"
+      ],
+      "default": "sm",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "iconColor",
+      "type": "enum",
+      "required": false,
+      "description": "iconColor attribute",
+      "enum_values": [
+        "hemelblauw",
+        "donkerblauw",
+        "lintblauw",
+        "wit",
+        "zwart",
+        "grijs-700"
+      ],
+      "default": "hemelblauw",
+      "is_example": true,
+      "example_value": "hemelblauw"
+    },
+    {
+      "name": "iconAriaLabel",
+      "type": "string",
+      "required": false,
+      "description": "iconAriaLabel attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "role",
+      "type": "string",
+      "required": false,
+      "description": "role attribute",
+      "default": ""
+    },
+    {
+      "name": "hover",
+      "type": "boolean",
+      "required": false,
+      "description": "hover attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "description": "active attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "focus",
+      "type": "boolean",
+      "required": false,
+      "description": "focus attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "noUnderline",
+      "type": "boolean",
+      "required": false,
+      "description": "noUnderline attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "fullContainerLink",
+      "type": "boolean",
+      "required": false,
+      "description": "fullContainerLink attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "required": false,
+      "description": "target attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    },
+    {
+      "name": "LinkComponent",
+      "type": "string",
+      "required": false,
+      "description": "LinkComponent attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "content": "Dit is een link",
+    "href": "#",
+    "color": "hemelblauw",
+    "weight": "bold",
+    "showIcon": "no",
+    "hover": false,
+    "icon": "home",
+    "iconSize": "md",
+    "iconColor": "hemelblauw",
+    "iconAriaLabel": "",
+    "active": false,
+    "focus": false,
+    "noUnderline": false,
+    "fullContainerLink": false
+  }
+}

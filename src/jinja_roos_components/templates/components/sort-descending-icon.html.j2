@@ -1,11 +1,9 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
 {% import 'components/_attribute_mixin.j2' as attributes %}
-{# Auto-generated from React component: tabs
+{# Auto-generated from React component: sort-descending-icon
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
-{% set tabs = _component_context.get('tabs', []) %}
-{% set activeTab = _component_context.get('activeTab', 0) %}
-{% set children = _component_context.get('content', '') %}
-{% set css_classes = ['rvo-tabs', 'rvo-ul', 'rvo-ul--no-margin', 'rvo-ul--no-padding', 'rvo-ul--icon', 'rvo-ul--icon-option-2'] %}
+
+{% set css_classes = [] %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
 {% if utility_classes %}
@@ -15,19 +13,9 @@
 {% if _component_context.get('class') %}
     {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-<ul
+<svg
     class="{{ css_classes | join(' ') }}"
-    data-roos-component="tabs"
+    data-roos-component="sort-descending-icon"
     {{ attrs.render_extra_attributes(_component_context) }}>
-        {% if children %}
-        {{ children | safe }}
-    {% elif tabs %}
-        {% for tab in tabs %}
-            <c-tab-item
-                label="{{ tab.label }}"
-                href="{{ tab.href }}"
-                selected="{{ loop.index0 == activeTab }}"
-            ></c-tab-item>
-        {% endfor %}
-    {% endif %}
-</ul>
+    {# Content #}
+</svg>

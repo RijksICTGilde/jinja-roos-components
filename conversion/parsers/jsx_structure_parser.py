@@ -57,9 +57,9 @@ class JsxStructureParser:
             # This is a dynamic tag! Use the conditional info
             resolved_dynamic_tag = dynamic_tag
 
-        # Check for wrapper pattern: simple div/span with only className
-        # wrapping a more complex element
-        if root_tag in ('div', 'span') and self._is_simple_wrapper(root_attrs_str):
+        # Check for wrapper pattern: element with simple attributes
+        # wrapping a more complex element (component)
+        if root_tag in ('div', 'span', 'li', 'ul', 'ol', 'section', 'article', 'nav') and self._is_simple_wrapper(root_attrs_str):
             # Try to detect nested element
             nested_result = self._parse_nested_element(jsx_content, tag_match.end())
             if nested_result:
@@ -71,7 +71,8 @@ class JsxStructureParser:
                     'needs_review': nested_result['needs_review'],
                     'wrapper': {
                         'tag': root_tag,
-                        'classes': root_classes
+                        'classes': root_classes,
+                        'attributes': root_attrs  # Include wrapper attributes like role="presentation"
                     },
                     'dynamic_tag': resolved_dynamic_tag
                 }
@@ -86,7 +87,7 @@ class JsxStructureParser:
         }
 
     def _is_simple_wrapper(self, attrs_str: str) -> bool:
-        """Check if element is a simple wrapper (only has className, no complex attributes).
+        """Check if element is a simple wrapper (only has className and semantic attributes).
 
         Args:
             attrs_str: Attributes string
@@ -94,15 +95,23 @@ class JsxStructureParser:
         Returns:
             True if this looks like a simple wrapper element
         """
-        # Simple wrapper has only className (static or dynamic)
-        # No other meaningful attributes
+        # Simple wrapper has className and only semantic/presentational attributes
+        # (role, aria-*, data-*, id), not complex event handlers or state
         has_classname = 'className=' in attrs_str
 
-        # Count number of attributes (rough heuristic)
-        attr_count = len(re.findall(r'\w+\s*=', attrs_str))
+        # Check for complex attributes that indicate NOT a wrapper
+        # Event handlers (onClick, onChange, etc.)
+        has_event_handlers = bool(re.search(r'on[A-Z]\w+\s*=', attrs_str))
 
-        # Simple wrapper: has className and few/no other attrs
-        return has_classname and attr_count <= 1
+        # State/ref attributes
+        has_state_refs = bool(re.search(r'\b(ref|key)\s*=', attrs_str))
+
+        # Complex spread operators (not just {...props})
+        has_complex_spread = bool(re.search(r'\{\.\.\.(?!props\})', attrs_str))
+
+        # Simple wrapper: has className and NO complex attributes
+        # Can have role, aria-*, data-*, id, etc.
+        return has_classname and not (has_event_handlers or has_state_refs or has_complex_spread)
 
     def _parse_nested_element(self, jsx_content: str, start_pos: int) -> Optional[Dict]:
         """Parse nested element after root tag.
@@ -159,8 +168,8 @@ class JsxStructureParser:
             class_str = class_match.group(1)
             css_classes = [cls.strip() for cls in class_str.split() if cls.strip()]
 
-        # Extract other static attributes (id, data-*, aria-*, etc.)
-        # Pattern: attrName="value" or attrName='value'
+        # Extract other attributes (both static strings and JSX expressions)
+        # Pattern 1: attrName="value" or attrName='value' (static strings)
         attr_pattern = r'(\w+(?:-\w+)*)=["\']([^"\']+)["\']'
         for match in re.finditer(attr_pattern, attributes_str):
             attr_name = match.group(1)
@@ -169,6 +178,17 @@ class JsxStructureParser:
             # Skip className (already processed) and JSX-specific attributes
             if attr_name not in ('className', 'key', 'ref'):
                 attributes[attr_name] = attr_value
+
+        # Pattern 2: attrName={expression} (JSX expressions)
+        expr_pattern = r'(\w+(?:-\w+)*)=\{([^}]+)\}'
+        for match in re.finditer(expr_pattern, attributes_str):
+            attr_name = match.group(1)
+            attr_expr = match.group(2).strip()
+
+            # Skip if already captured as static string, className, or JSX-specific
+            if attr_name not in attributes and attr_name not in ('className', 'key', 'ref'):
+                # Mark as expression so downstream processors know
+                attributes[attr_name] = {'type': 'expression', 'value': attr_expr}
 
         # Check for dynamic className expressions like className={clsx(...)}
         if 'className={' in attributes_str:

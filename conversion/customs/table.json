@@ -1,0 +1,32 @@
+{
+  "component": "table",
+  "tag_name": "table",
+  "description": "HTML table element with RVO styling",
+  "html_tag": "table",
+  "css_classes": ["rvo-table"],
+  "wrapper": {
+    "html_tag": "div",
+    "css_classes": ["rvo-table--responsive"]
+  },
+  "conditional_children": [
+    {
+      "tag": "caption",
+      "classes": ["rvo-caption"],
+      "condition": "description",
+      "content": "{{ description }}"
+    }
+  ],
+  "add_children_support": true,
+  "attribute_additions": {
+    "description": {
+      "type": "string",
+      "required": false,
+      "description": "Table caption/description"
+    }
+  },
+  "notes": [
+    "Custom wrapper component for HTML table element",
+    "Wrapped in responsive container div",
+    "Use with thead, tbody, tr, th, and td components"
+  ]
+}

@@ -1,17 +1,36 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: form-fieldset
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
-{% set legend = _component_context.legend | default('') %}
-{% set disabled = _component_context.disabled | default(false) %}
-{% set fields = _component_context.fields | default('defaultFields') %}
-{% set children = _component_context.content | default('') %}
+{% set legend = _component_context.get('legend', '') %}
+{% set disabled = _component_context.get('disabled', false) %}
+{% set fields = _component_context.get('fields', 'defaultFields') %}
+{% set children = _component_context.get('content', '') %}
 {% set css_classes = ['utrecht-form-fieldset__fieldset', 'utrecht-form-fieldset--html-fieldset', 'utrecht-form-fieldset'] %}
+{% set content = _component_context.content | default('') %}
+
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+{# Add custom classes from class attribute #}
 {% set wrapper_classes = ['utrecht-form-fieldset', 'rvo-form-fieldset'] %}
+{% if _component_context.get('class') %}
+    {% set wrapper_classes = wrapper_classes + _component_context['class'].split() %}
+{% endif %}
 <div class="{{ wrapper_classes | join(' ') }}" data-roos-component="form-fieldset">
     <fieldset
         class="{{ css_classes | join(' ') }}"
         {% if disabled %}disabled{% endif %}
         {{ attrs.render_extra_attributes(_component_context) }}>
-        {% if legend %}<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">{{ legend }}</legend>{% endif %}{{ _component_context.content if _component_context.content else '' }}{# TODO_CONVERSION: Handle fields.map rendering #}
+        {% if legend %}<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">{{ legend }}</legend>{% endif %}
+    {% if children %}
+        {{ children | safe }}
+    {% elif fields %}
+        {% for fieldProps in fields %}
+            <c-text-input-field></c-text-input-field>
+        {% endfor %}
+    {% endif %}
     </fieldset>
 </div>

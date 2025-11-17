@@ -1,0 +1,14 @@
+{
+  "component": "tbody",
+  "tag_name": "tbody",
+  "description": "HTML table body element with RVO styling",
+  "html_tag": "tbody",
+  "css_classes": ["rvo-table-body"],
+  "add_children_support": true,
+  "attribute_additions": {},
+  "aliases": [],
+  "notes": [
+    "Custom wrapper component for HTML tbody element",
+    "Container for table body rows"
+  ]
+}

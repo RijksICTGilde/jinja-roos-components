@@ -1,0 +1,14 @@
+{
+  "component": "icon",
+  "description": "Extend color attribute to support all RVO colors",
+  "attribute_overrides": {
+    "color": {
+      "values": "all_rvo_colors",
+      "description": "Icon color (supports all RVO palette colors)"
+    }
+  },
+  "notes": [
+    "Extended color attribute to support full RVO color palette",
+    "Color maps to rvo-icon--{color} CSS class"
+  ]
+}

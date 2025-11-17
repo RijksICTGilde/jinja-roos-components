@@ -1,0 +1,14 @@
+{
+  "component": "tr",
+  "tag_name": "tr",
+  "description": "HTML table row element with RVO styling",
+  "html_tag": "tr",
+  "css_classes": ["rvo-table-row"],
+  "add_children_support": true,
+  "attribute_additions": {},
+  "aliases": [],
+  "notes": [
+    "Custom wrapper component for HTML tr element",
+    "Provides RVO table row styling"
+  ]
+}

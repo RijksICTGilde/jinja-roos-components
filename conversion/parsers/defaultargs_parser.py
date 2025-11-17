@@ -70,26 +70,67 @@ class DefaultArgsParser:
         """
         result = {}
 
-        # Remove outer braces and split by lines
+        # Remove outer braces
         obj_str = obj_str.strip()[1:-1]  # Remove { and }
+
+        # Parse line by line, handling multi-line values
+        i = 0
         lines = obj_str.split('\n')
 
-        for line in lines:
-            line = line.strip()
+        while i < len(lines):
+            line = lines[i].strip()
 
-            # Skip empty lines, comments, and closing braces
+            # Skip empty lines, comments
             if not line or line.startswith('//') or line.startswith('/*'):
+                i += 1
                 continue
 
-            # Remove trailing comma
-            if line.endswith(','):
-                line = line[:-1].strip()
+            # Check if this line starts a key: value pair
+            key_match = re.match(r'^(\w+)\s*:\s*(.*)$', line)
+            if key_match:
+                key = key_match.group(1)
+                value_start = key_match.group(2).strip()
 
-            # Parse key: value pairs
-            parsed = self._parse_property_line(line)
-            if parsed:
-                key, value = parsed
-                result[key] = value
+                # Check if value is multi-line (array or object)
+                if value_start.startswith('[') and not value_start.rstrip(',').endswith(']'):
+                    # Multi-line array - collect until we find the closing ]
+                    full_value = value_start
+                    i += 1
+                    bracket_count = value_start.count('[') - value_start.count(']')
+
+                    while i < len(lines) and bracket_count > 0:
+                        next_line = lines[i]
+                        full_value += '\n' + next_line
+                        bracket_count += next_line.count('[') - next_line.count(']')
+                        i += 1
+
+                    # Remove trailing comma
+                    full_value = full_value.rstrip().rstrip(',')
+                    result[key] = self._parse_value(full_value)
+                    continue
+
+                elif value_start.startswith('{') and not value_start.rstrip(',').endswith('}'):
+                    # Multi-line object - collect until we find the closing }
+                    full_value = value_start
+                    i += 1
+                    brace_count = value_start.count('{') - value_start.count('}')
+
+                    while i < len(lines) and brace_count > 0:
+                        next_line = lines[i]
+                        full_value += '\n' + next_line
+                        brace_count += next_line.count('{') - next_line.count('}')
+                        i += 1
+
+                    # Remove trailing comma
+                    full_value = full_value.rstrip().rstrip(',')
+                    result[key] = self._parse_value(full_value)
+                    continue
+                else:
+                    # Single-line value
+                    value = value_start.rstrip(',')
+                    result[key] = self._parse_value(value)
+
+            i += 1
 
         return result
 
@@ -152,18 +193,77 @@ class DefaultArgsParser:
         except ValueError:
             pass
 
-        # Arrays (simple parsing)
+        # Arrays
         if value_str.startswith('[') and value_str.endswith(']'):
             arr_content = value_str[1:-1].strip()
             if not arr_content:
                 return []
-            # Simple comma-separated values
-            items = [self._parse_value(item.strip()) for item in arr_content.split(',')]
+
+            # Parse array items, handling nested objects and arrays
+            items = []
+            current_item = ''
+            depth = 0  # Track nesting depth of {}, []
+
+            for char in arr_content:
+                if char in '{[':
+                    depth += 1
+                    current_item += char
+                elif char in '}]':
+                    depth -= 1
+                    current_item += char
+                elif char == ',' and depth == 0:
+                    # Top-level comma - end of item
+                    if current_item.strip():
+                        items.append(self._parse_value(current_item.strip()))
+                    current_item = ''
+                else:
+                    current_item += char
+
+            # Don't forget the last item
+            if current_item.strip():
+                items.append(self._parse_value(current_item.strip()))
+
             return items
 
-        # Objects (return as string for now - can be enhanced)
-        if value_str.startswith('{'):
-            return value_str
+        # Objects - parse to dictionary
+        if value_str.startswith('{') and value_str.endswith('}'):
+            obj_content = value_str[1:-1].strip()
+            if not obj_content:
+                return {}
+
+            # Parse object properties
+            obj_dict = {}
+            current_prop = ''
+            depth = 0
+
+            for char in obj_content:
+                if char in '{[':
+                    depth += 1
+                    current_prop += char
+                elif char in '}]':
+                    depth -= 1
+                    current_prop += char
+                elif char == ',' and depth == 0:
+                    # Top-level comma - end of property
+                    if current_prop.strip():
+                        prop_match = re.match(r'^\s*(\w+)\s*:\s*(.+)$', current_prop.strip())
+                        if prop_match:
+                            prop_name = prop_match.group(1)
+                            prop_value = self._parse_value(prop_match.group(2).strip())
+                            obj_dict[prop_name] = prop_value
+                    current_prop = ''
+                else:
+                    current_prop += char
+
+            # Don't forget the last property
+            if current_prop.strip():
+                prop_match = re.match(r'^\s*(\w+)\s*:\s*(.+)$', current_prop.strip())
+                if prop_match:
+                    prop_name = prop_match.group(1)
+                    prop_value = self._parse_value(prop_match.group(2).strip())
+                    obj_dict[prop_name] = prop_value
+
+            return obj_dict
 
         # Default: return as string
         return value_str

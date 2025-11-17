@@ -1,0 +1,16 @@
+{
+  "name": "td",
+  "source_file": "custom/td",
+  "conversion_hash": "custom_component",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "Child content for the component"
+    }
+  ],
+  "manual_review_items": []
+}

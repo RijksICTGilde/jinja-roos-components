@@ -1,0 +1,22 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: tab-item
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set label = _component_context.get('label', 'Tab Item label') %}
+{% set href = _component_context.get('href', '#') %}
+{% set selected = _component_context.get('selected', false) %}
+{% set css_classes = ['rvo-tabs__item-link'] %}
+{% if selected %}{% set css_classes = css_classes + ['rvo-tabs__item-link--active'] %}{% endif %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
+{% endif %}
+{% set wrapper_classes = ['rvo-tabs__item'] %}
+<li class="{{ wrapper_classes | join(' ') }}" role="presentation" data-roos-component="tab-item" {{ attrs.render_extra_attributes(_component_context) }}>
+    <c-link role="tab" href="{{ href }}" aria-selected="{{ selected }}" class="rvo-tabs__item-link {% if selected %}rvo-tabs__item-link--active{% endif %}" noUnderline="{{ true }}" active="{{ selected }}" weight="{{ 'bold' if selected else 'normal' }}">{{ label }}</c-link>
+</li>

@@ -14,7 +14,7 @@
       "name": "text-input-field",
       "component_class": "TextInputField",
       "source_path": "../../form-field-textinput/src/template",
-      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field-textinput/src/template.tsx",
+      "resolved_path": "rvo/components/form-field-textinput/src/template.tsx",
       "interface": "ITextInputFieldProps",
       "tag_name": "c-text-input-field",
       "props": []

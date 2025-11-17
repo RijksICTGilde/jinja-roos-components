@@ -203,16 +203,62 @@ class TsxParser:
             jsx = self._extract_until_matching_paren(component_content[start:])
             return jsx.strip()
 
-        # Fallback to explicit return statement
-        return_match = re.search(r'return\s*\(', component_content)
-        if not return_match:
-            # Try without parentheses
-            return_match = re.search(r'return\s*<', component_content)
+        # Detect and handle conditional returns
+        # Look for pattern: if (condition) { return (...); } return (...);
+        conditional_return = re.search(
+            r'if\s*\(([^)]+)\)\s*\{[^}]*return\s*[\(<]',
+            component_content
+        )
+
+        if conditional_return:
+            condition = conditional_return.group(1).strip()
+            # Check if this is a component-type prop check (like LinkComponent)
+            # These are used for dynamic component rendering which doesn't translate to Jinja
+            # Pattern: checking for props ending in "Component" or PascalCase vars
+            component_prop_patterns = [
+                r'\w*Component\b',  # Ends with Component
+                r'\b[A-Z][a-zA-Z]+\b'  # PascalCase (likely a component)
+            ]
+
+            is_component_check = any(
+                re.search(pattern, condition)
+                for pattern in component_prop_patterns
+            )
+
+            if is_component_check:
+                # Skip conditional returns that check for component props
+                # Find the unconditional default return after the if block
+                if_block_end = component_content.find('}', conditional_return.end())
+                if if_block_end > 0:
+                    after_if = component_content[if_block_end:]
+                    default_return = re.search(r'return\s*[\(<]', after_if)
+                    if default_return:
+                        # Use the default return
+                        return_match = default_return
+                        component_content = after_if
+                    else:
+                        # No default return found, use last return
+                        return_matches = list(re.finditer(r'return\s*[\(<]', component_content))
+                        return_match = return_matches[-1] if return_matches else None
+                else:
+                    return_matches = list(re.finditer(r'return\s*[\(<]', component_content))
+                    return_match = return_matches[-1] if return_matches else None
+            else:
+                # For other conditionals, we could convert to Jinja {% if %}
+                # For now, use the last return (main/default path)
+                return_matches = list(re.finditer(r'return\s*[\(<]', component_content))
+                return_match = return_matches[-1] if return_matches else None
+        else:
+            # No conditional returns, find the return statement
+            return_match = re.search(r'return\s*\(', component_content)
             if not return_match:
-                return ""
+                return_match = re.search(r'return\s*<', component_content)
+
+        if not return_match:
+            return ""
 
         start = return_match.end()
-        if component_content[start - 1] == '(':
+        if component_content[start - 1] in '(<':
             start -= 1
 
         # Extract until matching closing
@@ -235,16 +281,55 @@ class TsxParser:
             jsx = self._extract_until_matching_paren(content[start:])
             return jsx.strip()
 
-        # Fallback to explicit return statement
-        return_match = re.search(r'return\s*\(', content)
-        if not return_match:
-            # Try without parentheses
-            return_match = re.search(r'return\s*<', content)
+        # Detect and handle conditional returns
+        conditional_return = re.search(
+            r'if\s*\(([^)]+)\)\s*\{[^}]*return\s*[\(<]',
+            content
+        )
+
+        if conditional_return:
+            condition = conditional_return.group(1).strip()
+            # Check if this is a component-type prop check
+            component_prop_patterns = [
+                r'\w*Component\b',
+                r'\b[A-Z][a-zA-Z]+\b'
+            ]
+
+            is_component_check = any(
+                re.search(pattern, condition)
+                for pattern in component_prop_patterns
+            )
+
+            if is_component_check:
+                # Skip conditional returns for component props
+                if_block_end = content.find('}', conditional_return.end())
+                if if_block_end > 0:
+                    after_if = content[if_block_end:]
+                    default_return = re.search(r'return\s*[\(<]', after_if)
+                    if default_return:
+                        return_match = default_return
+                        content = after_if
+                    else:
+                        return_matches = list(re.finditer(r'return\s*[\(<]', content))
+                        return_match = return_matches[-1] if return_matches else None
+                else:
+                    return_matches = list(re.finditer(r'return\s*[\(<]', content))
+                    return_match = return_matches[-1] if return_matches else None
+            else:
+                # Use the last return for other conditionals
+                return_matches = list(re.finditer(r'return\s*[\(<]', content))
+                return_match = return_matches[-1] if return_matches else None
+        else:
+            # No conditional returns
+            return_match = re.search(r'return\s*\(', content)
             if not return_match:
-                return ""
+                return_match = re.search(r'return\s*<', content)
+
+        if not return_match:
+            return ""
 
         start = return_match.end()
-        if content[start - 1] == '(':
+        if content[start - 1] in '(<':
             start -= 1
 
         # Extract until matching closing

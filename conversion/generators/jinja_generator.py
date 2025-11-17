@@ -1,5 +1,6 @@
 """Generate Jinja templates from parsed React components."""
 
+import re
 from typing import List, Dict, Any, Optional
 from ..parsers.interface_parser import AttributeInfo
 from .class_builder import ClassBuilder
@@ -44,7 +45,8 @@ class JinjaGenerator:
         nested_components: List[Dict] = None,
         array_mappings: Dict[str, Dict] = None,
         add_children_support: bool = False,
-        custom_content_template: Optional[str] = None
+        custom_content_template: Optional[str] = None,
+        component_refs: Dict[str, Dict] = None
     ) -> str:
         """Generate complete Jinja template.
 
@@ -82,6 +84,12 @@ class JinjaGenerator:
 
         # Generate variable declarations
         lines.append(self._generate_variables(attributes, default_args))
+
+        # Generate component variable declarations (like iconMarkup = Icon(...))
+        if component_refs:
+            comp_var_lines = self._generate_component_variables(component_refs, nested_components or [])
+            if comp_var_lines:
+                lines.append(comp_var_lines)
 
         # Generate CSS class building logic
         self.class_builder.add_base_classes(base_classes)
@@ -213,6 +221,124 @@ class JinjaGenerator:
 
         return '\n'.join(lines)
 
+    def _generate_component_variables(self, component_refs: Dict[str, Dict], nested_components: List[Dict]) -> str:
+        """Generate component variable declarations like {% set iconMarkup %}<c-icon...>{% endset %}.
+
+        Args:
+            component_refs: Dict of variable names to component reference info
+            nested_components: List of nested component metadata
+
+        Returns:
+            Jinja set blocks for component variables
+        """
+        lines = []
+
+        # First pass: Generate computed string variables and variable transforms (dependencies for component refs)
+        for var_name, ref_info in component_refs.items():
+            if ref_info.get('type') == 'computed_string':
+                # Generate list-based class building
+                conditionals = ref_info.get('conditionals', [])
+                if conditionals:
+                    # Generate: {% set var_classes = [] %}
+                    lines.append(f"{{% set {var_name}_classes = [] %}}")
+
+                    # Generate conditional additions
+                    for cond_info in conditionals:
+                        condition = self._convert_js_condition_to_jinja(cond_info['condition'])
+                        value = cond_info['value']
+                        lines.append(f"{{% if {condition} %}}{{% set {var_name}_classes = {var_name}_classes + ['{value}'] %}}{{% endif %}}")
+
+                    # Generate final join
+                    lines.append(f"{{% set {var_name} = {var_name}_classes | join(' ') %}}")
+
+            elif ref_info.get('type') == 'variable_transform':
+                # Variable transforms are handled by the class builder as computed vars
+                # (added in _build_class_logic before this method is called)
+                # So we skip them here to avoid duplicates
+                pass
+
+        # Second pass: Generate component references (may depend on computed strings)
+        for var_name, ref_info in component_refs.items():
+            # Handle component references
+            if not ref_info.get('component'):
+                continue
+
+            component_name = ref_info['component']
+            props = ref_info.get('props', {})
+
+            # Find the nested component tag name
+            tag_name = None
+            for nested in nested_components:
+                if nested['component_class'] == component_name:
+                    tag_name = nested['tag_name']
+                    break
+
+            if not tag_name:
+                # Component not found in nested components, skip
+                continue
+
+            # Generate component tag with props
+            attrs_list = []
+            for prop_name, prop_value in props.items():
+                # Translate React prop names to HTML attribute names
+                # className → class (React uses className, HTML/Jinja uses class)
+                # htmlFor → for (if we encounter it)
+                # Keep other names as-is
+                attr_name = self._translate_react_prop_to_html_attr(prop_name)
+
+                # Convert prop value to Jinja expression
+                # Simple variable reference: icon → {{ icon }}
+                # String literal: 'value' → "value"
+                if prop_value.startswith("'") and prop_value.endswith("'"):
+                    # String literal
+                    attrs_list.append(f'{attr_name}="{prop_value[1:-1]}"')
+                else:
+                    # Variable or expression
+                    attrs_list.append(f'{attr_name}="{{{{ {prop_value} }}}}"')
+
+            attrs_str = ' '.join(attrs_list)
+
+            # Generate {% set varName %}<c-component ...></c-component>{% endset %}
+            lines.append(f"{{% set {var_name} %}}<{tag_name} {attrs_str}></{tag_name}>{{% endset %}}")
+
+        return '\n'.join(lines)
+
+    def _convert_js_condition_to_jinja(self, js_condition: str) -> str:
+        """Convert JavaScript condition to Jinja2 condition.
+
+        Args:
+            js_condition: JavaScript condition (e.g., "showIcon === 'before'")
+
+        Returns:
+            Jinja2 condition (e.g., "showIcon == 'before'")
+        """
+        jinja_condition = js_condition
+        # Convert comparison operators
+        jinja_condition = jinja_condition.replace('===', '==')
+        jinja_condition = jinja_condition.replace('!==', '!=')
+        # Convert logical operators
+        jinja_condition = jinja_condition.replace('&&', 'and')
+        jinja_condition = jinja_condition.replace('||', 'or')
+        # Convert negation (careful with order - do this after !== conversion)
+        jinja_condition = re.sub(r'\!(\w+)', r'not \1', jinja_condition)
+        return jinja_condition
+
+    def _translate_react_prop_to_html_attr(self, prop_name: str) -> str:
+        """Translate React prop names to HTML attribute names.
+
+        Args:
+            prop_name: React prop name (e.g., 'className', 'htmlFor')
+
+        Returns:
+            HTML attribute name (e.g., 'class', 'for')
+        """
+        # Map of React prop names to HTML attribute names
+        translation_map = {
+            'className': 'class',
+            'htmlFor': 'for',
+        }
+        return translation_map.get(prop_name, prop_name)
+
     def _get_default_value(self, attr: AttributeInfo, default_args: Dict[str, Any]) -> Any:
         """Get default value for an attribute.
 
@@ -306,7 +432,7 @@ class JinjaGenerator:
         """Generate HTML element with attributes.
 
         Args:
-            tag: HTML tag name
+            tag: HTML tag name or component name
             attributes: List of attributes
             content: Inner content
             wrapper_info: Optional wrapper element info
@@ -319,12 +445,38 @@ class JinjaGenerator:
         if dynamic_tag:
             return self._generate_dynamic_tag_element(dynamic_tag, attributes, content, wrapper_info)
 
+        # Check if tag is a React component (PascalCase) instead of HTML tag
+        is_component = tag and tag[0].isupper()
+
+        # If it's a component with a wrapper, we need to generate the component tag from content
+        # The content should have the component's props parsed
+        if is_component and wrapper_info:
+            # The content should already be parsed with the component tag
+            # Just wrap it in the wrapper
+            return self._generate_wrapper_with_content(wrapper_info, content)
+
         lines = []
 
         # If there's a wrapper, generate wrapper opening tag
         if wrapper_info:
             wrapper_tag = wrapper_info['tag']
-            wrapper_opening = f'<{wrapper_tag} class="{{{{ wrapper_classes | join(\' \') }}}}" data-roos-component="{self.component_name}">'
+            wrapper_attrs = ['class="{{ wrapper_classes | join(\' \') }}"']
+
+            # Add wrapper attributes (like role="presentation")
+            if 'attributes' in wrapper_info:
+                for attr_name, attr_value in wrapper_info['attributes'].items():
+                    if isinstance(attr_value, bool):
+                        if attr_value:
+                            wrapper_attrs.append(attr_name)
+                    else:
+                        wrapper_attrs.append(f'{attr_name}="{attr_value}"')
+
+            wrapper_attrs.append(f'data-roos-component="{self.component_name}"')
+
+            # Add event handlers and extra attributes via mixin
+            wrapper_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
+
+            wrapper_opening = f'<{wrapper_tag} {" ".join(wrapper_attrs)}>'
             lines.append(wrapper_opening)
 
         # Inner element opening tag
@@ -336,13 +488,29 @@ class JinjaGenerator:
         if not wrapper_info:
             inner_attrs.append(f'data-roos-component="{self.component_name}"')
 
-        # Add common HTML attributes
-        common_attrs = ['id', 'type', 'disabled', 'required', 'readonly', 'placeholder']
+        # Add HTML attributes based on tag type
+        # Map of tag -> list of relevant attributes
+        tag_specific_attrs = {
+            'a': ['href', 'target', 'role', 'rel', 'download'],
+            'input': ['type', 'placeholder', 'value', 'name', 'disabled', 'required', 'readonly', 'checked', 'min', 'max', 'step'],
+            'button': ['type', 'disabled', 'name', 'value'],
+            'select': ['name', 'disabled', 'required', 'multiple'],
+            'textarea': ['name', 'placeholder', 'disabled', 'required', 'readonly', 'rows', 'cols'],
+            'img': ['src', 'alt', 'width', 'height'],
+            'form': ['action', 'method', 'enctype'],
+        }
+
+        # Common attributes for all tags
+        common_attrs = ['id', 'title', 'tabindex']
+
+        # Get relevant attributes for this tag
+        relevant_attrs = tag_specific_attrs.get(tag, []) + common_attrs
+
         for attr in attributes:
             # Skip if this attribute is a pass-through attribute (will be handled separately)
             if hasattr(attr, '_passthrough_target'):
                 continue
-            if attr.name in common_attrs:
+            if attr.name in relevant_attrs:
                 attr_str = self._generate_html_attribute(attr)
                 if attr_str:
                     inner_attrs.append(attr_str)
@@ -395,6 +563,151 @@ class JinjaGenerator:
 
         return '\n'.join(lines)
 
+    def _generate_wrapper_with_content(self, wrapper_info: Dict, content: str) -> str:
+        """Generate wrapper element with content inside.
+
+        Args:
+            wrapper_info: Wrapper element info
+            content: Pre-generated content (should be component tag)
+
+        Returns:
+            Wrapper HTML with content
+        """
+        lines = []
+
+        # Generate wrapper opening tag
+        wrapper_tag = wrapper_info['tag']
+        wrapper_attrs = ['class="{{ wrapper_classes | join(\' \') }}"']
+
+        # Add wrapper attributes (like role="presentation")
+        if 'attributes' in wrapper_info:
+            for attr_name, attr_value in wrapper_info['attributes'].items():
+                if isinstance(attr_value, bool):
+                    if attr_value:
+                        wrapper_attrs.append(attr_name)
+                else:
+                    wrapper_attrs.append(f'{attr_name}="{attr_value}"')
+
+        wrapper_attrs.append(f'data-roos-component="{self.component_name}"')
+
+        # Add event handlers and extra attributes via mixin
+        wrapper_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
+
+        wrapper_opening = f'<{wrapper_tag} {" ".join(wrapper_attrs)}>'
+        lines.append(wrapper_opening)
+
+        # Add content (should be the component tag)
+        if content:
+            lines.append(f'    {content}')
+
+        # Close wrapper
+        lines.append(f'</{wrapper_tag}>')
+
+        return '\n'.join(lines)
+
+    def _generate_wrapped_component_element(self, component_name: str, attributes: List[AttributeInfo], content: str, wrapper_info: Optional[Dict]) -> str:
+        """Generate wrapped component element (e.g., <li> wrapping <c-link>).
+
+        Args:
+            component_name: Component name (e.g., 'Link')
+            attributes: List of component attributes
+            content: Inner content
+            wrapper_info: Wrapper element info
+
+        Returns:
+            HTML string with wrapper and component tag
+        """
+        lines = []
+
+        # Generate wrapper opening tag
+        if wrapper_info:
+            wrapper_tag = wrapper_info['tag']
+            wrapper_attrs = ['class="{{ wrapper_classes | join(\' \') }}"']
+
+            # Add wrapper attributes (like role="presentation")
+            if 'attributes' in wrapper_info:
+                for attr_name, attr_value in wrapper_info['attributes'].items():
+                    if isinstance(attr_value, bool):
+                        if attr_value:
+                            wrapper_attrs.append(attr_name)
+                    else:
+                        wrapper_attrs.append(f'{attr_name}="{attr_value}"')
+
+            wrapper_attrs.append(f'data-roos-component="{self.component_name}"')
+
+            # Add event handlers and extra attributes via mixin
+            wrapper_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
+
+            wrapper_opening = f'<{wrapper_tag} {" ".join(wrapper_attrs)}>'
+            lines.append(wrapper_opening)
+
+        # Generate component tag
+        component_tag_name = self._to_kebab_case(component_name)
+        component_tag_name = f'c-{component_tag_name}'
+
+        # Find component in nested_components to get tag name
+        for comp in self.nested_components:
+            if comp['component_class'] == component_name:
+                component_tag_name = comp['tag_name']
+                break
+
+        # Build component attributes from the component's attributes
+        component_attrs = []
+
+        # Add role, href, aria-selected, and other attributes that are defined
+        for attr in attributes:
+            # Skip function props
+            if attr.is_function:
+                continue
+
+            var_name = self._get_mapped_name(attr.name)
+
+            # Special handling for specific attributes
+            # Skip 'label' - it will be used as inner content, not an attribute
+            if attr.name == 'label':
+                continue
+            elif attr.name in ['href', 'selected']:
+                if 'boolean' in attr.types:
+                    # For boolean: selected="{{ selected }}"
+                    component_attrs.append(f'{attr.name}="{{{{ {var_name} }}}}"')
+                else:
+                    component_attrs.append(f'{attr.name}="{{{{ {var_name} }}}}"')
+
+        # Add fixed attributes for Link component
+        # role="tab", aria-selected based on selected, noUnderline, active, weight
+        component_attrs.insert(0, 'role="tab"')
+
+        # aria-selected should be string "true" or "false"
+        if any(a.name == 'selected' for a in attributes):
+            component_attrs.append('aria-selected="{{ \'true\' if selected else \'false\' }}"')
+
+        # Add class with clsx logic
+        component_attrs.append('class="{{ css_classes | join(\' \') }}"')
+
+        # noUnderline always true for tabs
+        component_attrs.append('noUnderline="true"')
+
+        # active based on selected
+        if any(a.name == 'selected' for a in attributes):
+            component_attrs.append('active="{{ selected }}"')
+            component_attrs.append('weight="{{ \'bold\' if selected else \'normal\' }}"')
+
+        # Build tag
+        lines.append(f'    <{component_tag_name}')
+        for attr in component_attrs:
+            lines.append(f'        {attr}')
+        # Content - use double braces to escape in f-string
+        if content:
+            lines.append(f'    >{content}</{component_tag_name}>')
+        else:
+            lines.append(f'    >{{{{ label }}}}</{component_tag_name}>')
+
+        # Close wrapper
+        if wrapper_info:
+            lines.append(f'</{wrapper_info["tag"]}>')
+
+        return '\n'.join(lines)
+
     def _generate_dynamic_tag_element(self, dynamic_tag: Dict, attributes: List[AttributeInfo], content: str, wrapper_info: Optional[Dict] = None) -> str:
         """Generate HTML element with dynamic tag selection.
 
@@ -423,7 +736,23 @@ class JinjaGenerator:
         # If there's a wrapper, generate wrapper opening tag
         if wrapper_info:
             wrapper_tag = wrapper_info['tag']
-            wrapper_opening = f'<{wrapper_tag} class="{{{{ wrapper_classes | join(\' \') }}}}" data-roos-component="{self.component_name}">'
+            wrapper_attrs = ['class="{{ wrapper_classes | join(\' \') }}"']
+
+            # Add wrapper attributes (like role="presentation")
+            if 'attributes' in wrapper_info:
+                for attr_name, attr_value in wrapper_info['attributes'].items():
+                    if isinstance(attr_value, bool):
+                        if attr_value:
+                            wrapper_attrs.append(attr_name)
+                    else:
+                        wrapper_attrs.append(f'{attr_name}="{attr_value}"')
+
+            wrapper_attrs.append(f'data-roos-component="{self.component_name}"')
+
+            # Add event handlers and extra attributes via mixin
+            wrapper_attrs.append('{{ attrs.render_extra_attributes(_component_context) }}')
+
+            wrapper_opening = f'<{wrapper_tag} {" ".join(wrapper_attrs)}>'
             lines.append(wrapper_opening)
 
         # Inner element opening tag with dynamic tag
@@ -599,6 +928,64 @@ class JinjaGenerator:
             elif element.type == 'variable':
                 # Simple variable reference
                 parts.append(f"{{{{ {element.content} }}}}")
+
+            elif element.type == 'jsx_fragment':
+                # JSX fragment - parse and inline the content
+                # The element.jsx_content contains JSX like:
+                # <>
+                #   {showIcon === 'before' && iconMarkup}
+                #   {children || content}
+                #   {showIcon === 'after' && iconMarkup}
+                # </>
+                jsx_content = element.jsx_content
+
+                # Strip JSX fragment markers <> and </>
+                jsx_content = jsx_content.strip()
+                if jsx_content.startswith('<>'):
+                    jsx_content = jsx_content[2:]
+                if jsx_content.endswith('</>'):
+                    jsx_content = jsx_content[:-3]
+                jsx_content = jsx_content.strip()
+
+                # Parse individual JSX expressions from the fragment
+                # The content is like: {expr1}\n{expr2}\n{expr3}
+                import re
+                expression_pattern = r'\{([^}]+)\}'
+
+                fragment_parts = []
+                for match in re.finditer(expression_pattern, jsx_content):
+                    expression = match.group(1).strip()
+
+                    # Convert common React patterns to Jinja
+                    # Pattern: condition && value
+                    if ' && ' in expression:
+                        cond, value = expression.split(' && ', 1)
+                        cond = cond.strip()
+                        value = value.strip()
+
+                        # Convert React syntax to Jinja
+                        cond_jinja = cond.replace(' === ', ' == ').replace(' !== ', ' != ')
+
+                        fragment_parts.append(f"{{% if {cond_jinja} %}}{{{{{value}}}}}{{% endif %}}")
+
+                    # Pattern: value1 || value2  (fallback)
+                    elif ' || ' in expression:
+                        values = [v.strip() for v in expression.split(' || ')]
+                        # Generate nested fallback: value1 or value2 or ...
+                        jinja_expr = ' or '.join(values)
+                        fragment_parts.append(f"{{{{ {jinja_expr} | safe }}}}")
+
+                    # Simple variable
+                    else:
+                        fragment_parts.append(f"{{{{ {expression} | safe }}}}")
+
+                fragment_content = '\n    '.join(fragment_parts)
+                parts.append(fragment_content)
+
+            elif element.type == 'component':
+                # Nested component (e.g., Link inside a wrapper)
+                component_tag = self._inline_component(element, attributes)
+                parts.append(component_tag)
 
             elif element.type == 'array_map':
                 # Convert array.map() to Jinja for-loop with nested component
@@ -812,45 +1199,217 @@ class JinjaGenerator:
         tag_name = f'c-{component_name_kebab}'
         props = element.component_props or {}
 
-        # Extract content prop (if any) - this becomes inner content, not an attribute
-        content_value = props.get('content', None)
+        # Extract children (inner content)
+        children_content = None
+        if '_children' in props:
+            children_data = props['_children']
+            if isinstance(children_data, dict):
+                # New format: {'value': ..., 'type': ...}
+                children_value = children_data['value']
+                # Strip {braces} if it's a JSX expression
+                if children_value.startswith('{') and children_value.endswith('}'):
+                    children_content = children_value[1:-1]
+                else:
+                    children_content = children_value
+            else:
+                # Old format: just a string
+                children_content = children_data
 
         # Convert props to Jinja attributes
         attrs = []
-        for prop_name, prop_value in props.items():
-            # Skip content (it's inner content, not an attribute)
-            if prop_name == 'content':
+        for prop_name, prop_data in props.items():
+            # Skip special props
+            if prop_name in ['_children', '_spread', 'content']:
                 continue
-            # Handle className -> class
-            elif prop_name == 'className':
-                attrs.append(f'class="{prop_value}"')
-            # Handle href (for links)
-            elif prop_name == 'href':
-                attrs.append(f'href="{{{{ {prop_value} }}}}"')
-            # Event handlers: onClick → @click, onMouseDown → @mousedown, etc.
-            elif prop_name.startswith('on'):
-                # Convert onClick to @click (remove 'on' prefix and lowercase the first char of event name)
-                event_name = prop_name[2:]  # Remove 'on' prefix
-                event_name = event_name[0].lower() + event_name[1:]  # Lowercase first char: Click → click
-                attrs.append(f'@{event_name}="{{{{ {prop_value} }}}}"')
-            # Regular props
+
+            # Skip event handlers (onClick, onChange, etc.)
+            if prop_name.startswith('on') and len(prop_name) > 2 and prop_name[2].isupper():
+                continue
+
+            # Get the prop value and type
+            if isinstance(prop_data, dict):
+                prop_value = prop_data['value']
+                prop_type = prop_data['type']
             else:
-                attrs.append(f'{prop_name}="{{{{ {prop_value} }}}}"')
+                # Old format - assume expression
+                prop_value = prop_data
+                prop_type = 'expression'
+
+            # Convert className to class
+            attr_name = 'class' if prop_name == 'className' else prop_name
+
+            # Convert the value based on type
+            if prop_type == 'string':
+                # String literal - keep as-is
+                attrs.append(f'{attr_name}="{prop_value}"')
+            elif prop_type == 'expression':
+                # Expression - convert to Jinja
+                jinja_value = self._convert_jsx_expression_to_jinja(prop_value)
+                if jinja_value:
+                    attrs.append(f'{attr_name}="{jinja_value}"')
 
         # Build the tag
         attr_str = ' '.join(attrs) if attrs else ''
-        if content_value:
+        if children_content:
             # Component with content
             if attr_str:
-                return f'<{tag_name} {attr_str}>{{{{ {content_value} }}}}</{tag_name}>'
+                return f'<{tag_name} {attr_str}>{{{{ {children_content} }}}}</{tag_name}>'
             else:
-                return f'<{tag_name}>{{{{ {content_value} }}}}</{tag_name}>'
+                return f'<{tag_name}>{{{{ {children_content} }}}}</{tag_name}>'
         else:
             # Self-closing or empty component
             if attr_str:
                 return f'<{tag_name} {attr_str}></{tag_name}>'
             else:
                 return f'<{tag_name}></{tag_name}>'
+
+    def _convert_jsx_expression_to_jinja(self, expr: str) -> Optional[str]:
+        """Convert a JSX expression to Jinja.
+
+        Handles:
+        - clsx() calls: clsx('a', b && 'c') → "a {% if b %}c{% endif %}"
+        - Ternary: a ? 'b' : 'c' → {{ 'b' if a else 'c' }}
+        - Boolean literals: true/false → true/false
+        - Variable references: var → {{ var }}
+
+        Args:
+            expr: JSX expression
+
+        Returns:
+            Jinja expression or None if can't convert
+        """
+        import re
+
+        # Handle clsx() calls
+        if expr.startswith('clsx('):
+            return self._convert_clsx_to_jinja(expr)
+
+        # Handle ternary operator
+        if ' ? ' in expr and ' : ' in expr:
+            return self._convert_ternary_to_jinja(expr)
+
+        # Handle boolean literals
+        if expr == 'true':
+            return '{{ true }}'
+        elif expr == 'false':
+            return '{{ false }}'
+
+        # Handle simple variable references
+        if re.match(r'^\w+$', expr):
+            return f'{{{{ {expr} }}}}'
+
+        # Default: wrap in Jinja expression
+        return f'{{{{ {expr} }}}}'
+
+    def _convert_clsx_to_jinja(self, clsx_expr: str) -> str:
+        """Convert clsx() call to Jinja class string.
+
+        Examples:
+        - clsx('a', 'b') → "a b"
+        - clsx('a', selected && 'active') → "a {% if selected %}active{% endif %}"
+        - clsx('a', selected ? 'active' : 'inactive') → "a {{ 'active' if selected else 'inactive' }}"
+
+        Args:
+            clsx_expr: clsx() expression
+
+        Returns:
+            Jinja class string
+        """
+        import re
+
+        # Extract arguments from clsx(...)
+        match = re.match(r'clsx\((.*)\)$', clsx_expr, re.DOTALL)
+        if not match:
+            return f'{{{{ {clsx_expr} }}}}'
+
+        args_str = match.group(1)
+
+        # Split by commas (but not inside parentheses/quotes)
+        args = []
+        current_arg = ''
+        depth = 0
+        in_string = False
+        string_char = None
+
+        for char in args_str:
+            if char in ('"', "'") and not in_string:
+                in_string = True
+                string_char = char
+                current_arg += char
+            elif char == string_char and in_string:
+                in_string = False
+                current_arg += char
+            elif char in '([{' and not in_string:
+                depth += 1
+                current_arg += char
+            elif char in ')]}' and not in_string:
+                depth -= 1
+                current_arg += char
+            elif char == ',' and depth == 0 and not in_string:
+                args.append(current_arg.strip())
+                current_arg = ''
+            else:
+                current_arg += char
+
+        if current_arg.strip():
+            args.append(current_arg.strip())
+
+        # Convert each argument
+        parts = []
+        for arg in args:
+            arg = arg.strip()
+
+            # String literal - just use the value
+            if (arg.startswith('"') and arg.endswith('"')) or (arg.startswith("'") and arg.endswith("'")):
+                parts.append(arg[1:-1])  # Remove quotes
+
+            # Conditional: var && 'class'
+            elif ' && ' in arg:
+                condition, class_name = arg.split(' && ', 1)
+                condition = condition.strip()
+                class_name = class_name.strip().strip("'").strip('"')
+                parts.append(f'{{% if {condition} %}}{class_name}{{% endif %}}')
+
+            # Ternary: var ? 'a' : 'b'
+            elif ' ? ' in arg and ' : ' in arg:
+                jinja_ternary = self._convert_ternary_to_jinja(arg)
+                parts.append(jinja_ternary)
+
+            # Object/complex expression - wrap in Jinja
+            else:
+                parts.append(f'{{{{ {arg} }}}}')
+
+        return ' '.join(parts)
+
+    def _convert_ternary_to_jinja(self, ternary_expr: str) -> str:
+        """Convert JavaScript ternary to Jinja.
+
+        Example: selected ? 'bold' : 'normal' → {{ 'bold' if selected else 'normal' }}
+
+        Args:
+            ternary_expr: Ternary expression
+
+        Returns:
+            Jinja expression
+        """
+        import re
+
+        # Pattern: condition ? true_value : false_value
+        match = re.match(r'(.+?)\s*\?\s*(.+?)\s*:\s*(.+)$', ternary_expr)
+        if not match:
+            return f'{{{{ {ternary_expr} }}}}'
+
+        condition = match.group(1).strip()
+        true_val = match.group(2).strip()
+        false_val = match.group(3).strip()
+
+        # Remove quotes from string literals
+        if (true_val.startswith("'") and true_val.endswith("'")) or (true_val.startswith('"') and true_val.endswith('"')):
+            true_val = true_val
+        if (false_val.startswith("'") and false_val.endswith("'")) or (false_val.startswith('"') and false_val.endswith('"')):
+            false_val = false_val
+
+        return f'{{{{ {true_val} if {condition} else {false_val} }}}}'
 
     def _generate_fallback_chain(self, element, attributes: List[AttributeInfo]) -> str:
         """Generate if/elif structure from fallback chain.
@@ -998,8 +1557,12 @@ class JinjaGenerator:
                 if prop_name == 'key':
                     continue
 
+                # Skip event handlers (onClick, onChange, etc.) - these are JavaScript callbacks
+                if prop_name.startswith('on') and prop_name[2:3].isupper():
+                    continue
+
                 # Convert prop value to Jinja
-                jinja_value = prop_value.replace(element.item_var, f'{element.item_var}')
+                jinja_value = self._convert_prop_value_to_jinja(prop_value, element)
                 attrs.append(f'{prop_name}="{{{{ {jinja_value} }}}}"')
 
         # Build the tag
@@ -1024,6 +1587,56 @@ class JinjaGenerator:
                 return f'{opening}{{{{ {children_content} }}}}</{tag_name}>'
             else:
                 return f'{opening}</{tag_name}>'
+
+    def _convert_prop_value_to_jinja(self, prop_value: str, element) -> str:
+        """Convert a React prop value expression to Jinja.
+
+        Handles:
+        - Loop index comparisons: currentTab === index → loop.index0 == activeTab
+        - State variables: currentTab → activeTab (maps useState state to prop)
+        - Item variable references: tab.label → tab.label (unchanged)
+        - JavaScript operators: === → ==, !== → !=
+
+        Args:
+            prop_value: React prop value expression
+            element: ContentElement with loop context (item_var, etc.)
+
+        Returns:
+            Jinja-compatible expression
+        """
+        import re
+
+        # Check if this contains 'index' variable (from .map((item, index) =>))
+        # Pattern: someVar === index or index === someVar
+        index_comparison = re.search(r'(\w+)\s*===\s*index|index\s*===\s*(\w+)', prop_value)
+        if index_comparison:
+            # Extract the variable being compared to index
+            var_name = index_comparison.group(1) or index_comparison.group(2)
+
+            # Map common state variables to their prop equivalents
+            # currentTab (state) → activeTab (prop)
+            state_to_prop = {
+                'currentTab': 'activeTab',
+                'currentStep': 'activeStep',
+                'currentPage': 'activePage',
+            }
+
+            var_name = state_to_prop.get(var_name, var_name)
+
+            # Convert to Jinja: loop.index0 == varName
+            # (loop.index0 is 0-based, matching JavaScript's behavior)
+            converted = f'loop.index0 == {var_name}'
+            return converted
+
+        # Replace JavaScript operators with Jinja equivalents
+        jinja_value = prop_value.replace(' === ', ' == ').replace(' !== ', ' != ')
+
+        # Replace item variable references if needed
+        if hasattr(element, 'item_var') and element.item_var:
+            # Keep item_var references as-is (they're already correct for Jinja)
+            pass
+
+        return jinja_value
 
     def _to_kebab_case(self, pascal_case: str) -> str:
         """Convert PascalCase to kebab-case.

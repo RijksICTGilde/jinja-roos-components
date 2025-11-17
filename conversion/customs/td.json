@@ -1,0 +1,14 @@
+{
+  "component": "td",
+  "tag_name": "td",
+  "description": "HTML table data cell element with RVO styling",
+  "html_tag": "td",
+  "css_classes": ["rvo-table-cell"],
+  "add_children_support": true,
+  "attribute_additions": {},
+  "aliases": [],
+  "notes": [
+    "Custom wrapper component for HTML td element",
+    "Provides basic RVO table cell styling"
+  ]
+}

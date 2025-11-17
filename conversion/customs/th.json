@@ -1,0 +1,22 @@
+{
+  "component": "th",
+  "tag_name": "th",
+  "description": "HTML table header cell element with RVO styling",
+  "html_tag": "th",
+  "css_classes": ["rvo-table-header"],
+  "add_children_support": true,
+  "attribute_additions": {
+    "scope": {
+      "type": "enum",
+      "values": ["col", "row", "colgroup", "rowgroup"],
+      "required": false,
+      "description": "Scope of the header cell for accessibility"
+    }
+  },
+  "aliases": [],
+  "notes": [
+    "Custom wrapper component for HTML th element",
+    "Provides basic RVO table header cell styling",
+    "For complex sorting functionality, use the full table component"
+  ]
+}
