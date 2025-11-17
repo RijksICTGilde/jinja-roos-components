@@ -1,4 +1,7 @@
 # [Unreleased]
+- ...
+
+# [0.2] - 2025-11-17
 - Added conversion scripts for automatic conversion from React (RVO) to jinja components
 - Added support for general attributes that control margins, padding and font style which can be applied to any component
 - Added some new convenience components, like c-strong c-p c-em which mimic html like structure but with RVO support (thus adding classes)
