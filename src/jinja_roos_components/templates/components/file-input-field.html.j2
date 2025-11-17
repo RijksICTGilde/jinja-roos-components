@@ -17,9 +17,8 @@
 <div role="group"
      aria-labelledby="{{ id }}-label"
      class="{{ field_classes | join(' ') }}"
-     data-roos-component="file-input-field"
-     {{ attrs.render_extra_attributes(_component_context) }}>
-    
+     data-roos-component="file-input-field">
+
     {% if label %}
         <div class="rvo-form-field__label">
             <label class="rvo-label" id="{{ id }}-label" for="{{ id }}">
@@ -28,7 +27,7 @@
             </label>
         </div>
     {% endif %}
-    
+
     <input id="{{ id }}"
            type="file"
            class="rvo-file-input"
@@ -36,6 +35,7 @@
            {% if accept %}accept="{{ accept }}"{% endif %}
            {% if multiple %}multiple{% endif %}
            {% if required %}required{% endif %}
-           {% if disabled %}disabled{% endif %}>
+           {% if disabled %}disabled{% endif %}
+           {{ attrs.render_extra_attributes(_component_context) }}>
     
 </div>

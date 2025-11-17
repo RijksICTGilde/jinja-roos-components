@@ -117,9 +117,8 @@ def get_colors_metadata() -> list[dict]:
     Get full color metadata for documentation purposes.
     Returns list of color objects with name, hex, display_name, etc.
     """
-    definitions_file = _color_validator._find_definitions_file()
-    if not definitions_file:
-        return []
+    definitions_file = Path(__file__).parent / 'overall_definitions.json'
+
 
     try:
         with open(definitions_file, 'r', encoding='utf-8') as f:

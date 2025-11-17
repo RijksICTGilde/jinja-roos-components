@@ -35,9 +35,8 @@
     class="{{ field_classes | join(' ') }}"
     data-roos-component="date-input-field"
     data-roos-size="{{ size }}"
-    {% if has_error or error_message %}data-roos-has-error="true"{% endif %}
-    {{ attrs.render_extra_attributes(_component_context) }}>
-    
+    {% if has_error or error_message %}data-roos-has-error="true"{% endif %}>
+
     {% if label %}
         <div class="rvo-form-field__label">
             <label for="{{ id }}" class="rvo-label utrecht-form-label" id="{{ id }}-label">
@@ -53,8 +52,8 @@
             {% endif %}
         </div>
     {% endif %}
-    
-    <input 
+
+    <input
         {% if id %}id="{{ id }}"{% endif %}
         {% if name %}name="{{ name }}"{% endif %}
         type="date"
@@ -67,7 +66,8 @@
         {% if max_date %}max="{{ max_date }}"{% endif %}
         {% if has_error or error_message %}aria-invalid="true"{% endif %}
         {% if error_message %}aria-describedby="{{ id }}-error"{% endif %}
-        {% if helper_text %}aria-describedby="{{ id }}-help"{% endif %} />
+        {% if helper_text %}aria-describedby="{{ id }}-help"{% endif %}
+        {{ attrs.render_extra_attributes(_component_context) }} />
     
     {% if error_message %}
         <div id="{{ id }}-error" class="rvo-form-field__error-message" role="alert">
