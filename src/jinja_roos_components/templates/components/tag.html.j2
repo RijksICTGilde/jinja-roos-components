@@ -1,7 +1,7 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
 {% set content = _component_context.content | default('') %}
 {% set type = _component_context.type | default('') %}
-{% set icon_placement = _component_context.iconPlacement | default('') %}
+{% set icon_placement = _component_context.iconPlacement | default('before') %}
 {% set icon = _component_context.icon | default('') %}
 {% set is_pill = _component_context.isPill | default(false) %}
 {% set url = _component_context.url | default('') %}
@@ -12,7 +12,7 @@
 {% set css_classes = ['rvo-tag'] %}
 {% if url %}{% set css_classes = css_classes + ['rvo-tag--as-link'] %}{% endif %}
 {% if _component_context.get('@click') %}{% set css_classes = css_classes + ['rvo-tag--clickable'] %}{% endif %}
-{% if icon_placement %}{% set css_classes = css_classes + ['rvo-tag--with-icon'] %}{% endif %}
+{% if icon or type %}{% set css_classes = css_classes + ['rvo-tag--with-icon'] %}{% endif %}
 {% if type %}{% set css_classes = css_classes + ['rvo-tag--' + type] %}{% endif %}
 {% if is_pill %}{% set css_classes = css_classes + ['rvo-tag--pill'] %}{% endif %}
 {% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
@@ -22,20 +22,18 @@
 
 {# Generate icon markup #}
 {% set icon_markup = '' %}
-{% if icon_placement %}
-    {% if icon %}
-        {% set icon_markup = '<span class="rvo-icon rvo-icon--' + icon + ' rvo-icon--lg rvo-link__icon--' + icon_placement + '" aria-hidden="true"></span>' %}
-    {% elif type %}
-        {# Status icons for different types #}
-        {% set status_icons = {
-            'info': 'info',
-            'warning': 'waarschuwing',
-            'error': 'foutmelding',
-            'success': 'bevestiging'
-        } %}
-        {% set status_icon = status_icons.get(type, 'info') %}
-        {% set icon_markup = '<span class="rvo-status-icon rvo-status-icon--' + status_icon + ' rvo-status-icon--lg" aria-hidden="true"></span>' %}
-    {% endif %}
+{% if icon %}
+    {% set icon_markup = '<span class="rvo-icon rvo-icon--' + icon + ' rvo-icon--lg rvo-link__icon--' + icon_placement + '" aria-hidden="true"></span>' %}
+{% elif type %}
+    {# Status icons for different types #}
+    {% set status_icons = {
+        'info': 'info',
+        'warning': 'waarschuwing',
+        'error': 'foutmelding',
+        'success': 'bevestiging'
+    } %}
+    {% set status_icon = status_icons.get(type, 'info') %}
+    {% set icon_markup = '<span class="rvo-status-icon rvo-status-icon--' + status_icon + ' rvo-status-icon--lg" aria-hidden="true"></span>' %}
 {% endif %}
 
 <{{ tag_element }}

@@ -1115,11 +1115,8 @@
         },
         {
           "name": "iconPlacement",
-          "description": "Icon placement relative to content",
+          "description": "Icon placement relative to content (default: `before`)",
           "values": [
-            {
-              "name": ""
-            },
             {
               "name": "before"
             },
@@ -2134,12 +2131,9 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
-          "description": "Icon placement (default: `no`)",
+          "name": "iconPlacement",
+          "description": "Icon placement (default: `before`)",
           "values": [
-            {
-              "name": "no"
-            },
             {
               "name": "before"
             },
