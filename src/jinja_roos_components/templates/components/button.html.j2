@@ -53,6 +53,7 @@
 {% if _component_context.get('class') %}
     {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
+
 <button
     class="{{ css_classes | join(' ') }}"
     data-roos-component="button"
