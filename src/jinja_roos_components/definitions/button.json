@@ -289,7 +289,7 @@
     "focusVisible": false,
     "hover": false,
     "label": "Button",
-    "showIcon": "no",
+    "iconPlacement": "before",
     "icon": "home",
     "iconAriaLabel": "",
     "fullWidth": false

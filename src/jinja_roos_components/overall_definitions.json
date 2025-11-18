@@ -2772,7 +2772,7 @@
       ],
       "slots": [],
       "examples": [
-        "<c-link href=\"/page\" content=\"Link Text\" showIcon=\"after\" icon=\"arrow-right\" />"
+        "<c-link href=\"/page\" content=\"Link Text\" iconPlacement=\"after\" icon=\"arrow-right\" />"
       ],
       "allow_preview": true,
       "requires_children": false,
