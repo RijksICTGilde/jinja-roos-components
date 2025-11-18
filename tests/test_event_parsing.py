@@ -24,7 +24,7 @@ def test_event_attribute_jinja_interpolation():
     label="Verwijderen"
     kind="warning"
     size="sm"
-    showIcon="before"
+    iconPlacement="before"
     icon="verwijderen"
     @click="'showDeleteConfirmation('{{ project.name }}', '{{ project.display_name or project.name }}')'" />
 '''

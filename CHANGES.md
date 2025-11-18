@@ -1,5 +1,5 @@
 # [Unreleased]
-- ...
+- (!backwards incompatible) change button attribute `showIcon` ("no, "before", "after") to `iconPlacement` ("before", "after")
 
 # [0.2] - 2025-11-17
 - Added conversion scripts for automatic conversion from React (RVO) to jinja components

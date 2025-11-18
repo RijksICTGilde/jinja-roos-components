@@ -252,6 +252,19 @@ class ComponentConverter:
         )
         print(f"   ✓ Expanded to {len(class_mappings)} total clsx mappings")
 
+        # Step 4a-1: Add custom CSS class mappings from customization
+        from conversion.parsers.clsx_parser import ClassMapping
+        css_custom_mappings = self.customization_loader.get_css_class_mappings(customization_name)
+        if css_custom_mappings:
+            for mapping in css_custom_mappings:
+                class_mappings.append(ClassMapping(
+                    prop_name='__JINJA__',  # Marker: condition is already in Jinja format
+                    value='',
+                    css_class=mapping['class'],
+                    condition=mapping['condition']
+                ))
+            print(f"   ✓ Added {len(css_custom_mappings)} custom CSS class mapping(s)")
+
         # Step 4b: Extract props passed to base component from JSX
         base_component_props = {}
         ternary_mappings = []
@@ -1008,6 +1021,12 @@ class ComponentConverter:
                 self.jinja_generator.class_builder.add_conditional_class(
                     mapping.css_class,
                     jinja_condition
+                )
+            elif mapping.prop_name == '__JINJA__':
+                # Custom CSS class mapping from customization - condition is already in Jinja format
+                self.jinja_generator.class_builder.add_conditional_class(
+                    mapping.css_class,
+                    mapping.condition
                 )
             elif mapping.prop_name == '__TERNARY__':
                 # Ternary expression in template - needs special handling

@@ -3788,21 +3788,6 @@
           ]
         },
         {
-          "name": "showIcon",
-          "description": "showIcon attribute (default: `no`)",
-          "values": [
-            {
-              "name": "no"
-            },
-            {
-              "name": "before"
-            },
-            {
-              "name": "after"
-            }
-          ]
-        },
-        {
           "name": "icon",
           "description": "icon attribute"
         },
@@ -4036,6 +4021,18 @@
             },
             {
               "name": "reset"
+            }
+          ]
+        },
+        {
+          "name": "iconPlacement",
+          "description": "Icon placement relative to button text (default: `before`)",
+          "values": [
+            {
+              "name": "before"
+            },
+            {
+              "name": "after"
             }
           ]
         },
