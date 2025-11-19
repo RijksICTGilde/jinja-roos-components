@@ -34,7 +34,7 @@ dependencies = [
     "beautifulsoup4>=4.9.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -42,17 +42,9 @@ dev = [
     "isort>=5.0.0",
     "mypy>=1.0.0",
     "ruff>=0.1.0",
-]
-fastapi = [
     "fastapi>=0.100.0",
     "python-multipart>=0.0.6",
     "uvicorn>=0.20.0",
-]
-examples = [
-    "fastapi>=0.100.0",
-    "uvicorn>=0.20.0",
-]
-flask = [
     "flask>=2.3.0",
 ]
 
