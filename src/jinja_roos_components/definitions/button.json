@@ -107,20 +107,6 @@
       "example_value": false
     },
     {
-      "name": "showIcon",
-      "type": "enum",
-      "required": false,
-      "description": "showIcon attribute",
-      "enum_values": [
-        "no",
-        "before",
-        "after"
-      ],
-      "default": "no",
-      "is_example": true,
-      "example_value": "no"
-    },
-    {
       "name": "icon",
       "type": "string",
       "required": false,
@@ -243,6 +229,17 @@
       "default": "button"
     },
     {
+      "name": "iconPlacement",
+      "type": "enum",
+      "required": false,
+      "description": "Icon placement relative to button text",
+      "enum_values": [
+        "before",
+        "after"
+      ],
+      "default": "before"
+    },
+    {
       "name": "children",
       "type": "string",
       "required": false,
@@ -253,6 +250,11 @@
   "manual_review_items": [
     {
       "issue": "Unmapped prop: label",
+      "severity": "medium",
+      "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: showIcon",
       "severity": "medium",
       "source_line": 0
     },
@@ -270,6 +272,11 @@
       "issue": "Unmapped prop: color",
       "severity": "medium",
       "source_line": 0
+    },
+    {
+      "issue": "Unmapped prop: iconPlacement",
+      "severity": "medium",
+      "source_line": 0
     }
   ],
   "example_values": {
@@ -282,7 +289,7 @@
     "focusVisible": false,
     "hover": false,
     "label": "Button",
-    "showIcon": "no",
+    "iconPlacement": "before",
     "icon": "home",
     "iconAriaLabel": "",
     "fullWidth": false

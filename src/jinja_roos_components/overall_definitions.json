@@ -1600,11 +1600,11 @@
           "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "",
             "before",
             "after"
           ],
           "required": false,
+          "default": "before",
           "description": "Icon placement relative to content"
         },
         {
@@ -2708,14 +2708,13 @@
           "description": "Icon name"
         },
         {
-          "name": "showIcon",
+          "name": "iconPlacement",
           "type": "enum",
           "enum_values": [
-            "no",
             "before",
             "after"
           ],
-          "default": "no",
+          "default": "before",
           "required": false,
           "description": "Icon placement"
         },
@@ -2773,7 +2772,7 @@
       ],
       "slots": [],
       "examples": [
-        "<c-link href=\"/page\" content=\"Link Text\" showIcon=\"after\" icon=\"arrow-right\" />"
+        "<c-link href=\"/page\" content=\"Link Text\" iconPlacement=\"after\" icon=\"arrow-right\" />"
       ],
       "allow_preview": true,
       "requires_children": false,

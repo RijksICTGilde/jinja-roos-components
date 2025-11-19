@@ -1,6 +1,7 @@
 {
   "component": "button",
   "description": "Add color attribute, type attribute, and children/content support",
+  "attribute_removals": ["showIcon"],
   "attribute_additions": {
     "color": {
       "type": "enum",
@@ -15,19 +16,38 @@
       "required": false,
       "description": "HTML button type attribute",
       "default": "button"
+    },
+    "iconPlacement": {
+      "type": "enum",
+      "values": ["before", "after"],
+      "required": false,
+      "default": "before",
+      "description": "Icon placement relative to button text"
     }
   },
   "default_overrides": {
     "type": "button",
-    "color": "wit"
+    "color": "wit",
+    "iconPlacement": "before",
+    "icon": ""
   },
   "add_children_support": true,
-  "custom_content_template": "{% if showIcon == 'before' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}{{ children if children else label | safe }}{% if showIcon == 'after' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}",
+  "custom_content_template": "{% if icon and iconPlacement == 'before' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}{{ children if children else label | safe }}{% if icon and iconPlacement == 'after' %}<span class=\"utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}\" role=\"img\" aria-label=\"{{ iconAriaLabel | title }}\"></span>{% endif %}",
+  "css_class_mappings": [
+    {
+      "class": "utrecht-button--icon-before",
+      "condition": "icon and iconPlacement == 'before'"
+    },
+    {
+      "class": "utrecht-button--icon-after",
+      "condition": "icon and iconPlacement == 'after'"
+    }
+  ],
   "notes": [
     "Base RVO button uses 'kind' prop for styling variants",
     "Added 'color' attribute to allow custom color overrides with full RVO palette",
     "Added 'type' attribute with default 'button' to prevent accidental form submissions",
     "Button content: renders children if provided, otherwise falls back to label attribute",
-    "Icons are conditionally rendered before/after content based on showIcon attribute"
+    "Icons are conditionally rendered before/after content based on iconPlacement attribute (only when icon is provided)"
   ]
 }

@@ -6,10 +6,12 @@
 {% set additional_class = _component_context.class | default('') %}
 
 {# Check if color is a named RVO color or hex color #}
-{% set color_lower = color.lower() if color else '' %}
-{% set is_named_color = color_lower in rvo_color_names %}
-{% set is_hex_color = color.startswith('#') if color else false %}
-{% set resolved_color = 'var(--rvo-color-' + color_lower + ')' if is_named_color else color %}
+{% if color %}
+    {% set color_lower = color.lower() if color else '' %}
+    {% set is_named_color = color_lower in rvo_color_names %}
+    {% set is_hex_color = color.startswith('#') if color else false %}
+    {% set resolved_color = 'var(--rvo-color-' + color_lower + ')' if is_named_color else color %}
+{% endif %}
 
 {# Build icon name from complex icon names (e.g., "Category > Icon Name") #}
 {% set icon_name = icon %}
@@ -31,7 +33,7 @@
     {% set css_classes = css_classes + ['rvo-icon--' + size] %}
 {% endif %}
 
-{% if is_named_color %}
+{% if color and is_named_color %}
     {% set css_classes = css_classes + ['rvo-icon--' + color] %}
 {% endif %}
 
@@ -53,6 +55,6 @@
     data-roos-icon="{{ icon_name }}"
     {% if size %}data-roos-size="{{ size }}"{% endif %}
     {% if color %}data-roos-color="{{ color }}"{% endif %}
-    {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
+    {% if color and is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
     {{ attrs.render_extra_attributes(_component_context) }}>
 </span>

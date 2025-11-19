@@ -148,6 +148,11 @@ class CustomizationLoader:
         if not customization:
             return attributes
 
+        # Apply attribute removals
+        attribute_removals = customization.get('attribute_removals', [])
+        if attribute_removals:
+            attributes = [attr for attr in attributes if attr.name not in attribute_removals]
+
         # Apply attribute overrides
         attribute_overrides = customization.get('attribute_overrides', {})
         for attr in attributes:
@@ -316,3 +321,21 @@ class CustomizationLoader:
             return None
 
         return customization.get('custom_content_template')
+
+    def get_css_class_mappings(self, component_name: str) -> List[Dict[str, str]]:
+        """Get custom CSS class mappings from customization.
+
+        This allows adding CSS class conditionals that are not automatically
+        extracted from the React source.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            List of mappings with 'class' and 'condition' keys
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return []
+
+        return customization.get('css_class_mappings', [])
