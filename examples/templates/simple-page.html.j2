@@ -2,7 +2,7 @@
 <c-page title="Simple Test Page">
     <c-header text="Site Title" subtitle="Department" link="/home" />
     <c-layout-flow gap="lg" size="lg">
-        <c-menubar items='[{"label": "Home", "link": "/home"}, {"label": "About", "link": "/about"}]' size="md" />
+        <c-menubar :items='[{"label": "Home", "link": "/home"}, {"label": "About", "link": "/about"}]' size="md" />
 
         <c-hero
             title="Components + HTMX"
@@ -11,7 +11,13 @@
             image='{"src": "/static/hero1.jpg", "alt": "ROOS Components"}'
         />
 
-        <c-grid columns="two">
+        <c-grid columns="three">
+            <div>
+                <c-progress-tracker>
+                    <c-progress-tracker-step state="start" line="straight" size="sm" label="Content here"/>
+                    <c-progress-tracker-step state="incomplete" line="straight" size="sm" label="Content here 2"/>
+                </c-progress-tracker>
+            </div>
             <c-card outline="true" hx-get="/render?template=simple-htmx.html.j2" hx-trigger="click" hx-target="#target1" hx-swap="innerHTML" >
                 <p>
                 Dit is een card
