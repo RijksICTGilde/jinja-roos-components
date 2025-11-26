@@ -1,7 +1,7 @@
 # [Unreleased]
 - (!backwards incompatible) change of attribute `showIcon` ("no, "before", "after") to `iconPlacement` ("before", "after"). affected components: `button`, `link`, `tag`. The presence of the `icon` attribute is now enough to show (default "before")
 - add customization options `css_class_mappings` and `attribute_removals`
-- fix that alert icon changes matches kind
+- fix that alert component shows correct icon: different per kind
 
 # [0.2] - 2025-11-17
 - Added conversion scripts for automatic conversion from React (RVO) to jinja components
