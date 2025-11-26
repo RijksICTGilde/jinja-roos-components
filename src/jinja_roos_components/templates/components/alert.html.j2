@@ -47,7 +47,7 @@
         
         {# Status Icon #}
         {% if kind in status_icon_map %}
-            <span class="utrecht-icon rvo-icon rvo-icon-info rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl"
+            <span class="utrecht-icon rvo-icon rvo-icon-{{ status_icon_map[kind] }} rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl"
                   role="img"
                   aria-label="{{ status_icon_map[kind] | title }}"></span>
         {% endif %}
