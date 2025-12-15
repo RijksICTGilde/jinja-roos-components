@@ -316,3 +316,80 @@ class CustomizationLoader:
             return None
 
         return customization.get('custom_content_template')
+
+    def get_wrapper_classes_target(self, component_name: str) -> str:
+        """Get where outer wrapper classes should be applied.
+
+        Some Utrecht components have a wrapper div with classes like 'utrecht-form-fieldset'.
+        This setting controls where these classes are applied:
+        - 'wrapper_only': Apply wrapper classes only to the wrapper element (default)
+        - 'primary_only': Apply wrapper classes only to the primary element
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            Target setting string ('wrapper_only' or 'primary_only')
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return 'wrapper_only'  # Default: wrapper classes stay on wrapper
+
+        return customization.get('wrapper_classes_target', 'wrapper_only')
+
+    def get_class_overrides(self, component_name: str) -> Optional[Dict[str, Any]]:
+        """Get class override configuration for complex nested structures.
+
+        Allows overriding the auto-detected wrapper and primary classes with
+        explicit Jinja expressions. Useful for components with multiple nested
+        clsx() calls that the converter can't parse automatically.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            Dict with 'wrapper_classes' and/or 'primary_classes' Jinja expressions,
+            or None if no overrides configured
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return None
+
+        return customization.get('class_overrides')
+
+    def get_skip_utility_classes(self, component_name: str) -> bool:
+        """Check if utility class generation should be skipped for this component.
+
+        Some components have props like 'padding' that conflict with generic
+        utility class generation. This setting disables the utility class mixin.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            True if utility classes should be skipped, False otherwise
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return False
+
+        return customization.get('skip_utility_classes', False)
+
+    def get_skip_class_override(self, component_name: str) -> bool:
+        """Check if custom class attribute handling should be skipped for this component.
+
+        Some components handle the class attribute in their own way (e.g., via
+        wrapper_classes in class_overrides). This setting disables the automatic
+        class attribute handling on the primary element.
+
+        Args:
+            component_name: Name of the component
+
+        Returns:
+            True if class override should be skipped, False otherwise
+        """
+        customization = self.load_customization(component_name)
+        if not customization:
+            return False
+
+        return customization.get('skip_class_override', False)

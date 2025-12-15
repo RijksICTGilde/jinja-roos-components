@@ -348,7 +348,7 @@ class ComponentExtension(Extension):
         # Check each attribute in the component usage
         for attr_name in attrs.keys():
             if attr_name.startswith('_'):
-                # Internal attributes (like _raw_content) are always allowed
+                # Internal attributes (like _raw_content, __jinja_conditional_N__) are always allowed
                 continue
 
             # Event attributes (@click, @change, etc.) are always allowed - handled by event mixin

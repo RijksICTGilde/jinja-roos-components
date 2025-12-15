@@ -6,23 +6,20 @@
 {% set disabled = _component_context.get('disabled', false) %}
 {% set fields = _component_context.get('fields', 'defaultFields') %}
 {% set children = _component_context.get('content', '') %}
-{% set css_classes = ['utrecht-form-fieldset__fieldset', 'utrecht-form-fieldset--html-fieldset', 'utrecht-form-fieldset'] %}
-{% set content = _component_context.content | default('') %}
-
+{% set css_classes = ['utrecht-form-fieldset__fieldset', 'utrecht-form-fieldset--html-fieldset'] %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
 {% if utility_classes %}
     {% set css_classes = css_classes + utility_classes.split() %}
 {% endif %}
 {# Add custom classes from class attribute #}
-{% set wrapper_classes = ['utrecht-form-fieldset', 'rvo-form-fieldset'] %}
 {% if _component_context.get('class') %}
-    {% set wrapper_classes = wrapper_classes + _component_context['class'].split() %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-<div class="{{ wrapper_classes | join(' ') }}" data-roos-component="form-fieldset">
+{% set wrapper_classes = ['utrecht-form-fieldset', 'rvo-form-fieldset'] %}
+<div class="{{ wrapper_classes | join(' ') }}" data-roos-component="form-fieldset" {{ attrs.render_extra_attributes(_component_context) }}>
     <fieldset
         class="{{ css_classes | join(' ') }}"
-        {% if disabled %}disabled{% endif %}
         {{ attrs.render_extra_attributes(_component_context) }}>
         {% if legend %}<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">{{ legend }}</legend>{% endif %}
     {% if children %}

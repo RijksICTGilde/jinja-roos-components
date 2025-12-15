@@ -46,7 +46,10 @@ class JinjaGenerator:
         array_mappings: Dict[str, Dict] = None,
         add_children_support: bool = False,
         custom_content_template: Optional[str] = None,
-        component_refs: Dict[str, Dict] = None
+        component_refs: Dict[str, Dict] = None,
+        class_overrides: Optional[Dict[str, Any]] = None,
+        skip_utility_classes: bool = False,
+        skip_class_override: bool = False
     ) -> str:
         """Generate complete Jinja template.
 
@@ -63,6 +66,9 @@ class JinjaGenerator:
             array_mappings: Dict mapping array attributes to component info
             add_children_support: Whether to add children/content support as fallback
             custom_content_template: Optional custom Jinja template for content rendering
+            class_overrides: Optional dict with 'wrapper_classes' and/or 'primary_classes' Jinja code
+            skip_utility_classes: Whether to skip generating utility class code
+            skip_class_override: Whether to skip adding custom class attribute handling
 
         Returns:
             Generated Jinja template as string
@@ -71,6 +77,9 @@ class JinjaGenerator:
         self.nested_components = nested_components or []
         self.array_mappings = array_mappings or {}
         self.add_children_support = add_children_support
+        self.class_overrides = class_overrides
+        self.skip_utility_classes = skip_utility_classes
+        self.skip_class_override = skip_class_override
 
         # Special handling for composition components
         # (components with no own attributes that just wrap other components)
@@ -91,18 +100,27 @@ class JinjaGenerator:
             if comp_var_lines:
                 lines.append(comp_var_lines)
 
-        # Generate CSS class building logic
-        self.class_builder.add_base_classes(base_classes)
-        lines.append(self.class_builder.generate_jinja_code(name_mappings=self.name_mappings))
+        # Generate CSS class building logic (or use override if provided)
+        if self.class_overrides and 'primary_classes' in self.class_overrides:
+            # Use custom primary classes from customization
+            lines.append(self.class_overrides['primary_classes'])
+        else:
+            self.class_builder.add_base_classes(base_classes)
+            lines.append(self.class_builder.generate_jinja_code(name_mappings=self.name_mappings))
 
-        # Add utility classes from text-style, margin, padding attributes
-        lines.append(self._generate_utility_classes())
+        # Add utility classes from text-style, margin, padding attributes (unless skipped)
+        if not self.skip_utility_classes:
+            lines.append(self._generate_utility_classes())
 
-        # Add custom classes from class attribute
-        lines.append(self._generate_custom_classes())
+        # Add custom classes from class attribute (unless skipped)
+        if not self.skip_class_override:
+            lines.append(self._generate_custom_classes())
 
-        # If there's a wrapper, generate separate wrapper classes
-        if wrapper_info:
+        # If there's a wrapper, generate separate wrapper classes (or use override)
+        if self.class_overrides and 'wrapper_classes' in self.class_overrides:
+            # Use custom wrapper classes from customization
+            lines.append(self.class_overrides['wrapper_classes'])
+        elif wrapper_info:
             lines.append(self._generate_wrapper_classes(wrapper_info))
 
         # Generate content from custom template, content_elements, or default
@@ -1440,6 +1458,15 @@ class JinjaGenerator:
             # Generate content based on type
             if part_type == 'children_passthrough':
                 lines.append("        {{ children | safe }}")
+            elif part_type == 'variable':
+                # Variable type - check if it's a children/content reference
+                content = part.get('content', '')
+                if 'parseContentMarkup(children)' in content or content == 'children':
+                    lines.append("        {{ children | safe }}")
+                else:
+                    # Generic variable reference
+                    var_name = self._apply_name_mappings(content)
+                    lines.append(f"        {{{{ {var_name} | safe }}}}")
             elif part_type == 'array_map':
                 # Get the array_map element
                 map_element = part.get('element')

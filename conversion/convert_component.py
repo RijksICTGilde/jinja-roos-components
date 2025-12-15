@@ -1478,6 +1478,11 @@ class ComponentConverter:
         # Get custom content template from customization if available
         custom_content_template = self.customization_loader.get_custom_content_template(self.output_name)
 
+        # Get class overrides and utility class settings from customization
+        class_overrides = self.customization_loader.get_class_overrides(self.output_name)
+        skip_utility_classes = self.customization_loader.get_skip_utility_classes(self.output_name)
+        skip_class_override = self.customization_loader.get_skip_class_override(self.output_name)
+
         return self.jinja_generator.generate_template(
             component_info.props_interface or [],
             component_info.default_args,
@@ -1490,7 +1495,10 @@ class ComponentConverter:
             array_mappings=array_mappings or {},
             add_children_support=self.add_children_support,
             custom_content_template=custom_content_template,
-            component_refs=component_refs
+            component_refs=component_refs,
+            class_overrides=class_overrides,
+            skip_utility_classes=skip_utility_classes,
+            skip_class_override=skip_class_override
         )
 
     def _generate_definition(

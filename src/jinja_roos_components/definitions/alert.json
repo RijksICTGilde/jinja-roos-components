@@ -1,0 +1,189 @@
+{
+  "name": "alert",
+  "source_file": "rvo/components/alert/src/template.tsx",
+  "conversion_hash": "9c47b218fe2da2b80d1e6440a1cc3680cc182eab194423282372504fb0dfae47",
+  "base_components": [],
+  "nested_components": [
+    {
+      "name": "button",
+      "component_class": "Button",
+      "source_path": "../../button/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/button/src/template.tsx",
+      "relative_path": "rvo/components/button/src/template.tsx",
+      "interface": "IButtonProps",
+      "tag_name": "c-button",
+      "props": [
+        "kind",
+        "size",
+        "label",
+        "active",
+        "busy",
+        "focus",
+        "focusVisible",
+        "hover",
+        "disabled",
+        "showIcon",
+        "icon",
+        "iconAriaLabel",
+        "fullWidth",
+        "className",
+        "alignToRightInGroup",
+        "onFocus",
+        "onBlur",
+        "onClick"
+      ]
+    },
+    {
+      "name": "icon",
+      "component_class": "Icon",
+      "source_path": "../../icon/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/icon/src/template.tsx",
+      "relative_path": "rvo/components/icon/src/template.tsx",
+      "interface": "IIconProps",
+      "tag_name": "c-icon",
+      "props": [
+        "kind",
+        "size",
+        "label",
+        "active",
+        "busy",
+        "focus",
+        "focusVisible",
+        "hover",
+        "disabled",
+        "showIcon",
+        "icon",
+        "iconAriaLabel",
+        "fullWidth",
+        "className",
+        "alignToRightInGroup",
+        "onFocus",
+        "onBlur",
+        "onClick"
+      ]
+    },
+    {
+      "name": "status-icon",
+      "component_class": "StatusIcon",
+      "source_path": "../../status-icon/src/template",
+      "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/status-icon/src/template.tsx",
+      "relative_path": "rvo/components/status-icon/src/template.tsx",
+      "interface": "IStatusIconProps",
+      "tag_name": "c-status-icon",
+      "props": [
+        "kind",
+        "size",
+        "label",
+        "active",
+        "busy",
+        "focus",
+        "focusVisible",
+        "hover",
+        "disabled",
+        "showIcon",
+        "icon",
+        "iconAriaLabel",
+        "fullWidth",
+        "className",
+        "alignToRightInGroup",
+        "onFocus",
+        "onBlur",
+        "onClick"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "name": "kind",
+      "type": "enum",
+      "required": false,
+      "description": "kind attribute",
+      "enum_values": [
+        "info",
+        "warning",
+        "error",
+        "success"
+      ],
+      "default": "info",
+      "is_example": true,
+      "example_value": "info"
+    },
+    {
+      "name": "heading",
+      "type": "string",
+      "required": false,
+      "description": "heading attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "content attribute",
+      "default": "",
+      "is_example": true,
+      "example_value": "`This is an example of an alert, with a <a href=\"#\" class=\"rvo-link rvo-link--lintblauw\">link</a> inside.`"
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "required": false,
+      "description": "closable attribute",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "padding",
+      "type": "enum",
+      "required": false,
+      "description": "padding attribute",
+      "enum_values": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "2xl"
+      ],
+      "default": "xs",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    },
+    {
+      "name": "maxWidth",
+      "type": "enum",
+      "required": false,
+      "description": "maxWidth attribute",
+      "enum_values": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "sm"
+    }
+  ],
+  "manual_review_items": [
+    {
+      "issue": "Dynamic className expression found - needs clsx parsing",
+      "severity": "low",
+      "source_line": 0
+    }
+  ],
+  "example_values": {
+    "kind": "info",
+    "heading": "",
+    "content": "`This is an example of an alert, with a <a href=\"#\" class=\"rvo-link rvo-link--lintblauw\">link</a> inside.`",
+    "closable": false,
+    "padding": "md"
+  }
+}

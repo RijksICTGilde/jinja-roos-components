@@ -1,0 +1,21 @@
+{
+  "component": "alert",
+  "description": "Customizations for alert component - complex nested structure with switch-based icon",
+  "default_overrides": {
+    "content": "",
+    "maxWidth": ""
+  },
+  "notes": [
+    "Alert has complex nested structure: outer div.rvo-alert > inner div.rvo-alert__container > content",
+    "Icon is determined by switch statement on 'kind' prop",
+    "Closable button is not supported in Jinja (requires JavaScript state)",
+    "Content default changed from example HTML to empty string"
+  ],
+  "skip_utility_classes": true,
+  "skip_class_override": true,
+  "class_overrides": {
+    "wrapper_classes": "{% set wrapper_classes = ['rvo-alert', 'rvo-alert--' + kind] %}\n{% if padding %}{% set wrapper_classes = wrapper_classes + ['rvo-alert--padding-' + padding] %}{% endif %}\n{% if maxWidth %}{% set wrapper_classes = wrapper_classes + ['rvo-alert--layout'] %}{% endif %}\n{% if _component_context.get('class') %}{% set wrapper_classes = wrapper_classes + _component_context['class'].split() %}{% endif %}",
+    "primary_classes": "{% set css_classes = ['rvo-alert__container'] %}\n{% if maxWidth %}{% set css_classes = css_classes + ['rvo-max-width-layout--' + maxWidth] %}{% endif %}"
+  },
+  "custom_content_template": "{% set status_icon_map = {'info': 'info', 'warning': 'waarschuwing', 'error': 'foutmelding', 'success': 'bevestiging'} %}\n        <span class=\"utrecht-icon rvo-icon rvo-icon-{{ status_icon_map[kind] }} rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl\"\n            role=\"img\" aria-label=\"{{ status_icon_map[kind] | title }}\"></span>\n        <div class=\"rvo-alert-text\">\n            {% if heading %}<strong>{{ heading }}</strong>{% endif %}\n            <div>{{ children if children else content | safe }}</div>\n        </div>\n        {% if closable %}\n            <button type=\"button\" class=\"utrecht-button utrecht-button--subtle rvo-button__close\" aria-label=\"Sluiten\">\n                <span class=\"utrecht-icon rvo-icon rvo-icon-kruis rvo-icon--md\"\n                    role=\"img\" aria-label=\"Kruis\"></span>\n            </button>\n        {% endif %}"
+}

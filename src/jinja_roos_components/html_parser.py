@@ -172,22 +172,112 @@ class ComponentHTMLParser(html.parser.HTMLParser):
         if pos != -1:
             self.current_pos = pos + len(data)
     
+    def _find_matching_endif(self, text: str) -> Optional[int]:
+        """
+        Find the position after the matching {% endif %} for an {% if %} block.
+        Returns the position after {% endif %}, or None if not found.
+        """
+        if_depth = 0
+        pos = 0
+
+        while pos < len(text):
+            if text[pos:pos+2] == '{%':
+                # Find the end of this block
+                block_end = text.find('%}', pos + 2)
+                if block_end == -1:
+                    return None
+
+                block_content = text[pos+2:block_end].strip()
+
+                if block_content.startswith('if ') or block_content == 'if':
+                    if_depth += 1
+                elif block_content.startswith('endif'):
+                    if_depth -= 1
+                    if if_depth == 0:
+                        return block_end + 2
+
+                pos = block_end + 2
+            else:
+                pos += 1
+
+        return None
+
+    def _extract_jinja_block(self, attrs_str: str, pos: int) -> Tuple[str, int]:
+        """
+        Extract a Jinja block starting at pos.
+        Handles {% ... %} and {{ ... }} blocks, including nested blocks.
+        Returns tuple of (block_content, position_after_block).
+        """
+        if pos + 1 >= len(attrs_str):
+            return "", pos
+
+        if attrs_str[pos:pos+2] == '{%':
+            end_tag = '%}'
+        elif attrs_str[pos:pos+2] == '{{':
+            end_tag = '}}'
+        else:
+            return "", pos
+
+        start_tag = attrs_str[pos:pos+2]
+        search_pos = pos + 2
+        nesting = 1
+
+        while search_pos < len(attrs_str) - 1 and nesting > 0:
+            two_chars = attrs_str[search_pos:search_pos+2]
+            if two_chars == start_tag:
+                nesting += 1
+                search_pos += 2
+            elif two_chars == end_tag:
+                nesting -= 1
+                search_pos += 2
+            else:
+                search_pos += 1
+
+        return attrs_str[pos:search_pos], search_pos
+
     def _parse_attributes(self, attrs_str: str) -> Dict[str, str]:
         """
         Parse attributes from a string, handling multi-line values and nested quotes.
         Uses character-by-character parsing to handle complex nested structures.
+        Also handles Jinja blocks ({% ... %} and {{ ... }}) within attribute areas.
+
+        Conditional attributes like {% if x %}attr="val"{% endif %} are stored with
+        a special key format: __jinja_conditional_N__ where N is a counter.
         """
         attrs = {}
         pos = 0
-        
+        conditional_counter = 0
+
         while pos < len(attrs_str):
             # Skip whitespace
             while pos < len(attrs_str) and attrs_str[pos].isspace():
                 pos += 1
-            
+
             if pos >= len(attrs_str):
                 break
-            
+
+            # Check for Jinja block that might wrap a conditional attribute
+            if pos + 1 < len(attrs_str) and attrs_str[pos:pos+2] == '{%':
+                block_content, block_end = self._extract_jinja_block(attrs_str, pos)
+
+                # Check if this is an {% if %} block that contains an attribute
+                if block_content.startswith('{%') and (' if ' in block_content[:50] or block_content[2:].strip().startswith('if ')):
+                    # This looks like a conditional - find the matching {% endif %}
+                    # and capture everything in between as a conditional attribute
+                    remaining = attrs_str[pos:]
+                    endif_match = self._find_matching_endif(remaining)
+                    if endif_match:
+                        full_conditional = remaining[:endif_match]
+                        # Store the entire conditional block
+                        attrs[f'__jinja_conditional_{conditional_counter}__'] = full_conditional
+                        conditional_counter += 1
+                        pos += endif_match
+                        continue
+
+                # Not a conditional, just skip this block
+                pos = block_end
+                continue
+
             # Find attribute name (including : or @ prefix)
             name_start = pos
             if attrs_str[pos] in (':@'):
@@ -340,6 +430,38 @@ def parse_component_attributes(attrs_str: str) -> Dict[str, str]:
     return attrs
 
 
+def _parse_conditional_attr(conditional_block: str) -> Optional[Tuple[str, str, str]]:
+    """
+    Parse a conditional attribute block like {% if x %}attr="value"{% endif %}.
+    Returns tuple of (condition, attr_name, attr_value) or None if parsing fails.
+    """
+    # Extract the condition from {% if condition %}
+    if_match = re.match(r'\{%\s*if\s+(.+?)\s*%\}', conditional_block)
+    if not if_match:
+        return None
+    condition = if_match.group(1)
+
+    # Find the content between {% if %} and {% endif %}
+    if_end = conditional_block.find('%}')
+    endif_start = conditional_block.rfind('{%')
+    if if_end == -1 or endif_start == -1:
+        return None
+
+    inner_content = conditional_block[if_end + 2:endif_start].strip()
+
+    # Parse the attribute from the inner content
+    attr_match = re.match(r'([\w-]+)\s*=\s*"([^"]*)"', inner_content)
+    if not attr_match:
+        attr_match = re.match(r"([\w-]+)\s*=\s*'([^']*)'", inner_content)
+    if not attr_match:
+        return None
+
+    attr_name = attr_match.group(1)
+    attr_value = attr_match.group(2)
+
+    return (condition, attr_name, attr_value)
+
+
 def convert_parsed_component(component: Dict[str, Any]) -> str:
     """
     Convert a parsed component to its Jinja2 include equivalent.
@@ -348,25 +470,37 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
     component_name = component['component_name']
     attrs = component.get('attrs', {})
     template_path = f"components/{component_name}.html.j2"
-    
+
     if not attrs and not (component.get('content') and component['content'].strip()):
         return f'{{% set _component_context = {{}} %}}{{% include "{template_path}" with context %}}'
-    
+
     # Get component definition for attribute type checking
     from .registry import ComponentRegistry, AttributeType
     registry = ComponentRegistry()
     component_def = registry.get_component(component_name)
-    
+
     # Extract raw content if present
     raw_content = None
     if component.get('content') and component['content'].strip():
         raw_content = component['content']
-    
-    # Build context dictionary
+
+    # Separate conditional attributes from regular attributes
+    conditional_attrs = []
+    regular_attrs = {}
+    for key, value in attrs.items():
+        if key.startswith('__jinja_conditional_') and key.endswith('__'):
+            # Parse the conditional block to extract condition and attribute
+            parsed = _parse_conditional_attr(value)
+            if parsed:
+                conditional_attrs.append(parsed)
+        else:
+            regular_attrs[key] = value
+
+    # Build context dictionary from regular attributes
     context_items = []
     event_templates = []
-    
-    for key, value in attrs.items():
+
+    for key, value in regular_attrs.items():
         if key.startswith(':'):
             # Binding attribute - use the expression directly
             clean_key = key[1:]  # Remove the : prefix
@@ -459,7 +593,34 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
     
     # Build the event template processing parts
     event_templates_str = ''.join(event_templates)
-    
+
+    # Build conditional attribute updates
+    # These will be evaluated at runtime after the base context is set
+    # We set the attribute directly on the dict using Jinja's namespace or update syntax
+    conditional_updates = []
+    for condition, attr_name, attr_value in conditional_attrs:
+        # Check if attr_value contains Jinja expressions
+        if '{{' in attr_value or '{%' in attr_value:
+            # Need to render the value first, then use _component_context.update()
+            import random
+            import string
+            var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
+            temp_var = f'_cond_attr_{var_suffix}'
+            conditional_updates.append(
+                f'{{% if {condition} %}}'
+                f'{{% set {temp_var} %}}{attr_value}{{% endset %}}'
+                f'{{%- set _ = _component_context.__setitem__("{attr_name}", {temp_var}) -%}}'
+                f'{{% endif %}}'
+            )
+        else:
+            escaped_value = attr_value.replace('"', '\\"')
+            conditional_updates.append(
+                f'{{% if {condition} %}}'
+                f'{{%- set _ = _component_context.__setitem__("{attr_name}", "{escaped_value}") -%}}'
+                f'{{% endif %}}'
+            )
+    conditional_str = ''.join(conditional_updates)
+
     # Handle raw content separately using capture block
     if raw_content:
         context_str = ', '.join(context_items) if context_items else ''
@@ -468,15 +629,17 @@ def convert_parsed_component(component: Dict[str, Any]) -> str:
         import string
         var_suffix = ''.join(random.choices(string.ascii_lowercase, k=8))
         capture_var = f'_captured_content_{var_suffix}'
-        
+
         content_part = f'"content": {capture_var}'
         full_context = context_str + (", " if context_str else "") + content_part
         return (f'{event_templates_str}'
                f'{{% set {capture_var} %}}{raw_content}{{% endset %}}'
                f'{{% set _component_context = {{{full_context}}} %}}'
+               f'{conditional_str}'
                f'{{% include "{template_path}" with context %}}')
     else:
         context_str = ', '.join(context_items)
         return (f'{event_templates_str}'
                f'{{% set _component_context = {{{context_str}}} %}}'
+               f'{conditional_str}'
                f'{{% include "{template_path}" with context %}}') 

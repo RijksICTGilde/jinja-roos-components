@@ -253,6 +253,10 @@ class ComponentValidator:
 
     def _is_allowed_generic_attribute(self, attr_name: str) -> bool:
         """Check if an attribute is a common HTML or framework attribute that should be allowed."""
+        # Internal attributes (e.g., __jinja_conditional_N__) are always allowed
+        if attr_name.startswith('_'):
+            return True
+
         allowed_generic = {
             # Common HTML attributes
             'id', 'class', 'style', 'data-*', 'aria-*', 'role', 'tabindex',

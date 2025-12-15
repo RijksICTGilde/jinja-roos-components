@@ -1,79 +1,36 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
-{% set kind = _component_context.kind | default('info') %}
-{% set heading = _component_context.heading | default('') %}
-{% set content = _component_context.content | default('') %}
-{% set closable = _component_context.closable | default(false) %}
-{% set padding = _component_context.padding | default('md') %}
-{% set max_width = _component_context.maxWidth | default('') %}
-{% set additional_class = _component_context.class | default('') %}
-
-{# Map kind to status icon types #}
-{% set status_icon_map = {
-    'info': 'info',
-    'warning': 'waarschuwing',
-    'error': 'foutmelding',
-    'success': 'bevestiging'
-} %}
-
-{# Build CSS classes #}
-{% set alert_classes = ['rvo-alert', 'rvo-alert--' + kind] %}
-
-{% if padding %}
-    {% set alert_classes = alert_classes + ['rvo-alert--padding-' + padding] %}
-{% endif %}
-
-{% if max_width %}
-    {% set alert_classes = alert_classes + ['rvo-alert--layout'] %}
-{% endif %}
-
-{% if additional_class %}
-    {% set alert_classes = alert_classes + [additional_class] %}
-{% endif %}
-
-{% set container_classes = ['rvo-alert__container'] %}
-{% if max_width %}
-    {% set container_classes = container_classes + ['rvo-max-width-layout--' + max_width] %}
-{% endif %}
-
-<div
-    class="{{ alert_classes | join(' ') }}"
-    data-roos-component="alert"
-    data-roos-kind="{{ kind }}"
-    data-roos-closable="{{ closable }}"
-    role="alert"
-    {{ attrs.render_extra_attributes(_component_context) }}>
-    
-    <div class="{{ container_classes | join(' ') }}">
-        
-        {# Status Icon #}
-        {% if kind in status_icon_map %}
-            <span class="utrecht-icon rvo-icon rvo-icon-info rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl"
-                  role="img"
-                  aria-label="{{ status_icon_map[kind] | title }}"></span>
-        {% endif %}
-        
-        {# Alert Content #}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: alert
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set kind = _component_context.get('kind', 'info') %}
+{% set heading = _component_context.get('heading', '') %}
+{% set content = _component_context.get('content', '') %}
+{% set closable = _component_context.get('closable', false) %}
+{% set padding = _component_context.get('padding', 'md') %}
+{% set children = _component_context.get('content', '') %}
+{% set maxWidth = _component_context.get('maxWidth', '') %}
+{% set css_classes = ['rvo-alert__container'] %}
+{% if maxWidth %}{% set css_classes = css_classes + ['rvo-max-width-layout--' + maxWidth] %}{% endif %}
+{% set wrapper_classes = ['rvo-alert', 'rvo-alert--' + kind] %}
+{% if padding %}{% set wrapper_classes = wrapper_classes + ['rvo-alert--padding-' + padding] %}{% endif %}
+{% if maxWidth %}{% set wrapper_classes = wrapper_classes + ['rvo-alert--layout'] %}{% endif %}
+{% if _component_context.get('class') %}{% set wrapper_classes = wrapper_classes + _component_context['class'].split() %}{% endif %}
+<div class="{{ wrapper_classes | join(' ') }}" data-roos-component="alert" {{ attrs.render_extra_attributes(_component_context) }}>
+    <div
+        class="{{ css_classes | join(' ') }}"
+        {{ attrs.render_extra_attributes(_component_context) }}>
+        {% set status_icon_map = {'info': 'info', 'warning': 'waarschuwing', 'error': 'foutmelding', 'success': 'bevestiging'} %}
+        <span class="utrecht-icon rvo-icon rvo-icon-{{ status_icon_map[kind] }} rvo-status-icon rvo-status-icon-{{ status_icon_map[kind] }} rvo-icon--xl"
+            role="img" aria-label="{{ status_icon_map[kind] | title }}"></span>
         <div class="rvo-alert-text">
-            {% if heading %}
-                <strong>{{ heading }}</strong>
-            {% endif %}
-            {% if content %}
-                <div>{{ content | safe }}</div>
-            {% endif %}
+            {% if heading %}<strong>{{ heading }}</strong>{% endif %}
+            <div>{{ children if children else content | safe }}</div>
         </div>
-        
-        {# Close Button #}
         {% if closable %}
-            <button type="button" 
-                    class="rvo-button rvo-button--subtle rvo-button__close"
-                    aria-label="Sluiten"
-                    onclick="this.closest('.rvo-alert').style.display='none'">
+            <button type="button" class="utrecht-button utrecht-button--subtle rvo-button__close" aria-label="Sluiten">
                 <span class="utrecht-icon rvo-icon rvo-icon-kruis rvo-icon--md"
-                      role="img"
-                      aria-label="Sluiten"></span>
+                    role="img" aria-label="Kruis"></span>
             </button>
         {% endif %}
-        
     </div>
-    
 </div>

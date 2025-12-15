@@ -258,15 +258,10 @@ class BaseComponentResolver:
                 if attr_name not in ('ref', 'children', 'className'):
                     attributes[attr_name] = attr_value
 
-            # Check if there are any className props from RVO
-            # The outermost element might have className from the RVO component
-            if component_info.elements:
-                outer_elem = component_info.elements[0]
-                # Look for additional classes from the outer wrapper
-                # These are typically passed via the className prop
-                for cls in outer_elem.classes:
-                    if cls and cls not in css_classes:
-                        css_classes.append(cls)
+            # Note: We do NOT copy outer wrapper classes to the primary element.
+            # Wrapper classes (like utrecht-form-fieldset on a div) stay on the wrapper,
+            # while primary element classes (like utrecht-form-fieldset__fieldset) stay on primary.
+            # The wrapper structure below keeps them separate.
 
             # Check if there's a wrapper structure (outer element is different from primary)
             wrapper_info = None
