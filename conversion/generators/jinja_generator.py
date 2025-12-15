@@ -850,11 +850,17 @@ class JinjaGenerator:
         # Get the mapped variable name (for reserved words)
         var_name = self._get_mapped_name(attr.name)
 
+        # Attributes that should only be rendered when they have a value
+        optional_attrs = ['target', 'role', 'rel', 'download', 'title', 'tabindex']
+
         if 'boolean' in attr.types:
             # Boolean attributes
             return f"{{% if {var_name} %}}{attr.name}{{% endif %}}"
+        elif attr.name in optional_attrs or not attr.required:
+            # Optional value attributes - only render when value exists
+            return f'{{% if {var_name} %}}{attr.name}="{{{{ {var_name} }}}}"{{% endif %}}'
         else:
-            # Value attributes
+            # Required value attributes
             return f'{attr.name}="{{{{ {var_name} }}}}"'
 
     def _generate_html_attribute_custom(self, attr: AttributeInfo, target_attr_name: str) -> Optional[str]:

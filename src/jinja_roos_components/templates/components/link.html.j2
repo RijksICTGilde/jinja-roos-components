@@ -50,9 +50,9 @@
 <a
     class="{{ css_classes | join(' ') }}"
     data-roos-component="link"
-    href="{{ href }}"
-    role="{{ role }}"
-    target="{{ target }}"
+    {% if href %}href="{{ href }}"{% endif %}
+    {% if role %}role="{{ role }}"{% endif %}
+    {% if target %}target="{{ target }}"{% endif %}
     {{ attrs.render_extra_attributes(_component_context) }}>
     {% if showIcon == 'before' %}{{iconMarkup}}{% endif %}
     {{ children or content | safe }}
