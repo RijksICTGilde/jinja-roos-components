@@ -92,7 +92,7 @@
                     {% else %}
                         <option value="{{ option.value | default(option.label) }}"
                                 {% if option.value == value or option.label == value %}selected{% endif %}
-                                {% if option.disabled %}disabled{% endif %}>
+                                {% if option.disabled | default(false) %}disabled{% endif %}>
                             {{ option.label }}
                         </option>
                     {% endif %}
