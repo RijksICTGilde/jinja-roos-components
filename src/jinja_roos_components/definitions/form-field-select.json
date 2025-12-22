@@ -9,6 +9,7 @@
       "component_class": "Field",
       "source_path": "../../form-field/src/template",
       "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field/src/template.tsx",
+      "relative_path": "rvo/components/form-field/src/template.tsx",
       "interface": "IFieldProps",
       "tag_name": "c-field",
       "props": [
@@ -31,6 +32,7 @@
       "component_class": "Select",
       "source_path": "../../form-select/src/template",
       "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-select/src/template.tsx",
+      "relative_path": "rvo/components/form-select/src/template.tsx",
       "interface": "ISelectProps",
       "tag_name": "c-select",
       "props": [

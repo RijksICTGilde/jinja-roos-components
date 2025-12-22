@@ -30,6 +30,7 @@
 {% if active %}{% set css_classes = css_classes + ['rvo-link--active'] %}{% endif %}
 {% if hover %}{% set css_classes = css_classes + ['rvo-link--hover'] %}{% endif %}
 {% if focus %}{% set css_classes = css_classes + ['rvo-link--focus'] %}{% endif %}
+{% if showIcon != 'no' %}{% set css_classes = css_classes + ['rvo-link--with-icon'] %}{% endif %}
 {% if noUnderline %}{% set css_classes = css_classes + ['rvo-link--no-underline'] %}{% endif %}
 {% if color == 'donkerblauw' %}{% set css_classes = css_classes + ['rvo-link--donkerblauw'] %}{% endif %}
 {% if color == 'lintblauw' %}{% set css_classes = css_classes + ['rvo-link--lintblauw'] %}{% endif %}

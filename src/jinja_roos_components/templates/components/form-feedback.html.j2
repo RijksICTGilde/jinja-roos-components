@@ -1,0 +1,23 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
+{# Auto-generated from React component: form-feedback
+   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
+{% set text = _component_context.get('text', 'Dit is een melding.') %}
+{% set type_attr = _component_context.get('type', 'warning') %}
+{% set children = _component_context.get('content', '') %}
+{% set css_classes = ['utrecht-form-field-description', 'rvo-form-feedback', 'rvo-form-feedback--error'] %}
+{# Add utility classes from text-style, margin, padding attributes #}
+{% set utility_classes = attributes.render_utility_classes(_component_context) %}
+{% if utility_classes %}
+    {% set css_classes = css_classes + utility_classes.split() %}
+{% endif %}
+{# Add custom classes from class attribute #}
+{% if _component_context.get('class') %}
+    {% set css_classes = css_classes + _component_context['class'].split() %}
+{% endif %}
+<div
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="form-feedback"
+    {{ attrs.render_extra_attributes(_component_context) }}>
+    {{ parseContentMarkup(children if parseContentMarkup(children else text) | safe }}
+</div>

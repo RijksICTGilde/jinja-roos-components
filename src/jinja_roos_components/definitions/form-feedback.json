@@ -1,5 +1,5 @@
 {
-  "name": "feedback",
+  "name": "form-feedback",
   "source_file": "rvo/components/form-feedback/src/template.tsx",
   "conversion_hash": "20462ae7b796311b9c7a8a44feaad963d1460c691ca9f533a58aa138ed3c8846",
   "base_components": [

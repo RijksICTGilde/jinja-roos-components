@@ -1,4 +1,5 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
+{% import 'components/_attribute_mixin.j2' as attributes %}
 {# Auto-generated from React component: form-field-select
    Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
 {# This is a composition component that wraps nested components #}
@@ -15,28 +16,4 @@
 {% set labelType = _component_context.get('labelType') %}
 {% set warningText = _component_context.get('warningText') %}
 
-<c-form-field
-    fieldId="{{ fieldId }}"
-    label="{{ label }}"
-    labelSize="{{ labelSize }}"
-    labelType="{{ labelType }}"
-    helperText="{{ helperText }}"
-    helperTextId="{{ helperTextId }}"
-    expandableHelperText="{{ expandableHelperText }}"
-    expandableHelperTextTitle="{{ expandableHelperTextTitle }}"
-    warningText="{{ warningText }}"
-    errorText="{{ errorText }}"
-    {{ attrs.render_extra_attributes(_component_context) }}>
-    <c-select
-        fieldId="{{ fieldId }}"
-        label="{{ label }}"
-        labelSize="{{ labelSize }}"
-        labelType="{{ labelType }}"
-        helperText="{{ helperText }}"
-        helperTextId="{{ helperTextId }}"
-        expandableHelperText="{{ expandableHelperText }}"
-        expandableHelperTextTitle="{{ expandableHelperTextTitle }}"
-        warningText="{{ warningText }}"
-        errorText="{{ errorText }}"
-    ></c-select>
-</c-form-field>
+{# TODO_CONVERSION: No content elements found for composition component #}

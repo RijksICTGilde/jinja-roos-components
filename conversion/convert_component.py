@@ -938,8 +938,8 @@ class ComponentConverter:
             if i >= len(props_str):
                 break
 
-            # Match prop name
-            prop_match = re.match(r'(\w+)=', props_str[i:])
+            # Match prop name (including hyphenated names like aria-labelledby)
+            prop_match = re.match(r'([\w-]+)=', props_str[i:])
             if not prop_match:
                 # Skip to next whitespace or equals
                 while i < len(props_str) and not props_str[i].isspace() and props_str[i] != '=':
@@ -1310,6 +1310,13 @@ class ComponentConverter:
                     mapping.prop_name,
                     mapping.css_class,
                     negate=True
+                )
+            elif mapping.value and mapping.value.startswith('!='):
+                # Not-equal condition: prop !== 'value' -> prop != 'value'
+                excluded_value = mapping.value[2:]  # Remove '!=' prefix
+                self.jinja_generator.class_builder.add_conditional_class(
+                    mapping.css_class,
+                    f"{mapping.prop_name} != '{excluded_value}'"
                 )
             else:
                 # Value-based (enum)

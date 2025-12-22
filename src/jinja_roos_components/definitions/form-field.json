@@ -15,6 +15,7 @@
       "component_class": "Feedback",
       "source_path": "../../form-feedback/src/template",
       "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-feedback/src/template.tsx",
+      "relative_path": "rvo/components/form-feedback/src/template.tsx",
       "interface": "IFeedbackProps",
       "tag_name": "c-feedback",
       "props": [
@@ -28,6 +29,7 @@
       "component_class": "Label",
       "source_path": "../../form-field-label/src/template",
       "resolved_path": "/Users/robbertuittenbroek/IdeaProjects/rvo/components/form-field-label/src/template.tsx",
+      "relative_path": "rvo/components/form-field-label/src/template.tsx",
       "interface": "ILabelProps",
       "tag_name": "c-label",
       "props": [

@@ -228,6 +228,10 @@ class ClsxParser:
         Now also supports compound conditions like:
         'type === "unordered" && noMargin && "rvo-ul--no-margin"'
 
+        Also supports:
+        - Array literals: condition && ['class-name']
+        - Not-equal conditions: prop !== 'value' && 'class-name'
+
         Args:
             expression: Conditional expression
         """
@@ -239,6 +243,15 @@ class ClsxParser:
 
         # The last part is always the class name or template literal
         class_part = parts[-1].strip()
+
+        # Handle array literal: ['class-name'] -> 'class-name'
+        if class_part.startswith('[') and class_part.endswith(']'):
+            # Extract class from array: ['class-name'] or ["class-name"]
+            array_content = class_part[1:-1].strip()
+            # Remove quotes from the class name inside the array
+            if (array_content.startswith("'") and array_content.endswith("'")) or \
+               (array_content.startswith('"') and array_content.endswith('"')):
+                class_part = array_content  # Keep quotes for later stripping
 
         # Everything before the last part forms the compound condition
         if len(parts) == 2:
@@ -284,11 +297,21 @@ class ClsxParser:
             ))
             return
 
-        # Not equal check
+        # Not equal check: prop !== 'value' && 'class-name'
+        # Convert to Jinja: prop != 'value'
         if ' !== ' in condition:
-            # For template literals, this is handled in _parse_template_literal
-            # For regular classes with !==, we can't easily convert without enum values
-            # Mark as needing template literal or skip
+            prop_part, value_part = condition.split(' !== ', 1)
+            prop_name = prop_part.strip()
+            excluded_value = value_part.strip().strip("'\"")
+
+            # Store with a special marker indicating this is a not-equal condition
+            # The Jinja generator will convert this to: prop != 'value'
+            self.mappings.append(ClassMapping(
+                prop_name=prop_name,
+                value=f'!={excluded_value}',  # Mark as not-equal
+                css_class=class_part,
+                condition=condition
+            ))
             return
 
         # Equality check
