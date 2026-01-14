@@ -1090,6 +1090,73 @@ table {
   border-spacing: 0;
 }
 
+.roos-secret-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rvo-space-md, 1rem);
+  flex-wrap: wrap;
+}
+
+.roos-secret-field__mask {
+  font-family: monospace;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  color: var(--rvo-color-grijs-600, #666);
+}
+
+.roos-secret-field__value {
+  font-family: monospace;
+  font-size: 0.875rem;
+  background: var(--rvo-color-grijs-100, #f5f5f5);
+  padding: var(--rvo-space-xs, 0.25rem) var(--rvo-space-sm, 0.5rem);
+  border-radius: 4px;
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.roos-secret-field__value pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.roos-secret-field__actions {
+  display: inline-flex;
+  gap: var(--rvo-space-xs, 0.25rem);
+}
+
+.roos-secret-field__toggle,
+.roos-secret-field__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rvo-space-xs, 0.25rem);
+}
+
+.roos-secret-field__copy--success {
+  color: var(--rvo-color-groen, #39870c) !important;
+}
+
+.roos-secret-field__copy--success .rvo-icon {
+  color: var(--rvo-color-groen, #39870c) !important;
+}
+
+.roos-secret-field--sm .roos-secret-field__mask,
+.roos-secret-field--sm .roos-secret-field__value {
+  font-size: 0.8125rem;
+}
+
+.roos-secret-field--md .roos-secret-field__mask,
+.roos-secret-field--md .roos-secret-field__value {
+  font-size: 0.875rem;
+}
+
+.roos-secret-field--lg .roos-secret-field__mask,
+.roos-secret-field--lg .roos-secret-field__value {
+  font-size: 1rem;
+}
+
 .roos-theme *:focus-visible {
   outline: 2px solid var(--rvo-color-focus, #0070f3);
   outline-offset: 2px;

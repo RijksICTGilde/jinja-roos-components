@@ -10,6 +10,7 @@ import '../scss/roos.scss';
 
 import { ButtonComponent } from './components/button';
 import { CardComponent } from './components/card';
+import { SecretFieldComponent } from './components/secret-field';
 import { ComponentRegistry } from './utils/registry';
 
 // Create global registry
@@ -18,6 +19,7 @@ const registry = new ComponentRegistry();
 // Register default components
 registry.register('button', ButtonComponent);
 registry.register('card', CardComponent);
+registry.register('secret-field', SecretFieldComponent);
 
 // Form components use basic interaction enhancement
 registry.register('checkbox', { selector: '[data-roos-component="checkbox"]', init: () => {} });
@@ -76,4 +78,4 @@ if (typeof window !== 'undefined') {
     };
 }
 
-export { ButtonComponent, CardComponent, ComponentRegistry };
+export { ButtonComponent, CardComponent, SecretFieldComponent, ComponentRegistry };

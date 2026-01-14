@@ -181,6 +181,157 @@ const CardComponent = {
 
 /***/ }),
 
+/***/ "./fe_src/ts/components/secret-field.ts":
+/*!**********************************************!*\
+  !*** ./fe_src/ts/components/secret-field.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SecretFieldComponent: () => (/* binding */ SecretFieldComponent)
+/* harmony export */ });
+const elementState = new WeakMap();
+function showValue(element) {
+    const state = elementState.get(element);
+    if (!state)
+        return;
+    const mask = element.querySelector('.roos-secret-field__mask');
+    const value = element.querySelector('.roos-secret-field__value');
+    const toggleButton = element.querySelector('.roos-secret-field__toggle');
+    const toggleText = element.querySelector('.roos-secret-field__toggle-text');
+    if (mask)
+        mask.style.display = 'none';
+    if (value)
+        value.style.display = 'inline';
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-pressed', 'true');
+        toggleButton.setAttribute('aria-label', state.hideLabel);
+    }
+    if (toggleText)
+        toggleText.textContent = state.hideLabel;
+    const icon = toggleButton?.querySelector('.rvo-icon');
+    if (icon) {
+        icon.classList.remove('rvo-icon-oog');
+        icon.classList.add('rvo-icon-oog-dicht');
+    }
+    state.isVisible = true;
+}
+function hideValue(element) {
+    const state = elementState.get(element);
+    if (!state)
+        return;
+    const mask = element.querySelector('.roos-secret-field__mask');
+    const value = element.querySelector('.roos-secret-field__value');
+    const toggleButton = element.querySelector('.roos-secret-field__toggle');
+    const toggleText = element.querySelector('.roos-secret-field__toggle-text');
+    if (mask)
+        mask.style.display = 'inline';
+    if (value)
+        value.style.display = 'none';
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-pressed', 'false');
+        toggleButton.setAttribute('aria-label', state.showLabel);
+    }
+    if (toggleText)
+        toggleText.textContent = state.showLabel;
+    const icon = toggleButton?.querySelector('.rvo-icon');
+    if (icon) {
+        icon.classList.remove('rvo-icon-oog-dicht');
+        icon.classList.add('rvo-icon-oog');
+    }
+    state.isVisible = false;
+}
+function showCopySuccess(element, copyButton, copyText) {
+    const state = elementState.get(element);
+    if (!state)
+        return;
+    const originalText = copyText.textContent || state.copyLabel;
+    copyText.textContent = state.copiedLabel;
+    copyButton.classList.add('roos-secret-field__copy--success');
+    const icon = copyButton.querySelector('.rvo-icon');
+    if (icon) {
+        icon.classList.remove('rvo-icon-document-blanco');
+        icon.classList.add('rvo-icon-vinkje');
+    }
+    setTimeout(() => {
+        copyText.textContent = originalText;
+        copyButton.classList.remove('roos-secret-field__copy--success');
+        if (icon) {
+            icon.classList.remove('rvo-icon-vinkje');
+            icon.classList.add('rvo-icon-document-blanco');
+        }
+    }, 2000);
+}
+function fallbackCopy(text, element, copyButton, copyText) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showCopySuccess(element, copyButton, copyText);
+    }
+    catch (execErr) {
+        console.error('Failed to copy text:', execErr);
+    }
+    document.body.removeChild(textArea);
+}
+const SecretFieldComponent = {
+    selector: '[data-roos-component="secret-field"]',
+    init(element) {
+        const el = element;
+        const state = {
+            isVisible: false,
+            showLabel: el.dataset.showLabel || 'Tonen',
+            hideLabel: el.dataset.hideLabel || 'Verbergen',
+            copyLabel: el.dataset.copyLabel || 'Kopiëren',
+            copiedLabel: el.dataset.copiedLabel || 'Gekopieerd!'
+        };
+        elementState.set(element, state);
+        const toggleButton = el.querySelector('.roos-secret-field__toggle');
+        if (toggleButton) {
+            toggleButton.addEventListener('click', () => {
+                const currentState = elementState.get(element);
+                if (!currentState)
+                    return;
+                if (currentState.isVisible) {
+                    hideValue(el);
+                }
+                else {
+                    showValue(el);
+                }
+            });
+        }
+        const copyButton = el.querySelector('.roos-secret-field__copy');
+        const copyText = el.querySelector('.roos-secret-field__copy-text');
+        const valueEl = el.querySelector('.roos-secret-field__value');
+        if (copyButton && copyText && valueEl) {
+            copyButton.addEventListener('click', async () => {
+                const secretValue = valueEl.textContent?.trim() || '';
+                try {
+                    await navigator.clipboard.writeText(secretValue);
+                    showCopySuccess(el, copyButton, copyText);
+                }
+                catch (err) {
+                    fallbackCopy(secretValue, el, copyButton, copyText);
+                }
+            });
+        }
+    },
+    destroy(element) {
+        elementState.delete(element);
+        const el = element;
+        const newEl = el.cloneNode(true);
+        el.parentNode?.replaceChild(newEl, el);
+    }
+};
+
+
+/***/ }),
+
 /***/ "./fe_src/ts/utils/registry.ts":
 /*!*************************************!*\
   !*** ./fe_src/ts/utils/registry.ts ***!
@@ -304,21 +455,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ButtonComponent: () => (/* reexport safe */ _components_button__WEBPACK_IMPORTED_MODULE_1__.ButtonComponent),
 /* harmony export */   CardComponent: () => (/* reexport safe */ _components_card__WEBPACK_IMPORTED_MODULE_2__.CardComponent),
-/* harmony export */   ComponentRegistry: () => (/* reexport safe */ _utils_registry__WEBPACK_IMPORTED_MODULE_3__.ComponentRegistry),
+/* harmony export */   ComponentRegistry: () => (/* reexport safe */ _utils_registry__WEBPACK_IMPORTED_MODULE_4__.ComponentRegistry),
+/* harmony export */   SecretFieldComponent: () => (/* reexport safe */ _components_secret_field__WEBPACK_IMPORTED_MODULE_3__.SecretFieldComponent),
 /* harmony export */   getRegistry: () => (/* binding */ getRegistry),
 /* harmony export */   init: () => (/* binding */ init)
 /* harmony export */ });
 /* harmony import */ var _scss_roos_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/roos.scss */ "./fe_src/scss/roos.scss");
 /* harmony import */ var _components_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/button */ "./fe_src/ts/components/button.ts");
 /* harmony import */ var _components_card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/card */ "./fe_src/ts/components/card.ts");
-/* harmony import */ var _utils_registry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/registry */ "./fe_src/ts/utils/registry.ts");
+/* harmony import */ var _components_secret_field__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/secret-field */ "./fe_src/ts/components/secret-field.ts");
+/* harmony import */ var _utils_registry__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/registry */ "./fe_src/ts/utils/registry.ts");
 
 
 
 
-const registry = new _utils_registry__WEBPACK_IMPORTED_MODULE_3__.ComponentRegistry();
+
+const registry = new _utils_registry__WEBPACK_IMPORTED_MODULE_4__.ComponentRegistry();
 registry.register('button', _components_button__WEBPACK_IMPORTED_MODULE_1__.ButtonComponent);
 registry.register('card', _components_card__WEBPACK_IMPORTED_MODULE_2__.CardComponent);
+registry.register('secret-field', _components_secret_field__WEBPACK_IMPORTED_MODULE_3__.SecretFieldComponent);
 registry.register('checkbox', { selector: '[data-roos-component="checkbox"]', init: () => { } });
 registry.register('select', { selector: '[data-roos-component="select"]', init: () => { } });
 registry.register('radio', { selector: '[data-roos-component="radio"]', init: () => { } });
