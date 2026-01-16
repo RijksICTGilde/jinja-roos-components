@@ -181,153 +181,77 @@ const CardComponent = {
 
 /***/ }),
 
-/***/ "./fe_src/ts/components/secret-field.ts":
-/*!**********************************************!*\
-  !*** ./fe_src/ts/components/secret-field.ts ***!
-  \**********************************************/
+/***/ "./fe_src/ts/utils/clipboard.ts":
+/*!**************************************!*\
+  !*** ./fe_src/ts/utils/clipboard.ts ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   SecretFieldComponent: () => (/* binding */ SecretFieldComponent)
+/* harmony export */   copyToClipboard: () => (/* binding */ copyToClipboard)
 /* harmony export */ });
-const elementState = new WeakMap();
-function showValue(element) {
-    const state = elementState.get(element);
-    if (!state)
+function copyToClipboard(targetSelector, event, parentOrOptions = {}) {
+    const options = typeof parentOrOptions === 'string'
+        ? { searchFromParent: parentOrOptions }
+        : parentOrOptions;
+    const { feedbackDuration = 2000, feedbackClass = 'is-copied', searchFromParent = '[data-copy-scope]' } = options;
+    const button = (event?.currentTarget || event?.target);
+    if (!button) {
+        console.error('copyToClipboard: No button element found');
         return;
-    const mask = element.querySelector('.roos-secret-field__mask');
-    const value = element.querySelector('.roos-secret-field__value');
-    const toggleButton = element.querySelector('.roos-secret-field__toggle');
-    const toggleText = element.querySelector('.roos-secret-field__toggle-text');
-    if (mask)
-        mask.style.display = 'none';
-    if (value)
-        value.style.display = 'inline';
-    if (toggleButton) {
-        toggleButton.setAttribute('aria-pressed', 'true');
-        toggleButton.setAttribute('aria-label', state.hideLabel);
     }
-    if (toggleText)
-        toggleText.textContent = state.hideLabel;
-    const icon = toggleButton?.querySelector('.rvo-icon');
-    if (icon) {
-        icon.classList.remove('rvo-icon-oog');
-        icon.classList.add('rvo-icon-oog-dicht');
-    }
-    state.isVisible = true;
-}
-function hideValue(element) {
-    const state = elementState.get(element);
-    if (!state)
+    const container = button.closest(searchFromParent);
+    if (!container) {
+        console.error(`copyToClipboard: Could not find parent "${searchFromParent}"`);
         return;
-    const mask = element.querySelector('.roos-secret-field__mask');
-    const value = element.querySelector('.roos-secret-field__value');
-    const toggleButton = element.querySelector('.roos-secret-field__toggle');
-    const toggleText = element.querySelector('.roos-secret-field__toggle-text');
-    if (mask)
-        mask.style.display = 'inline';
-    if (value)
-        value.style.display = 'none';
-    if (toggleButton) {
-        toggleButton.setAttribute('aria-pressed', 'false');
-        toggleButton.setAttribute('aria-label', state.showLabel);
     }
-    if (toggleText)
-        toggleText.textContent = state.showLabel;
-    const icon = toggleButton?.querySelector('.rvo-icon');
-    if (icon) {
-        icon.classList.remove('rvo-icon-oog-dicht');
-        icon.classList.add('rvo-icon-oog');
-    }
-    state.isVisible = false;
-}
-function showCopySuccess(element, copyButton, copyText) {
-    const state = elementState.get(element);
-    if (!state)
+    const targetElement = container.querySelector(targetSelector);
+    if (!targetElement) {
+        console.error(`copyToClipboard: Could not find target "${targetSelector}"`);
         return;
-    const originalText = copyText.textContent || state.copyLabel;
-    copyText.textContent = state.copiedLabel;
-    copyButton.classList.add('roos-secret-field__copy--success');
-    const icon = copyButton.querySelector('.rvo-icon');
-    if (icon) {
-        icon.classList.remove('rvo-icon-document-blanco');
-        icon.classList.add('rvo-icon-vinkje');
     }
-    setTimeout(() => {
-        copyText.textContent = originalText;
-        copyButton.classList.remove('roos-secret-field__copy--success');
-        if (icon) {
-            icon.classList.remove('rvo-icon-vinkje');
-            icon.classList.add('rvo-icon-document-blanco');
-        }
-    }, 2000);
+    const textToCopy = targetElement.textContent?.trim() || '';
+    if (!textToCopy) {
+        console.warn('copyToClipboard: No text content to copy');
+        return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => showCopyFeedback(button, feedbackClass, feedbackDuration))
+            .catch(() => fallbackCopy(textToCopy, button, feedbackClass, feedbackDuration));
+    }
+    else {
+        fallbackCopy(textToCopy, button, feedbackClass, feedbackDuration);
+    }
 }
-function fallbackCopy(text, element, copyButton, copyText) {
+function fallbackCopy(text, button, feedbackClass, feedbackDuration) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
     textArea.style.position = 'fixed';
     textArea.style.left = '-9999px';
+    textArea.style.top = '0';
+    textArea.setAttribute('readonly', '');
     document.body.appendChild(textArea);
-    textArea.select();
     try {
+        textArea.select();
+        textArea.setSelectionRange(0, text.length);
         document.execCommand('copy');
-        showCopySuccess(element, copyButton, copyText);
+        showCopyFeedback(button, feedbackClass, feedbackDuration);
     }
-    catch (execErr) {
-        console.error('Failed to copy text:', execErr);
+    catch (err) {
+        console.error('copyToClipboard: Failed to copy text:', err);
     }
-    document.body.removeChild(textArea);
+    finally {
+        document.body.removeChild(textArea);
+    }
 }
-const SecretFieldComponent = {
-    selector: '[data-roos-component="secret-field"]',
-    init(element) {
-        const el = element;
-        const state = {
-            isVisible: false,
-            showLabel: el.dataset.showLabel || 'Tonen',
-            hideLabel: el.dataset.hideLabel || 'Verbergen',
-            copyLabel: el.dataset.copyLabel || 'Kopiëren',
-            copiedLabel: el.dataset.copiedLabel || 'Gekopieerd!'
-        };
-        elementState.set(element, state);
-        const toggleButton = el.querySelector('.roos-secret-field__toggle');
-        if (toggleButton) {
-            toggleButton.addEventListener('click', () => {
-                const currentState = elementState.get(element);
-                if (!currentState)
-                    return;
-                if (currentState.isVisible) {
-                    hideValue(el);
-                }
-                else {
-                    showValue(el);
-                }
-            });
-        }
-        const copyButton = el.querySelector('.roos-secret-field__copy');
-        const copyText = el.querySelector('.roos-secret-field__copy-text');
-        const valueEl = el.querySelector('.roos-secret-field__value');
-        if (copyButton && copyText && valueEl) {
-            copyButton.addEventListener('click', async () => {
-                const secretValue = valueEl.textContent?.trim() || '';
-                try {
-                    await navigator.clipboard.writeText(secretValue);
-                    showCopySuccess(el, copyButton, copyText);
-                }
-                catch (err) {
-                    fallbackCopy(secretValue, el, copyButton, copyText);
-                }
-            });
-        }
-    },
-    destroy(element) {
-        elementState.delete(element);
-        const el = element;
-        const newEl = el.cloneNode(true);
-        el.parentNode?.replaceChild(newEl, el);
-    }
-};
+function showCopyFeedback(button, feedbackClass, duration) {
+    button.classList.add(feedbackClass);
+    setTimeout(() => {
+        button.classList.remove(feedbackClass);
+    }, duration);
+}
 
 
 /***/ }),
@@ -385,6 +309,323 @@ class ComponentRegistry {
         return Array.from(this.components.keys());
     }
 }
+
+
+/***/ }),
+
+/***/ "./fe_src/ts/utils/ruleapplier.ts":
+/*!****************************************!*\
+  !*** ./fe_src/ts/utils/ruleapplier.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RuleApplier: () => (/* binding */ RuleApplier),
+/* harmony export */   applyRules: () => (/* binding */ applyRules)
+/* harmony export */ });
+class RuleApplier {
+    constructor() {
+        this.debug = false;
+    }
+    applyRules(rulesString, clickedElement) {
+        try {
+            const rules = this.parseRules(rulesString);
+            this.executeRules(rules, clickedElement);
+        }
+        catch (error) {
+            console.error('Rule application failed:', error.message);
+            throw error;
+        }
+    }
+    parseRules(rulesString) {
+        const rules = [];
+        const statements = this.tokenizeStatements(rulesString);
+        for (const statement of statements) {
+            const rule = this.parseStatement(statement);
+            if (rule)
+                rules.push(rule);
+        }
+        return rules;
+    }
+    tokenizeStatements(rulesString) {
+        const cleaned = rulesString.trim();
+        if (!cleaned) {
+            throw new Error('Empty rules string provided');
+        }
+        const statements = [];
+        let current = '';
+        let inQuotes = false;
+        let quoteChar = null;
+        for (let i = 0; i < cleaned.length; i++) {
+            const char = cleaned[i];
+            if ((char === '"' || char === "'") && cleaned[i - 1] !== '\\') {
+                if (!inQuotes) {
+                    inQuotes = true;
+                    quoteChar = char;
+                }
+                else if (char === quoteChar) {
+                    inQuotes = false;
+                    quoteChar = null;
+                }
+            }
+            if (char === ';' && !inQuotes) {
+                if (current.trim()) {
+                    statements.push(current.trim());
+                }
+                current = '';
+            }
+            else {
+                current += char;
+            }
+        }
+        if (current.trim()) {
+            statements.push(current.trim());
+        }
+        return statements;
+    }
+    parseStatement(statement) {
+        const colonIndex = statement.indexOf(':');
+        if (colonIndex === -1) {
+            throw new Error(`Invalid statement format: "${statement}". Expected: "selector: actions"`);
+        }
+        const selector = statement.substring(0, colonIndex).trim();
+        const actionsString = statement.substring(colonIndex + 1).trim();
+        if (!selector) {
+            throw new Error(`Empty selector in statement: "${statement}"`);
+        }
+        if (!actionsString) {
+            throw new Error(`No actions specified for selector "${selector}"`);
+        }
+        const actions = this.parseActions(actionsString);
+        return { selector, actions };
+    }
+    parseActions(actionsString) {
+        const actions = [];
+        const tokens = this.tokenizeActions(actionsString);
+        for (const token of tokens) {
+            const action = this.parseActionToken(token);
+            if (action)
+                actions.push(action);
+        }
+        return actions;
+    }
+    tokenizeActions(actionsString) {
+        const tokens = [];
+        let current = '';
+        let inBrackets = false;
+        for (let i = 0; i < actionsString.length; i++) {
+            const char = actionsString[i];
+            if (char === '[') {
+                inBrackets = true;
+                current += char;
+            }
+            else if (char === ']') {
+                inBrackets = false;
+                current += char;
+            }
+            else if (char === ' ' && !inBrackets) {
+                if (current.trim()) {
+                    tokens.push(current.trim());
+                }
+                current = '';
+            }
+            else {
+                current += char;
+            }
+        }
+        if (current.trim()) {
+            tokens.push(current.trim());
+        }
+        return tokens;
+    }
+    parseActionToken(token) {
+        if (token.startsWith('+')) {
+            const value = token.substring(1);
+            if (value.startsWith('[') && value.endsWith(']')) {
+                const classList = value.slice(1, -1).split(',').map(c => c.trim());
+                return { type: 'addClass', classes: classList };
+            }
+            else {
+                return { type: 'addClass', classes: [value] };
+            }
+        }
+        if (token.startsWith('-')) {
+            const value = token.substring(1);
+            if (value.startsWith('[') && value.endsWith(']')) {
+                const classList = value.slice(1, -1).split(',').map(c => c.trim());
+                return { type: 'removeClass', classes: classList };
+            }
+            else {
+                return { type: 'removeClass', classes: [value] };
+            }
+        }
+        if (token.includes('=')) {
+            const [key, ...valueParts] = token.split('=');
+            const value = valueParts.join('=');
+            if (!key.trim()) {
+                throw new Error(`Invalid attribute assignment: "${token}"`);
+            }
+            return {
+                type: 'setAttribute',
+                attribute: key.trim(),
+                value: value.trim().replace(/^["']|["']$/g, '')
+            };
+        }
+        throw new Error(`Unknown action format: "${token}"`);
+    }
+    resolveSelector(selector, clickedElement) {
+        const interpolated = this.interpolateVariables(selector, clickedElement);
+        if (interpolated === 'self' || interpolated.startsWith('self ') || interpolated.startsWith('self>')) {
+            const baseElements = [clickedElement];
+            const remainder = interpolated.substring(4).trim();
+            if (!remainder)
+                return baseElements;
+            return this.queryFromElements(baseElements, remainder);
+        }
+        if (interpolated === 'siblings' || interpolated.startsWith('siblings ') || interpolated.startsWith('siblings>')) {
+            const parent = clickedElement.parentElement;
+            if (!parent)
+                return [];
+            const baseElements = Array.from(parent.children).filter(el => el !== clickedElement);
+            const remainder = interpolated.substring(8).trim();
+            if (!remainder)
+                return baseElements;
+            return this.queryFromElements(baseElements, remainder);
+        }
+        if (interpolated === 'parent' || interpolated.startsWith('parent ') || interpolated.startsWith('parent>')) {
+            const baseElements = clickedElement.parentElement ? [clickedElement.parentElement] : [];
+            const remainder = interpolated.substring(6).trim();
+            if (!remainder)
+                return baseElements;
+            return this.queryFromElements(baseElements, remainder);
+        }
+        if (interpolated.startsWith('~')) {
+            const selectorPart = interpolated.substring(1).trim();
+            const siblings = [];
+            let sibling = clickedElement.nextElementSibling;
+            while (sibling) {
+                if (!selectorPart || sibling.matches(selectorPart)) {
+                    siblings.push(sibling);
+                }
+                sibling = sibling.nextElementSibling;
+            }
+            return siblings;
+        }
+        if (interpolated.startsWith('+')) {
+            const selectorPart = interpolated.substring(1).trim();
+            const next = clickedElement.nextElementSibling;
+            if (next && (!selectorPart || next.matches(selectorPart))) {
+                return [next];
+            }
+            return [];
+        }
+        if (interpolated.startsWith('>')) {
+            const selectorPart = interpolated.substring(1).trim();
+            if (!selectorPart) {
+                return Array.from(clickedElement.children);
+            }
+            return Array.from(clickedElement.querySelectorAll(':scope > ' + selectorPart));
+        }
+        if (interpolated.startsWith('^')) {
+            const selectorPart = interpolated.substring(1).trim();
+            const parent = clickedElement.closest(selectorPart);
+            return parent ? [parent] : [];
+        }
+        try {
+            if (interpolated.startsWith('#')) {
+                return Array.from(document.querySelectorAll(interpolated));
+            }
+            return Array.from(clickedElement.querySelectorAll(interpolated));
+        }
+        catch {
+            throw new Error(`Invalid selector: "${selector}"`);
+        }
+    }
+    queryFromElements(elements, selectorPart) {
+        const results = [];
+        for (const element of elements) {
+            if (selectorPart.startsWith('>')) {
+                const childSelector = selectorPart.substring(1).trim();
+                if (!childSelector) {
+                    results.push(...Array.from(element.children));
+                }
+                else {
+                    results.push(...Array.from(element.querySelectorAll(':scope > ' + childSelector)));
+                }
+            }
+            else if (selectorPart) {
+                results.push(...Array.from(element.querySelectorAll(selectorPart)));
+            }
+        }
+        return results;
+    }
+    interpolateVariables(selector, element) {
+        return selector.replace(/\{([^}]+)\}/g, (match, varName) => {
+            if (varName.startsWith('data-')) {
+                return element.dataset[varName.substring(5)] || '';
+            }
+            if (varName === 'id') {
+                return element.id || '';
+            }
+            if (varName.startsWith('attr:')) {
+                const attrName = varName.substring(5);
+                return element.getAttribute(attrName) || '';
+            }
+            return element.getAttribute(varName) || '';
+        });
+    }
+    executeRules(rules, clickedElement) {
+        for (const rule of rules) {
+            const elements = this.resolveSelector(rule.selector, clickedElement);
+            if (elements.length === 0 && this.debug) {
+                console.warn(`No elements found for selector: "${rule.selector}"`);
+                continue;
+            }
+            for (const element of elements) {
+                this.applyActions(element, rule.actions);
+            }
+        }
+    }
+    applyActions(element, actions) {
+        for (const action of actions) {
+            switch (action.type) {
+                case 'addClass':
+                    element.classList.add(...(action.classes || []));
+                    break;
+                case 'removeClass':
+                    element.classList.remove(...(action.classes || []));
+                    break;
+                case 'setAttribute':
+                    if (action.attribute && action.value !== undefined) {
+                        element.setAttribute(action.attribute, action.value);
+                    }
+                    break;
+            }
+        }
+    }
+}
+const ruleApplier = new RuleApplier();
+function applyRules(rulesString, event, options = {}) {
+    if (options.preventDefault && event?.preventDefault) {
+        event.preventDefault();
+    }
+    if (options.stopPropagation && event?.stopPropagation) {
+        event.stopPropagation();
+    }
+    const clickedElement = (event?.currentTarget || event?.target);
+    if (!clickedElement) {
+        console.error('No element found for rule application');
+        return;
+    }
+    try {
+        ruleApplier.applyRules(rulesString, clickedElement);
+    }
+    catch (error) {
+        console.error('Rule Application Error:', error);
+    }
+}
+
 
 
 /***/ })
@@ -455,25 +696,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ButtonComponent: () => (/* reexport safe */ _components_button__WEBPACK_IMPORTED_MODULE_1__.ButtonComponent),
 /* harmony export */   CardComponent: () => (/* reexport safe */ _components_card__WEBPACK_IMPORTED_MODULE_2__.CardComponent),
-/* harmony export */   ComponentRegistry: () => (/* reexport safe */ _utils_registry__WEBPACK_IMPORTED_MODULE_4__.ComponentRegistry),
-/* harmony export */   SecretFieldComponent: () => (/* reexport safe */ _components_secret_field__WEBPACK_IMPORTED_MODULE_3__.SecretFieldComponent),
+/* harmony export */   ComponentRegistry: () => (/* reexport safe */ _utils_registry__WEBPACK_IMPORTED_MODULE_3__.ComponentRegistry),
+/* harmony export */   applyRules: () => (/* reexport safe */ _utils_ruleapplier__WEBPACK_IMPORTED_MODULE_4__.applyRules),
+/* harmony export */   copyToClipboard: () => (/* reexport safe */ _utils_clipboard__WEBPACK_IMPORTED_MODULE_5__.copyToClipboard),
 /* harmony export */   getRegistry: () => (/* binding */ getRegistry),
 /* harmony export */   init: () => (/* binding */ init)
 /* harmony export */ });
 /* harmony import */ var _scss_roos_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/roos.scss */ "./fe_src/scss/roos.scss");
 /* harmony import */ var _components_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/button */ "./fe_src/ts/components/button.ts");
 /* harmony import */ var _components_card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/card */ "./fe_src/ts/components/card.ts");
-/* harmony import */ var _components_secret_field__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/secret-field */ "./fe_src/ts/components/secret-field.ts");
-/* harmony import */ var _utils_registry__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/registry */ "./fe_src/ts/utils/registry.ts");
+/* harmony import */ var _utils_registry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/registry */ "./fe_src/ts/utils/registry.ts");
+/* harmony import */ var _utils_ruleapplier__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/ruleapplier */ "./fe_src/ts/utils/ruleapplier.ts");
+/* harmony import */ var _utils_clipboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/clipboard */ "./fe_src/ts/utils/clipboard.ts");
 
 
 
 
 
-const registry = new _utils_registry__WEBPACK_IMPORTED_MODULE_4__.ComponentRegistry();
+
+const registry = new _utils_registry__WEBPACK_IMPORTED_MODULE_3__.ComponentRegistry();
 registry.register('button', _components_button__WEBPACK_IMPORTED_MODULE_1__.ButtonComponent);
 registry.register('card', _components_card__WEBPACK_IMPORTED_MODULE_2__.CardComponent);
-registry.register('secret-field', _components_secret_field__WEBPACK_IMPORTED_MODULE_3__.SecretFieldComponent);
 registry.register('checkbox', { selector: '[data-roos-component="checkbox"]', init: () => { } });
 registry.register('select', { selector: '[data-roos-component="select"]', init: () => { } });
 registry.register('radio', { selector: '[data-roos-component="radio"]', init: () => { } });
@@ -506,6 +749,8 @@ if (typeof window !== 'undefined') {
         getRegistry,
         registry
     };
+    window.applyRules = _utils_ruleapplier__WEBPACK_IMPORTED_MODULE_4__.applyRules;
+    window.copyToClipboard = _utils_clipboard__WEBPACK_IMPORTED_MODULE_5__.copyToClipboard;
 }
 
 

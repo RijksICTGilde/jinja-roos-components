@@ -151,8 +151,8 @@ def get_icons_metadata() -> list[dict]:
     Get full icon metadata for documentation purposes.
     Returns list of icon objects with name, category, display_name, etc.
     """
-    definitions_file = _icon_validator._find_definitions_file()
-    if not definitions_file:
+    definitions_file = Path(__file__).parent / 'overall_definitions.json'
+    if not definitions_file.exists():
         return []
 
     try:

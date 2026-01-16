@@ -1,6 +1,6 @@
 /**
  * ROOS Components - Main Entry Point
- * 
+ *
  * This file initializes the ROOS component library and provides
  * utilities for component interaction and HTMX integration.
  */
@@ -10,8 +10,9 @@ import '../scss/roos.scss';
 
 import { ButtonComponent } from './components/button';
 import { CardComponent } from './components/card';
-import { SecretFieldComponent } from './components/secret-field';
 import { ComponentRegistry } from './utils/registry';
+import { applyRules } from './utils/ruleapplier';
+import { copyToClipboard } from './utils/clipboard';
 
 // Create global registry
 const registry = new ComponentRegistry();
@@ -19,7 +20,7 @@ const registry = new ComponentRegistry();
 // Register default components
 registry.register('button', ButtonComponent);
 registry.register('card', CardComponent);
-registry.register('secret-field', SecretFieldComponent);
+// secret-field uses declarative applyRules + copyToClipboard, no component registration needed
 
 // Form components use basic interaction enhancement
 registry.register('checkbox', { selector: '[data-roos-component="checkbox"]', init: () => {} });
@@ -76,6 +77,9 @@ if (typeof window !== 'undefined') {
         getRegistry,
         registry
     };
+    // Make utilities available globally for onclick handlers
+    (window as any).applyRules = applyRules;
+    (window as any).copyToClipboard = copyToClipboard;
 }
 
-export { ButtonComponent, CardComponent, SecretFieldComponent, ComponentRegistry };
+export { ButtonComponent, CardComponent, ComponentRegistry, applyRules, copyToClipboard };

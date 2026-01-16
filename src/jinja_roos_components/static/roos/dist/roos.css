@@ -1091,10 +1091,38 @@ table {
 }
 
 .roos-secret-field {
-  display: inline-flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 200px auto;
+  align-items: start;
   gap: var(--rvo-space-md, 1rem);
-  flex-wrap: wrap;
+}
+
+.roos-secret-field--width-xs {
+  grid-template-columns: 100px auto;
+}
+
+.roos-secret-field--width-sm {
+  grid-template-columns: 150px auto;
+}
+
+.roos-secret-field--width-md {
+  grid-template-columns: 200px auto;
+}
+
+.roos-secret-field--width-lg {
+  grid-template-columns: 300px auto;
+}
+
+.roos-secret-field--width-xl {
+  grid-template-columns: 400px auto;
+}
+
+.roos-secret-field--width-auto {
+  grid-template-columns: 1fr auto;
+}
+
+.roos-secret-field__content {
+  min-width: 0;
 }
 
 .roos-secret-field__mask {
@@ -1105,6 +1133,7 @@ table {
 }
 
 .roos-secret-field__value {
+  display: none;
   font-family: monospace;
   font-size: 0.875rem;
   background: var(--rvo-color-grijs-100, #f5f5f5);
@@ -1114,32 +1143,62 @@ table {
   max-width: 100%;
 }
 
-.roos-secret-field__value pre {
+.roos-secret-field__code {
   margin: 0;
   white-space: pre-wrap;
   word-break: break-all;
   font-family: monospace;
-  font-size: 0.875rem;
+  font-size: inherit;
+  background: transparent;
+  padding: 0;
 }
 
 .roos-secret-field__actions {
   display: inline-flex;
   gap: var(--rvo-space-xs, 0.25rem);
+  flex-wrap: wrap;
 }
 
-.roos-secret-field__toggle,
-.roos-secret-field__copy {
+.roos-secret-field .roos-secret-field__hide-btn {
+  display: none !important;
+}
+
+.roos-secret-field .roos-secret-field__show-btn {
   display: inline-flex;
-  align-items: center;
-  gap: var(--rvo-space-xs, 0.25rem);
 }
 
-.roos-secret-field__copy--success {
-  color: var(--rvo-color-groen, #39870c) !important;
+.roos-secret-field__copied-label {
+  display: none;
 }
 
-.roos-secret-field__copy--success .rvo-icon {
+.roos-secret-field__copy-label {
+  display: inline;
+}
+
+.roos-secret-field.is-visible .roos-secret-field__mask {
+  display: none;
+}
+.roos-secret-field.is-visible .roos-secret-field__value {
+  display: inline-block;
+}
+.roos-secret-field.is-visible .roos-secret-field__show-btn {
+  display: none !important;
+}
+.roos-secret-field.is-visible .roos-secret-field__hide-btn {
+  display: inline-flex !important;
+}
+
+.roos-secret-field__copy-btn.is-copied {
   color: var(--rvo-color-groen, #39870c) !important;
+}
+.roos-secret-field__copy-btn.is-copied .rvo-icon {
+  color: var(--rvo-color-groen, #39870c) !important;
+}
+.roos-secret-field__copy-btn.is-copied .roos-secret-field__copy-label {
+  display: none;
+}
+.roos-secret-field__copy-btn.is-copied .roos-secret-field__copied-label {
+  display: inline;
 }
 
 .roos-secret-field--sm .roos-secret-field__mask,
