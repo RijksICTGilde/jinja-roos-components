@@ -3,6 +3,7 @@
 {% set name = _component_context.name | default('') %}
 {% set label = _component_context.label | default('') %}
 {% set value = _component_context.value | default('') %}
+{% set content = _component_context.content | default('') %}
 {% set placeholder = _component_context.placeholder | default('') %}
 {% set rows = _component_context.rows | default(4) %}
 {% set size = _component_context.size | default('max') %}
@@ -85,6 +86,7 @@
     </div>
     
     {# Textarea element #}
+    {# Custom: supports both content (child) and value (attribute) - content takes precedence #}
     <textarea id="{{ id }}"
               {% if name %}name="{{ name }}"{% endif %}
               placeholder="{{ placeholder }}"
@@ -95,6 +97,6 @@
               {% if readonly %}readonly{% endif %}
               {% if has_error or error_text %}aria-invalid="true"{% endif %}
               {% if helper_text %}aria-describedby="{{ id }}-helper"{% endif %}
-              {{ attrs.render_extra_attributes(_component_context) }}>{{ value }}</textarea>
+              {{ attrs.render_extra_attributes(_component_context) }}>{{ content or value }}</textarea>
     
 </div>

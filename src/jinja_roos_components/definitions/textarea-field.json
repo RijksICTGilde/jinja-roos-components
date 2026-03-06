@@ -1,0 +1,170 @@
+{
+  "name": "textarea-field",
+  "description": "Textarea form field with label, helper text, and validation messages",
+  "note": "Custom component - not generated from RVO/Utrecht source",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "Unique identifier for the textarea element",
+      "default": "",
+      "is_example": true,
+      "example_value": "message"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Name attribute for form submission",
+      "default": "",
+      "is_example": true,
+      "example_value": "message"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Label text for the textarea",
+      "default": "",
+      "is_example": true,
+      "example_value": "Message"
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "Initial value (fallback if no content provided). Use child content for preferred approach.",
+      "default": "",
+      "is_example": false
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "Initial textarea content (child element content). Takes precedence over value attribute.",
+      "default": "",
+      "is_example": true,
+      "example_value": "Initial text..."
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Placeholder text",
+      "default": "",
+      "is_example": true,
+      "example_value": "Enter your message..."
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "Number of visible rows",
+      "default": 4,
+      "is_example": true,
+      "example_value": 4
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": false,
+      "description": "Field size variant",
+      "enum_values": ["sm", "md", "max"],
+      "default": "max",
+      "is_example": true,
+      "example_value": "max"
+    },
+    {
+      "name": "helperText",
+      "type": "string",
+      "required": false,
+      "description": "Helper text displayed below the field",
+      "default": "",
+      "is_example": false
+    },
+    {
+      "name": "expandableHelperText",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether helper text is in an expandable details element",
+      "default": false,
+      "is_example": false
+    },
+    {
+      "name": "expandableHelperTextTitle",
+      "type": "string",
+      "required": false,
+      "description": "Title for expandable helper text",
+      "default": "More info",
+      "is_example": false
+    },
+    {
+      "name": "errorText",
+      "type": "string",
+      "required": false,
+      "description": "Error message displayed on validation failure",
+      "default": "",
+      "is_example": false
+    },
+    {
+      "name": "warningText",
+      "type": "string",
+      "required": false,
+      "description": "Warning message",
+      "default": "",
+      "is_example": false
+    },
+    {
+      "name": "hasError",
+      "type": "boolean",
+      "required": false,
+      "description": "Mark field as having an error",
+      "default": false,
+      "is_example": false
+    },
+    {
+      "name": "invalid",
+      "type": "boolean",
+      "required": false,
+      "description": "Mark field as invalid",
+      "default": false,
+      "is_example": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Mark field as required",
+      "default": false,
+      "is_example": true,
+      "example_value": true
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disable the textarea",
+      "default": false,
+      "is_example": false
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "Make the textarea read-only",
+      "default": false,
+      "is_example": false
+    }
+  ],
+  "example_values": {
+    "id": "message",
+    "name": "message",
+    "label": "Message",
+    "content": "Initial text...",
+    "placeholder": "Enter your message...",
+    "rows": 4,
+    "size": "max",
+    "required": true
+  }
+}
