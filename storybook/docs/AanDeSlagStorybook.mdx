@@ -1,0 +1,71 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Aan de slag/Storybook" />
+
+# Aan de slag met Storybook
+
+Deze Storybook toont alle beschikbare ROOS componenten met interactieve controls. Hier lees je hoe je Storybook lokaal kunt draaien.
+
+## Vereisten
+
+- Python 3.10+
+- Node.js 18+
+- Poetry (Python package manager)
+
+## Installatie
+
+```bash
+git clone https://github.com/RijksICTGilde/jinja-roos-components.git
+cd jinja-roos-components
+
+# Python dependencies
+poetry install
+
+# Node dependencies
+npm install
+```
+
+## Storybook starten
+
+```bash
+npm run storybook
+```
+
+Dit start automatisch:
+- **Render API** op `http://localhost:8100` — rendert Jinja2 componenten server-side
+- **Storybook** op `http://localhost:6006` — de visuele component browser
+
+## Hoe werkt het?
+
+Storybook ondersteunt geen Jinja2 templates out-of-the-box. Daarom gebruiken we een **Python render API** als brug:
+
+1. Je wijzigt een control in Storybook (bijv. button `kind` → "secondary")
+2. Storybook stuurt een request naar de render API
+3. De API rendert het Jinja2 template met de nieuwe attributen
+4. De gerenderde HTML wordt terug gestuurd en getoond in Storybook
+
+## Stories genereren
+
+De stories worden automatisch gegenereerd uit de component definities:
+
+```bash
+npm run generate-stories
+```
+
+Dit leest de component definities uit `src/jinja_roos_components/definitions/` en genereert story bestanden in `storybook/stories/`.
+
+## Structuur
+
+```
+.storybook/          # Storybook configuratie
+  main.js            # Framework & addon config
+  preview.js         # Decorators & parameters
+  preview-head.html  # CSS includes
+
+storybook/
+  render_api.py      # Python FastAPI render endpoint
+  generate-stories.mjs  # Story generator script
+  helpers/           # Shared story utilities
+  stories/           # Gegenereerde story bestanden
+  docs/              # Documentatie pagina's (MDX)
+```

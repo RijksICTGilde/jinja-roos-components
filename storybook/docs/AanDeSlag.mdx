@@ -1,0 +1,118 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Aan de slag/Componenten" />
+
+# Aan de slag met de componenten
+
+## Installatie
+
+```bash
+pip install jinja-roos-components
+```
+
+## Quick Setup
+
+### FastAPI
+
+```python
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from jinja_roos_components import setup_components
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+setup_components(
+    templates,
+    theme="operations",           # Theme: default, operations, dark
+    htmx=True,                   # HTMX integratie
+    user_css_files=[             # Extra CSS bestanden
+        "/static/custom.css"
+    ],
+)
+
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+```
+
+### Flask
+
+```python
+from flask import Flask
+from jinja2 import Environment, FileSystemLoader
+from jinja_roos_components import setup_components
+
+app = Flask(__name__)
+
+env = Environment(loader=FileSystemLoader('templates'))
+setup_components(env, htmx=True)
+
+@app.route("/")
+def home():
+    return env.get_template("index.html").render()
+```
+
+### Django
+
+Zie het [Django demo project](https://github.com/RijksICTGilde/jrc-django-demo) voor een volledig voorbeeld.
+
+## Demo projecten
+
+- [Django voorbeeld](https://github.com/RijksICTGilde/jrc-django-demo)
+- [FastAPI voorbeeld](https://github.com/RijksICTGilde/jrc-fastapi-demo)
+- [Flask voorbeeld](https://github.com/RijksICTGilde/jrc-flask-demo)
+
+## Component syntax
+
+### Pagina structuur
+
+Maak complete pagina's met het `c-page` component:
+
+```html
+<c-page title="Mijn applicatie" description="Een moderne webapplicatie">
+
+    <c-card title="Welkom">
+        <c-button kind="primary" label="Klik hier" />
+    </c-card>
+
+</c-page>
+```
+
+### Attributen
+
+```html
+<!-- String attributen -->
+<c-button kind="primary" label="Tekst" />
+
+<!-- Boolean attributen -->
+<c-checkbox checked="true" disabled="true" />
+```
+
+### Children / content
+
+```html
+<!-- Zelfsluitend (geen children) -->
+<c-button kind="primary" label="Klik" />
+
+<!-- Met children content -->
+<c-alert kind="info">
+  Dit is de inhoud van de alert.
+</c-alert>
+```
+
+### Template extensie
+
+Voor complexere layouts kun je base templates extenden:
+
+```html
+{% extends "layouts/base.html.j2" %}
+
+{% block title %}Mijn applicatie{% endblock %}
+
+{% block content %}
+    <c-card title="Welkom">
+        <c-button kind="primary" label="Klik hier" />
+    </c-card>
+{% endblock %}
+```

@@ -1,0 +1,43 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Introductie" />
+
+# Jinja ROOS Components
+
+Moderne, zelfstandige Jinja2 componentenbibliotheek met ingebouwde assets, ontworpen voor naadloze integratie met **FastAPI**, **Flask** en andere Python web frameworks.
+
+## Wat is ROOS?
+
+ROOS (Rijks Open-source Ontwerpsysteem) is gebouwd op het [NL Design System](https://nldesignsystem.nl/) en het [RVO Design System](https://nl-design-system.github.io/rvo/). Het biedt een set herbruikbare UI-componenten die voldoen aan de Rijkshuisstijl.
+
+Met **Jinja ROOS Components** kun je deze componenten direct gebruiken in je Jinja2 templates met een intuïtieve syntax:
+
+```html
+<c-button kind="primary" label="Klik hier" />
+
+<c-alert kind="info" heading="Let op">
+  Dit is een informatiemelding.
+</c-alert>
+
+<c-card title="Mijn kaart">
+  Inhoud van de kaart.
+</c-card>
+```
+
+## Kenmerken
+
+- **Custom Component Syntax** — Gebruik intuïtieve `<c-button>` tags in je templates
+- **Zelfstandige Assets** — Alle CSS, JavaScript, fonts en iconen gebundeld in het pakket
+- **RVO Design System** — Gebouwd op het Nederlandse overheid Design System
+- **HTMX Integratie** — Optionele HTMX-ondersteuning voor dynamische interacties
+- **Framework Agnostisch** — Werkt met FastAPI, Flask, Django en meer
+
+## Demo projecten
+
+- [Django voorbeeld](https://github.com/RijksICTGilde/jrc-django-demo)
+- [FastAPI voorbeeld](https://github.com/RijksICTGilde/jrc-fastapi-demo)
+- [Flask voorbeeld](https://github.com/RijksICTGilde/jrc-flask-demo)
+
+## Broncode
+
+De broncode is beschikbaar op [GitHub](https://github.com/RijksICTGilde/jinja-roos-components).
