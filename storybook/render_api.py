@@ -17,7 +17,8 @@ from pydantic import BaseModel
 # Ensure the src directory is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import FileSystemLoader
+from jinja2.sandbox import SandboxedEnvironment
 from jinja_roos_components.extension import setup_components
 from jinja_roos_components.registry import ComponentRegistry
 
@@ -30,9 +31,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Set up Jinja2 environment once at startup
+# Set up Jinja2 environment once at startup (sandboxed for safety)
 templates_dir = Path(__file__).resolve().parent.parent / "src" / "jinja_roos_components" / "templates"
-jinja_env = Environment(loader=FileSystemLoader(str(templates_dir)))
+jinja_env = SandboxedEnvironment(loader=FileSystemLoader(str(templates_dir)))
 setup_components(jinja_env, static_url_prefix="/static/roos/dist/")
 
 # Registry for definitions endpoint + allowlist validation
