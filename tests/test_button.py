@@ -28,7 +28,7 @@ def test_button_icon_before():
     result = template.render()
 
     # Check CSS class is present
-    assert "utrecht-button--icon-before" in result, \
+    assert "rvo-button--icon-before" in result, \
         "Should have icon-before CSS class"
 
     # Check icon span is rendered
@@ -62,7 +62,7 @@ def test_button_icon_after():
     result = template.render()
 
     # Check CSS class is present
-    assert "utrecht-button--icon-after" in result, \
+    assert "rvo-button--icon-after" in result, \
         "Should have icon-after CSS class"
 
     # Check icon span is rendered
@@ -93,9 +93,9 @@ def test_button_no_icon():
     result = template.render()
 
     # Verify no icon CSS classes
-    assert "utrecht-button--icon-before" not in result, \
+    assert "rvo-button--icon-before" not in result, \
         "Should not have icon-before CSS class without icon"
-    assert "utrecht-button--icon-after" not in result, \
+    assert "rvo-button--icon-after" not in result, \
         "Should not have icon-after CSS class without icon"
 
     # Verify no icon span is rendered
@@ -128,7 +128,7 @@ def test_button_icon_without_placement():
     result = template.render()
 
     # Check defaults to "before" placement
-    assert "utrecht-button--icon-before" in result, \
+    assert "rvo-button--icon-before" in result, \
         "Should default to icon-before CSS class when iconPlacement not specified"
 
     # Check icon span is rendered

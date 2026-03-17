@@ -27,13 +27,13 @@
       "required": false,
       "description": "color attribute",
       "enum_values": [
-        "logoblauw",
+        "lintblauw",
         "wit",
         "zwart",
         "grijs-500",
         "grijs-900"
       ],
-      "default": "logoblauw",
+      "default": "lintblauw",
       "is_example": true,
       "example_value": "grijs-900"
     },

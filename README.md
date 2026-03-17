@@ -472,6 +472,29 @@ Configure ROOS Components in a Jinja2 environment.
 5. Run code quality checks: `npm run lint && npm run typecheck`
 6. Submit a pull request
 
+## RVO Design System dependencies
+
+This package bundles static assets built against specific versions of the [RVO Design System](https://nl-design-system.github.io/rvo/) npm packages:
+
+| Package | Version |
+|---|---|
+| `@nl-rvo/assets` | `1.0.0` |
+| `@nl-rvo/component-library-css` | `4.19.0` |
+| `@nl-rvo/css-button` | `2.1.0` |
+| `@nl-rvo/design-tokens` | `2.2.0` |
+
+If your project loads any of these packages separately (e.g. via CDN in a base HTML template), use the same versions to avoid styling inconsistencies.
+
+### Example: CDN usage in base.html
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/design-tokens@2.2.0/dist/index.css">
+<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/component-library-css@4.19.0/dist/index.css">
+<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/css-button@2.1.0/dist/index.css">
+```
+
+> **Note:** `@nl-rvo/assets` (fonts and icons) is always served from this package's bundled static files — no CDN reference needed.
+
 ## Tagging / releasing
 Currently the package is not released on a package index. However, by using tags, users can still pin to a specific version. 
 - Change "[Unreleased]" in CHANGES.md to new tag and create new "[Unreleased]" section on top

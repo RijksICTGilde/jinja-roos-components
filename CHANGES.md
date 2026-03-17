@@ -1,5 +1,8 @@
 # [Unreleased]
-- ...
+- Upgraded `@nl-rvo/assets` from `1.0.0-alpha.360` to `1.0.0`
+- Upgraded `@nl-rvo/component-library-css` from `4.7.0` to `4.19.0`
+- (!backwards incompatible) Upgraded `@nl-rvo/css-button` from `1.1.5` to `2.1.0`: button CSS class prefix changed from `utrecht-button` to `rvo-button`; state classes `active`, `busy`, `focus`, `focusVisible`, `hover` removed
+- (!backwards incompatible) Upgraded `@nl-rvo/design-tokens` from `1.8.0` to `2.2.0`: color token `logoblauw` renamed to `lintblauw`
 
 # [0.3] - 2025-11-26
 - (!backwards incompatible) change of attribute `showIcon` ("no, "before", "after") to `iconPlacement` ("before", "after"). affected components: `button`, `link`, `tag`. The presence of the `icon` attribute is now enough to show (default "before")

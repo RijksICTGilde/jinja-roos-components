@@ -1,4 +1,3 @@
-{% import 'components/_generic_attributes.j2' as attrs %}
 {% set title = _component_context.title | default('ROOS Page') %}
 {% set lang = _component_context.lang | default('nl') %}
 {% set charset = _component_context.charset | default('utf-8') %}
@@ -58,7 +57,7 @@
         {% endif %}
     {% endif %}
 </head>
-<body class="rvo-theme{% if body_class %} {{ body_class }}{% endif %}" data-roos-page="true" {{ attrs.render_extra_attributes(_component_context) }}>
+<body class="rvo-theme{% if body_class %} {{ body_class }}{% endif %}" data-roos-page="true">
     {# Page content #}
     {% if content %}
         {{ content | safe }}

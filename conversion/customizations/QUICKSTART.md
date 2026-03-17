@@ -60,7 +60,7 @@ poetry run python conversion/convert_component.py card
 **After customization:**
 ```python
 # backgroundColor now accepts all RVO colors:
-# hemelblauw, logoblauw, lichtblauw, donkerblauw, groen, oranje,
+# hemelblauw, lintblauw, lichtblauw, donkerblauw, groen, oranje,
 # donkergeel, rood, wit, grijs, zwart, grijs-200, grijs-300, etc.
 ```
 
