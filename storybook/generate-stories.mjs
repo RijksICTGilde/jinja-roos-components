@@ -33,19 +33,18 @@ const SKIP_COMPONENTS = new Set([
   // Sub-components / duplicates of other components
   "checkbox-field",
   "radio-button-field",
-  "select-field",
-  "textarea-field",
-  "text-input-field",
-  "date-input-field",
-  "file-input-field",
-  "form-field",
   "form-field-select",
-  "form-fieldset",
   "form-select",
   "field",
   "feedback",
   "label",
   "progress-tracker-step",
+  // Table sub-components (shown as part of table story)
+  "table-head",
+  "table-body",
+  "table-row",
+  "table-header",
+  "table-cell",
 ]);
 
 function pascalCase(str) {
@@ -80,6 +79,12 @@ function loadIndividualDefinitions() {
   }
   return defs;
 }
+
+// ─── Preview wrapper styles for specific components ───
+const PREVIEW_STYLE = {
+  dialog:
+    "background:rgba(0,0,0,0.35);padding:3rem;min-height:300px;display:flex;align-items:center;justify-content:center",
+};
 
 // ─── Default args matching official RVO Storybook ───
 
@@ -194,6 +199,23 @@ const DEFAULT_ARGS = {
   "form-field-select": {},
   "form-fieldset": { legend: "Fieldset legend" },
   "horizontal-rule": {},
+  dialog: {
+    id: "demo-dialog",
+    modalTitle: "Gebruiker bewerken",
+    size: "md",
+    open: true,
+    content: "<p>Dialog content</p>",
+    footer: '<c-button kind="secondary" type="button">Annuleren</c-button><c-button kind="primary" type="submit">Opslaan</c-button>',
+  },
+  "search-field": {
+    id: "search",
+    placeholder: "Zoek medewerker...",
+    label: "Zoeken",
+  },
+  table: {
+    responsive: true,
+    content: `<c-table-head><c-table-row><c-table-header size="md">Naam</c-table-header><c-table-header size="lg">Functie</c-table-header><c-table-header size="sm" numeric="true">Uren</c-table-header></c-table-row></c-table-head><c-table-body><c-table-row><c-table-cell>Jan Jansen</c-table-cell><c-table-cell>Ontwikkelaar</c-table-cell><c-table-cell numeric="true">40</c-table-cell></c-table-row><c-table-row><c-table-cell>Piet Pietersen</c-table-cell><c-table-cell>Designer</c-table-cell><c-table-cell numeric="true">32</c-table-cell></c-table-row></c-table-body>`,
+  },
   ol: { items: '["Item 1", "Item 2", "Item 3"]' },
   ul: { items: '["Item 1", "Item 2", "Item 3"]' },
   "ordered-unordered-list": { items: '["Item 1", "Item 2", "Item 3"]' },
@@ -275,6 +297,19 @@ const COMPONENT_VARIANTS = {
         kind: "success",
         content: "Dit is een voorbeeld van een succesmelding.",
       },
+    },
+  },
+  dialog: {
+    "Sizes": {
+      Small: { size: "sm", modalTitle: "Small dialog", open: true, content: "<p>Dialog content</p>" },
+      Medium: { size: "md", modalTitle: "Medium dialog", open: true, content: "<p>Dialog content</p>" },
+      Large: { size: "lg", modalTitle: "Large dialog", open: true, content: "<p>Dialog content</p>" },
+      ExtraLarge: { size: "xl", modalTitle: "Extra large dialog", open: true, content: "<p>Dialog content</p>" },
+    },
+    "Types": {
+      Centered: { type: "centered", modalTitle: "Centered dialog", open: true, content: "<p>Gecentreerde dialog (standaard)</p>" },
+      DrawerRight: { type: "inset-inline-end", modalTitle: "Drawer rechts", open: true, content: "<p>Drawer aan de rechterkant</p>" },
+      DrawerLeft: { type: "inset-inline-start", modalTitle: "Drawer links", open: true, content: "<p>Drawer aan de linkerkant</p>" },
     },
   },
   icon: {
@@ -423,6 +458,7 @@ function generateDefaultStory(componentName, attributes) {
     : { ...defaultArgs };
 
   const sourceCode = buildJinjaSource(componentName, allArgs, needsChildrenContent);
+  const previewStyle = PREVIEW_STYLE[componentName] || "";
 
   return `import { renderComponent } from "../helpers/renderComponent";
 import { buildSource } from "../helpers/buildSource";
@@ -448,7 +484,7 @@ ${argTypesBlock}${contentArgType}
   ],
   render: (_args, { loaded: { html, source } }) => {
     const container = document.createElement("div");
-    const preview = document.createElement("div");
+    const preview = document.createElement("div");${previewStyle ? `\n    preview.style.cssText = ${JSON.stringify(previewStyle)};` : ""}
     preview.innerHTML = html;
     container.appendChild(preview);
     if (source) {
@@ -505,6 +541,7 @@ function generateVariantStory(
   const baseArgs = needsChildrenContent
     ? { ...defaultArgs, content: defaultContent }
     : { ...defaultArgs };
+  const previewStyle = PREVIEW_STYLE[componentName] || "";
 
   let variantExports = "";
   for (const [storyName, overrides] of Object.entries(variants)) {
@@ -549,7 +586,7 @@ ${argTypesBlock}${contentArgType}
   ],
   render: (_args, { loaded: { html, source } }) => {
     const container = document.createElement("div");
-    const preview = document.createElement("div");
+    const preview = document.createElement("div");${previewStyle ? `\n    preview.style.cssText = ${JSON.stringify(previewStyle)};` : ""}
     preview.innerHTML = html;
     container.appendChild(preview);
     if (source) {
