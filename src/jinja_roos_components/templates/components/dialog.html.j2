@@ -1,0 +1,48 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set modal_title = _component_context.modalTitle | default('') %}
+{% set size = _component_context.size | default('md') %}
+{% set dialog_type = _component_context.type | default('centered') %}
+{% set closedby = _component_context.closedby | default('any') %}
+{% set show_close = _component_context.showCloseButton | default(true) %}
+{% set close_label = _component_context.closeLabel | default('Sluiten') %}
+{% set footer = _component_context.footer | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+
+{% set css_classes = ['rvo-dialog'] %}
+{% if dialog_type != 'centered' %}
+    {% set css_classes = css_classes + ['rvo-dialog--' + dialog_type] %}
+{% endif %}
+{% if dialog_type == 'centered' and size %}
+    {% set css_classes = css_classes + ['rvo-dialog--' + size] %}
+{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<dialog class="{{ css_classes | join(' ') }}"
+        closedby="{{ closedby }}"
+        {% if _component_context.open | default(false) %}open{% endif %}
+        data-roos-component="dialog"
+        {{ attrs.render_extra_attributes(_component_context) }}>
+
+    {% if modal_title or show_close %}
+        <div class="rvo-dialog__header">
+            {% if modal_title %}
+                <h3 class="utrecht-heading-3 rvo-dialog__title">{{ modal_title }}</h3>
+            {% endif %}
+            {% if show_close %}
+                <button type="button" class="rvo-dialog__close" aria-label="{{ close_label }}">&#215;</button>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if footer %}
+        <div class="rvo-dialog__body">
+            {{ children | safe }}
+        </div>
+        <div class="rvo-dialog__footer">
+            {{ footer | safe }}
+        </div>
+    {% else %}
+        {{ children | safe }}
+    {% endif %}
+</dialog>
