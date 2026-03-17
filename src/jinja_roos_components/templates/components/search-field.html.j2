@@ -1,0 +1,33 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set id = _component_context.id | default('search') %}
+{% set name = _component_context.name | default('search') %}
+{% set placeholder = _component_context.placeholder | default('Zoeken...') %}
+{% set value = _component_context.value | default('') %}
+{% set label = _component_context.label | default('Zoeken') %}
+{% set show_clear = _component_context.showClearButton | default(true) %}
+{% set icon = _component_context.icon | default('zoek') %}
+{% set additional_class = _component_context.class | default('') %}
+
+{% set css_classes = ['rvo-search-field'] %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<div class="{{ css_classes | join(' ') }}"
+     role="group"
+     aria-labelledby="{{ id }}-label"
+     data-roos-component="search-field"
+     {{ attrs.render_extra_attributes(_component_context) }}>
+    <span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--md rvo-search-field__icon"
+          role="img" aria-hidden="true" id="{{ id }}-label"></span>
+    <input id="{{ id }}"
+           name="{{ name }}"
+           type="search"
+           class="utrecht-textbox rvo-search-field__input"
+           placeholder="{{ placeholder }}"
+           {% if value %}value="{{ value }}"{% endif %}
+           aria-label="{{ label }}" />
+    {% if show_clear %}
+        <button type="button"
+                class="rvo-search-field__clear"
+                aria-label="Zoekopdracht wissen">&#215;</button>
+    {% endif %}
+</div>
