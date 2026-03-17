@@ -485,14 +485,6 @@ This package bundles static assets built against specific versions of the [RVO D
 
 If your project loads any of these packages separately (e.g. via CDN in a base HTML template), use the same versions to avoid styling inconsistencies.
 
-### Example: CDN usage in base.html
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/design-tokens@2.2.0/dist/index.css">
-<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/component-library-css@4.19.0/dist/index.css">
-<link rel="stylesheet" href="https://unpkg.com/@nl-rvo/css-button@2.1.0/dist/index.css">
-```
-
 > **Note:** `@nl-rvo/assets` (fonts and icons) is always served from this package's bundled static files — no CDN reference needed.
 
 ## Tagging / releasing
