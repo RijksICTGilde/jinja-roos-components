@@ -1,0 +1,27 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set sortable = _component_context.sortable | default(false) %}
+{% set active_sort = _component_context.activeSort | default(false) %}
+{% set size = _component_context.size | default('') %}
+{% set numeric = _component_context.numeric | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+
+{% set css_classes = ['rvo-table-header'] %}
+{% if sortable %}{% set css_classes = css_classes + ['rvo-table-header--sortable'] %}{% endif %}
+{% if active_sort %}{% set css_classes = css_classes + ['rvo-table-header--active-sort'] %}{% endif %}
+{% if size %}{% set css_classes = css_classes + ['rvo-table-header--' + size] %}{% endif %}
+{% if numeric %}{% set css_classes = css_classes + ['rvo-table-header--numeric'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<th scope="col"
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="table-header"
+    {{ attrs.render_extra_attributes(_component_context) }}>
+    {% if sortable %}
+        <div class="rvo-table-header__sortable-container{% if numeric %} rvo-table-header__sortable-container--numeric{% endif %}">
+            {{ children | safe }}
+        </div>
+    {% else %}
+        {{ children | safe }}
+    {% endif %}
+</th>

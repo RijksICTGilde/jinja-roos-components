@@ -1,0 +1,66 @@
+{
+  "name": "table-header",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "sortable",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the column header is sortable",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "activeSort",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether this column is currently sorted",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": false,
+      "description": "Column width size",
+      "enum_values": ["xs", "sm", "md", "lg", "xl"],
+      "default": "",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "required": false,
+      "description": "Right-align for numeric content",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "sortable": false,
+    "activeSort": false,
+    "size": "md",
+    "numeric": false
+  }
+}

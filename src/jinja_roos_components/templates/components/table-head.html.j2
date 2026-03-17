@@ -1,0 +1,12 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+
+{% set css_classes = ['rvo-table-head'] %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<thead class="{{ css_classes | join(' ') }}"
+       data-roos-component="table-head"
+       {{ attrs.render_extra_attributes(_component_context) }}>
+    {{ children | safe }}
+</thead>
