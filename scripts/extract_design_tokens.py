@@ -28,7 +28,7 @@ def extract_colors_from_tokens() -> List[Dict[str, str]]:
     color_data = data.get('rvo', {}).get('color', {})
 
     # Define logical color order - primary colors first, neutrals last
-    primary_colors = ['hemelblauw', 'logoblauw', 'lichtblauw', 'donkerblauw']
+    primary_colors = ['hemelblauw', 'lintblauw', 'lichtblauw', 'donkerblauw']
     accent_colors = ['groen', 'oranje', 'donkergeel', 'rood']
     neutral_colors = ['wit', 'grijs', 'zwart']
 

@@ -7,13 +7,13 @@ const colors = {
     "hemelblauw-600": "#66B0DD",
     "hemelblauw-750": "#409CD5",
   },
-  "Logoblauw": {
-    "logoblauw": "#154273",
-    "logoblauw-150": "#DCE3EA",
-    "logoblauw-300": "#B9C7D5",
-    "logoblauw-450": "#95AAC0",
-    "logoblauw-600": "#738EAB",
-    "logoblauw-750": "#507196",
+  "Lintblauw": {
+    "lintblauw": "#154273",
+    "lintblauw-150": "#DCE3EA",
+    "lintblauw-300": "#B9C7D5",
+    "lintblauw-450": "#95AAC0",
+    "lintblauw-600": "#738EAB",
+    "lintblauw-750": "#507196",
   },
   "Lichtblauw": {
     "lichtblauw": "#8FCAE7",
