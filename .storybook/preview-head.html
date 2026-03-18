@@ -28,3 +28,57 @@
 
 <!-- ROOS custom styles -->
 <link rel="stylesheet" href="/static/roos/dist/roos.css" />
+
+<!-- Variant grid styles -->
+<style>
+  .variant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 8px 0;
+  }
+
+  .variant-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .variant-label {
+    margin: 0;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+  }
+
+  .variant-preview {
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  .variant-code {
+    margin: 0;
+    padding: 12px 16px;
+    background: #f6f9fc;
+    border-top: 1px solid #e0e0e0;
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+      monospace;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .variant-code code {
+    font-family: inherit;
+    font-size: inherit;
+  }
+</style>
