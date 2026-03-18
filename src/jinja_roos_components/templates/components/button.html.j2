@@ -21,29 +21,21 @@
 {% set iconPlacement = _component_context.get('iconPlacement', 'before') %}
 {% set children = _component_context.get('content', '') %}
 {% set appearance = 'primary-action-button' if kind == 'primary' or kind == 'warning' else 'secondary-action-button' if kind == 'secondary' else 'subtle-button' if kind == 'subtle' or kind == 'warning-subtle' else '' %}
-{% set css_classes = ['utrecht-button'] %}
-{% if kind == 'tertiary' %}{% set css_classes = css_classes + ['utrecht-button--rvo-tertiary-action'] %}{% endif %}
-{% if kind == 'quaternary' %}{% set css_classes = css_classes + ['utrecht-button--rvo-quaternary-action'] %}{% endif %}
-{% if active %}{% set css_classes = css_classes + ['utrecht-button--active'] %}{% endif %}
-{% if busy %}{% set css_classes = css_classes + ['utrecht-button--busy'] %}{% endif %}
-{% if hover %}{% set css_classes = css_classes + ['utrecht-button--hover'] %}{% endif %}
-{% if focus %}{% set css_classes = css_classes + ['utrecht-button--focus'] %}{% endif %}
-{% if focusVisible %}{% set css_classes = css_classes + ['utrecht-button--focus-visible'] %}{% endif %}
-{% if size == 'xs' %}{% set css_classes = css_classes + ['utrecht-button--rvo-xs'] %}{% endif %}
-{% if size == 'sm' %}{% set css_classes = css_classes + ['utrecht-button--rvo-sm'] %}{% endif %}
-{% if size == 'md' %}{% set css_classes = css_classes + ['utrecht-button--rvo-md'] %}{% endif %}
+{% set css_classes = ['rvo-button'] %}
+{% if size == 'xs' %}{% set css_classes = css_classes + ['rvo-button--size-xs'] %}{% endif %}
+{% if size == 'sm' %}{% set css_classes = css_classes + ['rvo-button--size-sm'] %}{% endif %}
+{% if size == 'md' %}{% set css_classes = css_classes + ['rvo-button--size-md'] %}{% endif %}
 {% if alignToRightInGroup %}{% set css_classes = css_classes + ['rvo-action-group--align-right'] %}{% endif %}
-{% if fullWidth %}{% set css_classes = css_classes + ['utrecht-button--rvo-full-width'] %}{% endif %}
-{% if icon and iconPlacement == 'before' %}{% set css_classes = css_classes + ['utrecht-button--icon-before'] %}{% endif %}
-{% if icon and iconPlacement == 'after' %}{% set css_classes = css_classes + ['utrecht-button--icon-after'] %}{% endif %}
-{% if kind == 'warning' or kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
-{% if kind == 'primary' %}{% set css_classes = css_classes + ['utrecht-button--primary-action'] %}{% endif %}
-{% if kind == 'warning' %}{% set css_classes = css_classes + ['utrecht-button--primary-action'] %}{% endif %}
-{% if kind == 'secondary' %}{% set css_classes = css_classes + ['utrecht-button--secondary-action'] %}{% endif %}
-{% if kind == 'subtle' %}{% set css_classes = css_classes + ['utrecht-button--subtle'] %}{% endif %}
-{% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--subtle'] %}{% endif %}
-{% if kind == 'warning' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
-{% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['utrecht-button--warning'] %}{% endif %}
+{% if fullWidth %}{% set css_classes = css_classes + ['rvo-button--full-width'] %}{% endif %}
+{% if icon and iconPlacement == 'before' %}{% set css_classes = css_classes + ['rvo-button--icon-before'] %}{% endif %}
+{% if icon and iconPlacement == 'after' %}{% set css_classes = css_classes + ['rvo-button--icon-after'] %}{% endif %}
+{% if kind == 'primary' %}{% set css_classes = css_classes + ['rvo-button--primary'] %}{% endif %}
+{% if kind == 'secondary' %}{% set css_classes = css_classes + ['rvo-button--secondary'] %}{% endif %}
+{% if kind == 'tertiary' %}{% set css_classes = css_classes + ['rvo-button--tertiary'] %}{% endif %}
+{% if kind == 'quaternary' %}{% set css_classes = css_classes + ['rvo-button--quaternary'] %}{% endif %}
+{% if kind == 'subtle' %}{% set css_classes = css_classes + ['rvo-button--subtle'] %}{% endif %}
+{% if kind == 'warning' %}{% set css_classes = css_classes + ['rvo-button--warning'] %}{% endif %}
+{% if kind == 'warning-subtle' %}{% set css_classes = css_classes + ['rvo-button--warning-subtle'] %}{% endif %}
 {# Add utility classes from text-style, margin, padding attributes #}
 {% set utility_classes = attributes.render_utility_classes(_component_context) %}
 {% if utility_classes %}

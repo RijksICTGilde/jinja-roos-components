@@ -1843,7 +1843,7 @@
         },
         {
           "name": "linkColor",
-          "description": "Link color (default: `logoblauw`)",
+          "description": "Link color (default: `lintblauw`)",
           "values": [
             {
               "name": "donkerblauw"
@@ -1852,7 +1852,7 @@
               "name": "hemelblauw"
             },
             {
-              "name": "logoblauw"
+              "name": "lintblauw"
             },
             {
               "name": "grijs-700"
@@ -2948,10 +2948,10 @@
         },
         {
           "name": "color",
-          "description": "color attribute (default: `logoblauw`)",
+          "description": "color attribute (default: `lintblauw`)",
           "values": [
             {
-              "name": "logoblauw"
+              "name": "lintblauw"
             },
             {
               "name": "wit"
@@ -3840,22 +3840,22 @@
               "name": "hemelblauw-750"
             },
             {
-              "name": "logoblauw"
+              "name": "lintblauw"
             },
             {
-              "name": "logoblauw-150"
+              "name": "lintblauw-150"
             },
             {
-              "name": "logoblauw-300"
+              "name": "lintblauw-300"
             },
             {
-              "name": "logoblauw-450"
+              "name": "lintblauw-450"
             },
             {
-              "name": "logoblauw-600"
+              "name": "lintblauw-600"
             },
             {
-              "name": "logoblauw-750"
+              "name": "lintblauw-750"
             },
             {
               "name": "lichtblauw"
@@ -4557,10 +4557,10 @@
         },
         {
           "name": "color",
-          "description": "color attribute (default: `logoblauw`)",
+          "description": "color attribute (default: `lintblauw`)",
           "values": [
             {
-              "name": "logoblauw"
+              "name": "lintblauw"
             },
             {
               "name": "wit"

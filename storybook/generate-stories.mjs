@@ -45,6 +45,16 @@ const SKIP_COMPONENTS = new Set([
   "table-row",
   "table-header",
   "table-cell",
+  // Typography — covered by Brand/Typografie docs page
+  "heading",
+  "paragraph",
+  "link",
+  "list",
+  "list-item",
+  "ordered-unordered-list",
+  "ol",
+  "ul",
+  "strong",
 ]);
 
 function pascalCase(str) {
@@ -467,7 +477,7 @@ function buildArgTypesBlock(attributes) {
     switch (attr.type) {
       case "enum": {
         const values = attr.enum_values || [];
-        if (values.length <= 6) {
+        if (values.length <= 8) {
           let line = `    ${key}: { options: ${JSON.stringify(values)}, control: { type: "inline-radio" }, description: ${JSON.stringify(attr.description || "")}`;
           if (attr.default !== undefined && attr.default !== null) {
             line += `, table: { defaultValue: { summary: ${JSON.stringify(String(attr.default))} } }`;
