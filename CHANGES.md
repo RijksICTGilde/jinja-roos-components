@@ -1,4 +1,7 @@
 # [Unreleased]
+- ...
+
+# [0.4] - 2026-03-18
 - Upgraded `@nl-rvo/assets` from `1.0.0-alpha.360` to `1.0.0`
 - Upgraded `@nl-rvo/component-library-css` from `4.7.0` to `4.19.0`
 - (!backwards incompatible) Upgraded `@nl-rvo/css-button` from `1.1.5` to `2.1.0`: button CSS class prefix changed from `utrecht-button` to `rvo-button`; state classes `active`, `busy`, `focus`, `focusVisible`, `hover` removed
