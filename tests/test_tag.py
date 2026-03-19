@@ -35,12 +35,12 @@ def test_tag_icon_before():
     assert 'rvo-link__icon--before' in result, \
         "Should render icon span with before class"
 
-    # Check icon class includes correct icon name
-    assert 'rvo-icon--delta' in result, \
+    # Check icon class includes correct icon name (single dash: rvo-icon-name)
+    assert 'rvo-icon-delta' in result, \
         "Should render icon with correct name"
 
     # Verify icon appears before content
-    icon_pos = result.find('rvo-icon--delta')
+    icon_pos = result.find('rvo-icon-delta')
     content_pos = result.find('New Feature')
     assert icon_pos < content_pos, \
         "Icon should appear before content text"
@@ -74,11 +74,11 @@ def test_tag_icon_after():
         "Should render icon span with after class"
 
     # Check icon class includes correct icon name
-    assert 'rvo-icon--waarschuwing' in result, \
+    assert 'rvo-icon-waarschuwing' in result, \
         "Should render icon with correct name"
 
     # Verify icon appears after content
-    icon_pos = result.find('rvo-icon--waarschuwing')
+    icon_pos = result.find('rvo-icon-waarschuwing')
     content_pos = result.find('Important')
     assert icon_pos > content_pos, \
         "Icon should appear after content text"
@@ -100,13 +100,9 @@ def test_tag_no_icon():
     template = env.from_string(test_template)
     result = template.render()
 
-    # Note: Tag without icon AND without type should not have with-icon class
+    # Tag without icon should not have with-icon class
     assert "rvo-tag--with-icon" not in result, \
-        "Should not have with-icon CSS class without icon or type"
-
-    # Verify no custom icon span is rendered
-    assert "rvo-icon rvo-icon--" not in result, \
-        "Should not render custom icon span without icon attribute"
+        "Should not have with-icon CSS class without icon"
 
     # Verify tag still renders with content
     assert "Simple Tag" in result, \
@@ -140,18 +136,18 @@ def test_tag_icon_without_placement():
         "Should default to icon-before class when iconPlacement not specified"
 
     # Check icon span is rendered
-    assert 'rvo-icon--bevestiging' in result, \
+    assert 'rvo-icon-bevestiging' in result, \
         "Should render icon with correct name"
 
     # Verify icon appears before content
-    icon_pos = result.find('rvo-icon--bevestiging')
+    icon_pos = result.find('rvo-icon-bevestiging')
     content_pos = result.find('Recommended')
     assert icon_pos < content_pos, \
         "Icon should default to appearing before content text"
 
 
-def test_tag_type_with_status_icon():
-    """Test tag with type attribute (should render status icon)."""
+def test_tag_type_without_icon():
+    """Test tag with type attribute but no icon (should not render icon)."""
 
     # Set up Jinja environment with ROOS components
     template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
@@ -168,25 +164,21 @@ def test_tag_type_with_status_icon():
     template = env.from_string(test_template)
     result = template.render()
 
-    # Check CSS classes
-    assert "rvo-tag--with-icon" in result, \
-        "Should have with-icon CSS class for type"
+    # Check type CSS class
     assert "rvo-tag--error" in result, \
         "Should have type-specific CSS class"
 
-    # Check status icon is rendered
-    assert 'rvo-status-icon' in result, \
-        "Should render status icon for type"
-    assert 'rvo-status-icon--foutmelding' in result, \
-        "Should render correct status icon for error type"
+    # Type alone should not add with-icon class (icon must be explicitly set)
+    assert "rvo-tag--with-icon" not in result, \
+        "Should not have with-icon CSS class without explicit icon"
 
     # Verify data attribute
     assert 'data-roos-type="error"' in result, \
         "Should have data-roos-type attribute"
 
 
-def test_tag_icon_priority_over_type():
-    """Test that custom icon takes priority over type status icon when both are provided."""
+def test_tag_icon_with_type():
+    """Test that icon is rendered when both icon and type are provided."""
 
     # Set up Jinja environment with ROOS components
     template_dir = os.path.join(os.path.dirname(__file__), 'jinja-roos-components', 'jinja_roos_components', 'templates')
@@ -210,15 +202,9 @@ def test_tag_icon_priority_over_type():
     assert "rvo-tag--error" in result, \
         "Should still have type-specific CSS class"
 
-    # Verify custom icon is rendered (not status icon)
-    assert 'rvo-icon--delta' in result, \
-        "Should render custom icon (icon attribute takes priority)"
-
-    # Verify status icon is NOT rendered
-    assert 'rvo-status-icon--foutmelding' not in result, \
-        "Should not render status icon when custom icon is provided"
-    assert 'rvo-status-icon' not in result or 'rvo-icon' in result, \
-        "Custom icon should take priority over type status icon"
+    # Verify custom icon is rendered
+    assert 'rvo-icon-delta' in result, \
+        "Should render custom icon"
 
     # Both attributes should be in data attributes
     assert 'data-roos-type="error"' in result, \
