@@ -73,6 +73,34 @@ const meta = {
         roosValue: "var(--rvo-color-donkerblauw)",
         reason: "Visuele hover-indicatie op klikbare cards",
       },
+      {
+        component: "Search field",
+        property: "container",
+        rvoValue: "geen border",
+        roosValue: "border + border-radius + padding",
+        reason: "Zoekbeld met zichtbare omlijning",
+      },
+      {
+        component: "Search field",
+        property: "input border",
+        rvoValue: "standaard input border",
+        roosValue: "none",
+        reason: "Input border verwijderd (container heeft border)",
+      },
+      {
+        component: "Search field",
+        property: "native clear button",
+        rvoValue: "browser default",
+        roosValue: "verborgen",
+        reason: "Eigen clear button vervangt browser native",
+      },
+      {
+        component: "Search field",
+        property: "clear button zichtbaarheid",
+        rvoValue: "altijd zichtbaar",
+        roosValue: "alleen bij invoer",
+        reason: "Kruisje verschijnt alleen wanneer er tekst is ingevoerd",
+      },
     ];
 
     const overridesTable = tokenTable();

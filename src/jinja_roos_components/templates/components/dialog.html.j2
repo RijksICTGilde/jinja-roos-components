@@ -35,14 +35,12 @@
         </div>
     {% endif %}
 
+    <div class="rvo-dialog__body">
+        {{ children | safe }}
+    </div>
     {% if footer %}
-        <div class="rvo-dialog__body">
-            {{ children | safe }}
-        </div>
         <div class="rvo-dialog__footer">
             {{ footer | safe }}
         </div>
-    {% else %}
-        {{ children | safe }}
     {% endif %}
 </dialog>

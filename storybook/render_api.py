@@ -98,9 +98,10 @@ def render_component(req: RenderRequest):
 
     source = build_source(req.component, req.attrs, req.content)
 
-    # Pre-render any HTML content attributes that contain <c-*> component tags
+    # Check if any attribute contains component markup or complex objects (lists/dicts)
     has_component_attrs = any(
-        key in HTML_CONTENT_ATTRS and isinstance(value, str) and "<c-" in value
+        (key in HTML_CONTENT_ATTRS and isinstance(value, str) and "<c-" in value)
+        or isinstance(value, (list, dict))
         for key, value in req.attrs.items()
     )
 

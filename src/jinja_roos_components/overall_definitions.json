@@ -2300,6 +2300,12 @@
           "description": "Site subtitle text displayed below title"
         },
         {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "description": "Logo/emblem size: sm, md, lg, xl"
+        },
+        {
           "name": "class",
           "type": "string",
           "required": false,
@@ -2311,6 +2317,7 @@
       ],
       "examples": [
         "<c-header text=\"Site Title\" subtitle=\"Department\" link=\"/home\" />",
+        "<c-header size=\"lg\" />",
         "<c-header text=\"Custom Site\" class=\"custom-header\" />"
       ],
       "allow_preview": true,

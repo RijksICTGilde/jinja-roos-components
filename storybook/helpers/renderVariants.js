@@ -42,6 +42,14 @@ export async function renderVariants(componentName, variants, options = {}) {
       preview.style.cssText = options.previewStyle;
     }
     preview.innerHTML = html;
+    // Contain dialog elements within their preview box
+    preview.querySelectorAll("dialog").forEach(d => {
+      d.style.position = "relative";
+      d.style.inset = "unset";
+      d.style.maxHeight = "none";
+      d.style.maxWidth = "100%";
+      d.style.width = "100%";
+    });
     card.appendChild(preview);
 
     const codeBlock = document.createElement("pre");
