@@ -1,0 +1,24 @@
+{
+  "name": "table-row",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {}
+}

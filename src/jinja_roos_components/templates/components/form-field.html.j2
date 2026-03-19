@@ -1,22 +1,75 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
-{# Auto-generated from React component: form-field
-   Manual edits: wrap in MANUAL_START/MANUAL_END tags to preserve #}
-{% set fieldId = _component_context.fieldId | default('fieldId') %}
-{% set label = _component_context.label | default('Field label') %}
-{% set labelSize = _component_context.labelSize | default('md') %}
-{% set labelType = _component_context.labelType | default('default') %}
-{% set helperText = _component_context.get('helperText') %}
-{% set helperTextId = _component_context.helperTextId | default('helperTextId') %}
+{% set fieldId = _component_context.fieldId | default('') %}
+{% set label = _component_context.label | default('') %}
+{% set required = _component_context.required | default(false) %}
+{% set helperText = _component_context.helperText | default('') %}
 {% set expandableHelperText = _component_context.expandableHelperText | default(false) %}
-{% set expandableHelperTextTitle = _component_context.expandableHelperTextTitle | default('Expandable helper text title') %}
-{% set warningText = _component_context.warningText | default('') %}
+{% set expandableHelperTextTitle = _component_context.expandableHelperTextTitle | default('Meer info') %}
 {% set errorText = _component_context.errorText | default('') %}
-{% set className = _component_context.get('className') %}
+{% set warningText = _component_context.warningText | default('') %}
+{% set additional_class = _component_context.class | default('') %}
 {% set children = _component_context.content | default('') %}
-{% set css_classes = ['rvo-form-field'] %}
-<div
-    class="{{ css_classes | join(' ') }}"
-    data-roos-component="form-field"
-    {{ attrs.render_extra_attributes(_component_context) }}>
-    {{ fieldLabelId }}{{ labelSize }}{{ labelType as any }}{{ fieldId }}{{ label }}{{ helperTextMarkup }}{% if errorText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{% if warningText %}{{# TODO_CONVERSION: Inline Feedback component #}}{% endif %}{{ (className && <div className={className}>{parseContentMarkup(children)}</div>) if (className && <div className={className}>{parseContentMarkup(children)}</div>) else parseContentMarkup(children) | safe }}
+
+{# Build CSS classes #}
+{% set field_classes = ['utrecht-form-field', 'rvo-form-field'] %}
+{% if errorText %}
+    {% set field_classes = field_classes + ['rvo-form-field--error'] %}
+{% endif %}
+{% if additional_class %}
+    {% set field_classes = field_classes + [additional_class] %}
+{% endif %}
+
+<div class="{{ field_classes | join(' ') }}"
+     data-roos-component="form-field"
+     {{ attrs.render_extra_attributes(_component_context) }}>
+
+    {% if label %}
+        <div class="rvo-form-field__label">
+            <label class="rvo-label{% if required %} rvo-label--required{% endif %}"
+                   {% if fieldId %}id="{{ fieldId }}-label" for="{{ fieldId }}"{% endif %}>
+                {{ label }}
+                {% if required %}
+                    <span class="rvo-required" aria-label="verplicht">*</span>
+                {% endif %}
+            </label>
+
+            {% if helperText and not errorText and not warningText %}
+                <div class="utrecht-form-field-description"
+                     {% if fieldId %}id="{{ fieldId }}-help"{% endif %}>
+                    {% if expandableHelperText %}
+                        <details class="rvo-expandable-content">
+                            <summary class="rvo-expandable-content__summary">
+                                <span class="utrecht-icon rvo-icon rvo-icon-info rvo-icon--md rvo-icon--hemelblauw"
+                                      role="img" aria-label="Info"></span>{{ expandableHelperTextTitle }}
+                            </summary>
+                            <div class="rvo-expandable-content__details">
+                                {{ helperText }}
+                            </div>
+                        </details>
+                    {% else %}
+                        {{ helperText }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if errorText %}
+                <div class="utrecht-form-field-description utrecht-form-field-description--invalid rvo-form-feedback rvo-form-feedback--error"
+                     {% if fieldId %}id="{{ fieldId }}-error"{% endif %}>
+                    <span class="utrecht-icon rvo-icon rvo-icon-foutmelding rvo-icon--md rvo-status-icon-foutmelding"
+                          role="img" aria-label="Foutmelding"></span>{{ errorText }}
+                </div>
+            {% endif %}
+
+            {% if warningText %}
+                <div class="utrecht-form-field-description utrecht-form-field-description--warning rvo-form-feedback rvo-form-feedback--warning"
+                     {% if fieldId %}id="{{ fieldId }}-warning"{% endif %}>
+                    <span class="utrecht-icon rvo-icon rvo-icon-waarschuwing rvo-icon--md rvo-status-icon-waarschuwing"
+                          role="img" aria-label="Waarschuwing"></span>{{ warningText }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {{ children | safe }}
+
 </div>

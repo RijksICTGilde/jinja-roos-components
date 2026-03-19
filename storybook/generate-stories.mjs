@@ -33,19 +33,28 @@ const SKIP_COMPONENTS = new Set([
   // Sub-components / duplicates of other components
   "checkbox-field",
   "radio-button-field",
-  "select-field",
-  "textarea-field",
-  "text-input-field",
-  "date-input-field",
-  "file-input-field",
-  "form-field",
   "form-field-select",
-  "form-fieldset",
   "form-select",
   "field",
   "feedback",
   "label",
   "progress-tracker-step",
+  // Table sub-components (shown as part of table story)
+  "table-head",
+  "table-body",
+  "table-row",
+  "table-header",
+  "table-cell",
+  // Typography — covered by Brand/Typografie docs page
+  "heading",
+  "paragraph",
+  "link",
+  "list",
+  "list-item",
+  "ordered-unordered-list",
+  "ol",
+  "ul",
+  "strong",
 ]);
 
 function pascalCase(str) {
@@ -81,6 +90,12 @@ function loadIndividualDefinitions() {
   return defs;
 }
 
+// ─── Preview wrapper styles for specific components ───
+const PREVIEW_STYLE = {
+  dialog:
+    "background:rgba(0,0,0,0.35);padding:3rem;min-height:300px;display:flex;align-items:center;justify-content:center",
+};
+
 // ─── Default args matching official RVO Storybook ───
 
 const DEFAULT_ARGS = {
@@ -102,17 +117,22 @@ const DEFAULT_ARGS = {
     padding: "md",
   },
   card: {
-    title: "",
-    content: "Content",
+    heading: "Card Heading",
+    subheading: "",
+    headingLevel: "2",
+    avatar: "",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    href: "#",
+    linkLabel: "Lees meer",
+    metadata: "Metadata",
+    target: "",
     outline: true,
-    padding: "sm",
-    fullCardLink: false,
-    showLinkIndicator: true,
+    padding: "md",
+    showLinkIndicator: false,
     backgroundColor: "none",
     layout: "column",
     image: "",
     imageAlt: "",
-    invertedColors: false,
   },
   link: {
     content: "Dit is een link",
@@ -194,6 +214,23 @@ const DEFAULT_ARGS = {
   "form-field-select": {},
   "form-fieldset": { legend: "Fieldset legend" },
   "horizontal-rule": {},
+  dialog: {
+    id: "demo-dialog",
+    modalTitle: "Gebruiker bewerken",
+    size: "md",
+    open: true,
+    content: "<p>Dialog content</p>",
+    footer: '<c-button kind="secondary" type="button">Annuleren</c-button><c-button kind="primary" type="submit">Opslaan</c-button>',
+  },
+  "search-field": {
+    id: "search",
+    placeholder: "Zoek medewerker...",
+    label: "Zoeken",
+  },
+  table: {
+    responsive: true,
+    content: `<c-table-head><c-table-row><c-table-header size="md">Naam</c-table-header><c-table-header size="lg">Functie</c-table-header><c-table-header size="sm" numeric="true">Uren</c-table-header></c-table-row></c-table-head><c-table-body><c-table-row><c-table-cell>Jan Jansen</c-table-cell><c-table-cell>Ontwikkelaar</c-table-cell><c-table-cell numeric="true">40</c-table-cell></c-table-row><c-table-row><c-table-cell>Piet Pietersen</c-table-cell><c-table-cell>Designer</c-table-cell><c-table-cell numeric="true">32</c-table-cell></c-table-row></c-table-body>`,
+  },
   ol: { items: '["Item 1", "Item 2", "Item 3"]' },
   ul: { items: '["Item 1", "Item 2", "Item 3"]' },
   "ordered-unordered-list": { items: '["Item 1", "Item 2", "Item 3"]' },
@@ -212,7 +249,7 @@ const DEFAULT_ARGS = {
 // ─── Content for components that need children ───
 
 const DEFAULT_CONTENT = {
-  card: "Dit is de content van de card.",
+  card: "",
   div: "Content",
   span: "Inline tekst",
   li: "List item",
@@ -276,6 +313,31 @@ const COMPONENT_VARIANTS = {
         content: "Dit is een voorbeeld van een succesmelding.",
       },
     },
+    "WithCloseButton": {
+      Closable: {
+        kind: "info",
+        closable: true,
+        content: "Deze melding kan gesloten worden.",
+      },
+      NotClosable: {
+        kind: "info",
+        closable: false,
+        content: "Deze melding kan niet gesloten worden.",
+      },
+    },
+  },
+  dialog: {
+    "Sizes": {
+      Small: { size: "sm", modalTitle: "Small dialog", open: true, content: "<p>Dialog content</p>" },
+      Medium: { size: "md", modalTitle: "Medium dialog", open: true, content: "<p>Dialog content</p>" },
+      Large: { size: "lg", modalTitle: "Large dialog", open: true, content: "<p>Dialog content</p>" },
+      ExtraLarge: { size: "xl", modalTitle: "Extra large dialog", open: true, content: "<p>Dialog content</p>" },
+    },
+    "Types": {
+      Centered: { type: "centered", modalTitle: "Centered dialog", open: true, content: "<p>Gecentreerde dialog (standaard)</p>" },
+      DrawerRight: { type: "inset-inline-end", modalTitle: "Drawer rechts", open: true, content: "<p>Drawer aan de rechterkant</p>" },
+      DrawerLeft: { type: "inset-inline-start", modalTitle: "Drawer links", open: true, content: "<p>Drawer aan de linkerkant</p>" },
+    },
   },
   icon: {
     "Sizes": {
@@ -297,6 +359,40 @@ const COMPONENT_VARIANTS = {
       H4: { type: "h4", content: "Heading niveau 4" },
       H5: { type: "h5", content: "Heading niveau 5" },
       H6: { type: "h6", content: "Heading niveau 6" },
+    },
+  },
+  input: {
+    "Sizes": {
+      Small: { id: "input-sm", size: "sm", placeholder: "Small" },
+      Medium: { id: "input-md", size: "md", placeholder: "Medium" },
+      Large: { id: "input-lg", size: "lg", placeholder: "Large" },
+    },
+    "States": {
+      Default: { id: "input-default", placeholder: "Default" },
+      Disabled: { id: "input-disabled", placeholder: "Disabled", disabled: true },
+      Invalid: { id: "input-invalid", placeholder: "Invalid", invalid: true },
+    },
+  },
+  select: {
+    "States": {
+      Default: { id: "select-default" },
+      Disabled: { id: "select-disabled", disabled: true },
+    },
+  },
+  checkbox: {
+    "States": {
+      Unchecked: { id: "cb-unchecked", name: "group", label: "Unchecked", checked: false },
+      Checked: { id: "cb-checked", name: "group", label: "Checked", checked: true },
+      Disabled: { id: "cb-disabled", name: "group", label: "Disabled", disabled: true },
+      Invalid: { id: "cb-invalid", name: "group", label: "Invalid", invalid: true },
+    },
+  },
+  "form-field": {
+    "States": {
+      Default: { label: "Label", fieldId: "ff-default" },
+      WithError: { label: "Label", fieldId: "ff-error", errorMessage: "Dit veld is verplicht" },
+      WithDescription: { label: "Label", fieldId: "ff-desc", description: "Dit is een beschrijving" },
+      Required: { label: "Label", fieldId: "ff-req", required: true },
     },
   },
   paragraph: {
@@ -379,9 +475,20 @@ function buildArgTypesBlock(attributes) {
 
     let control;
     switch (attr.type) {
-      case "enum":
-        control = `{ type: "select", options: ${JSON.stringify(attr.enum_values || [])} }`;
+      case "enum": {
+        const values = attr.enum_values || [];
+        if (values.length <= 8) {
+          let line = `    ${key}: { options: ${JSON.stringify(values)}, control: { type: "inline-radio" }, description: ${JSON.stringify(attr.description || "")}`;
+          if (attr.default !== undefined && attr.default !== null) {
+            line += `, table: { defaultValue: { summary: ${JSON.stringify(String(attr.default))} } }`;
+          }
+          line += " },";
+          lines.push(line);
+          continue;
+        }
+        control = `{ type: "select", options: ${JSON.stringify(values)} }`;
         break;
+      }
       case "boolean":
         control = '{ type: "boolean" }';
         break;
@@ -402,7 +509,7 @@ function buildArgTypesBlock(attributes) {
   return lines.join("\n");
 }
 
-function generateDefaultStory(componentName, attributes) {
+function generateComponentStory(componentName, attributes, variantGroups) {
   const pascal = pascalCase(componentName);
   const storyTitle = getStoryTitle(componentName);
   const argTypesBlock = buildArgTypesBlock(attributes);
@@ -422,10 +529,23 @@ function generateDefaultStory(componentName, attributes) {
     ? { ...defaultArgs, content: defaultContent }
     : { ...defaultArgs };
 
-  const sourceCode = buildJinjaSource(componentName, allArgs, needsChildrenContent);
+  const previewStyle = PREVIEW_STYLE[componentName] || "";
+  const hasVariants = variantGroups && Object.keys(variantGroups).length > 0;
 
-  return `import { renderComponent } from "../helpers/renderComponent";
-import { buildSource } from "../helpers/buildSource";
+  // Build variant exports
+  let variantExports = "";
+  if (hasVariants) {
+    for (const [groupName, variants] of Object.entries(variantGroups)) {
+      variantExports += buildVariantExport(componentName, groupName, variants, allArgs, previewStyle);
+    }
+  }
+
+  const imports = [`import { renderComponent } from "../helpers/renderComponent";`, `import { buildSource } from "../helpers/buildSource";`];
+  if (hasVariants) {
+    imports.push(`import { renderVariants } from "../helpers/renderVariants";`);
+  }
+
+  return `${imports.join("\n")}
 
 const meta = {
   title: "${storyTitle}",
@@ -448,25 +568,17 @@ ${argTypesBlock}${contentArgType}
   ],
   render: (_args, { loaded: { html, source } }) => {
     const container = document.createElement("div");
-    const preview = document.createElement("div");
+    const preview = document.createElement("div");${previewStyle ? `\n    preview.style.cssText = ${JSON.stringify(previewStyle)};` : ""}
     preview.innerHTML = html;
     container.appendChild(preview);
     if (source) {
-      const codeWrap = document.createElement("div");
-      codeWrap.style.cssText = "display:flex;justify-content:flex-end;margin-top:12px";
-      const btn = document.createElement("button");
-      btn.textContent = "Show code";
-      btn.style.cssText = "background:#fff;border:1px solid #d9d9d9;border-radius:4px;padding:4px 12px;font-size:12px;color:#333;cursor:pointer;font-family:inherit";
       const codeBlock = document.createElement("pre");
-      codeBlock.textContent = source;
-      codeBlock.style.cssText = "display:none;width:100%;margin-top:8px;padding:12px 16px;background:#f6f9fc;border:1px solid #e0e0e0;border-radius:4px;font-size:13px;line-height:1.5;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;overflow-x:auto;white-space:pre-wrap";
-      btn.onclick = () => {
-        const open = codeBlock.style.display !== "none";
-        codeBlock.style.display = open ? "none" : "block";
-        btn.textContent = open ? "Show code" : "Hide code";
-      };
-      codeWrap.appendChild(btn);
-      container.appendChild(codeWrap);
+      codeBlock.className = "variant-code";
+      const codeEl = document.createElement("code");
+      codeEl.textContent = source;
+      codeBlock.appendChild(codeEl);
+      codeBlock.style.marginTop = "16px";
+      codeBlock.style.borderRadius = "6px";
       container.appendChild(codeBlock);
     }
     return container;
@@ -479,103 +591,36 @@ export const Default = {
   name: "${pascal}",
   args: ${JSON.stringify(allArgs, null, 4).replace(/\n/g, "\n  ")},
 };
-`;
+${variantExports}`;
 }
 
-function generateVariantStory(
-  componentName,
-  groupName,
-  variants,
-  attributes,
-) {
-  const pascal = pascalCase(componentName);
-  const storyTitle = getStoryTitle(componentName);
-  const argTypesBlock = buildArgTypesBlock(attributes);
-  const defaultArgs = DEFAULT_ARGS[componentName] || {};
-  const defaultContent = DEFAULT_CONTENT[componentName] || "";
-
-  const hasContentAttr = attributes.some((a) => a.name === "content");
-  const needsChildrenContent = !hasContentAttr && defaultContent;
-
-  let contentArgType = "";
-  if (needsChildrenContent) {
-    contentArgType = `\n    content: { control: { type: "text" }, description: "Inner content / children" },`;
-  }
-
-  const baseArgs = needsChildrenContent
-    ? { ...defaultArgs, content: defaultContent }
-    : { ...defaultArgs };
-
-  let variantExports = "";
+function buildVariantExport(componentName, groupName, variants, baseArgs, previewStyle) {
+  const variantEntries = [];
   for (const [storyName, overrides] of Object.entries(variants)) {
     const storyArgs = { ...baseArgs, ...overrides };
-    // Handle content override for variants that have it
-    const contentOverride = overrides.content;
-    if (contentOverride && !hasContentAttr) {
-      storyArgs.content = contentOverride;
-      delete overrides.content;
-    }
-
     const humanName = storyName.replace(/([A-Z])/g, " $1").trim();
-    variantExports += `
-export const ${storyName} = {
-  name: "${humanName}",
-  args: ${JSON.stringify(storyArgs, null, 4).replace(/\n/g, "\n  ")},
-};
-`;
+    variantEntries.push({ label: humanName, args: storyArgs });
   }
 
-  return `import { renderComponent } from "../helpers/renderComponent";
-import { buildSource } from "../helpers/buildSource";
+  const variantsJson = JSON.stringify(variantEntries, null, 2).replace(/\n/g, "\n  ");
+  const optionsJson = previewStyle ? JSON.stringify({ previewStyle }) : "{}";
+  const exportName = groupName.replace(/[^a-zA-Z0-9]/g, "");
 
-const meta = {
-  title: "${storyTitle}/${groupName}",
-  argTypes: {
-${argTypesBlock}${contentArgType}
-  },
-  parameters: {
-    docs: {
-      source: {
-        language: "html",
-        transform: (_code, ctx) => buildSource("${componentName}", ctx.args),
-      },
-    },
-  },
-  loaders: [
-    async ({ args }) => {
-      const { content, ...attrs } = args;
-      return await renderComponent("${componentName}", attrs, content || "");
-    },
-  ],
-  render: (_args, { loaded: { html, source } }) => {
+  return `
+export const ${exportName} = {
+  name: "${groupName}",
+  render: () => {
+    const variants = ${variantsJson};
     const container = document.createElement("div");
-    const preview = document.createElement("div");
-    preview.innerHTML = html;
-    container.appendChild(preview);
-    if (source) {
-      const codeWrap = document.createElement("div");
-      codeWrap.style.cssText = "display:flex;justify-content:flex-end;margin-top:12px";
-      const btn = document.createElement("button");
-      btn.textContent = "Show code";
-      btn.style.cssText = "background:#fff;border:1px solid #d9d9d9;border-radius:4px;padding:4px 12px;font-size:12px;color:#333;cursor:pointer;font-family:inherit";
-      const codeBlock = document.createElement("pre");
-      codeBlock.textContent = source;
-      codeBlock.style.cssText = "display:none;width:100%;margin-top:8px;padding:12px 16px;background:#f6f9fc;border:1px solid #e0e0e0;border-radius:4px;font-size:13px;line-height:1.5;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;overflow-x:auto;white-space:pre-wrap";
-      btn.onclick = () => {
-        const open = codeBlock.style.display !== "none";
-        codeBlock.style.display = open ? "none" : "block";
-        btn.textContent = open ? "Show code" : "Hide code";
-      };
-      codeWrap.appendChild(btn);
-      container.appendChild(codeWrap);
-      container.appendChild(codeBlock);
-    }
+    container.textContent = "Varianten laden...";
+    renderVariants("${componentName}", variants, ${optionsJson}).then(grid => {
+      container.textContent = "";
+      container.appendChild(grid);
+    });
     return container;
   },
 };
-
-export default meta;
-${variantExports}`;
+`;
 }
 
 function main() {
@@ -608,32 +653,15 @@ function main() {
     if (SKIP_COMPONENTS.has(name)) continue;
 
     const pascal = pascalCase(name);
+    const variantGroups = COMPONENT_VARIANTS[name] || null;
 
-    // Generate default story
-    const defaultStory = generateDefaultStory(name, attributes);
+    // Generate single story file with default + all variants
+    const story = generateComponentStory(name, attributes, variantGroups);
     fs.writeFileSync(
       path.join(STORIES_DIR, `${pascal}.stories.js`),
-      defaultStory,
+      story,
     );
     count++;
-
-    // Generate variant stories
-    const variants = COMPONENT_VARIANTS[name];
-    if (variants) {
-      for (const [groupName, groupVariants] of Object.entries(variants)) {
-        const variantStory = generateVariantStory(
-          name,
-          groupName,
-          groupVariants,
-          attributes,
-        );
-        fs.writeFileSync(
-          path.join(STORIES_DIR, `${pascal}${groupName}.stories.js`),
-          variantStory,
-        );
-        count++;
-      }
-    }
   }
 
   console.log(`Generated ${count} story files in ${STORIES_DIR}`);

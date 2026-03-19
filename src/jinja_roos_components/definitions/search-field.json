@@ -1,0 +1,94 @@
+{
+  "name": "search-field",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "ID for the search input",
+      "default": "search",
+      "is_example": true,
+      "example_value": "search"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute for the search input",
+      "default": "search",
+      "is_example": true,
+      "example_value": "search"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Placeholder text",
+      "default": "Zoeken...",
+      "is_example": true,
+      "example_value": "Zoeken..."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "Current search value",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the search input",
+      "default": "Zoeken",
+      "is_example": true,
+      "example_value": "Zoeken"
+    },
+    {
+      "name": "showClearButton",
+      "type": "boolean",
+      "required": false,
+      "description": "Show clear button to reset search",
+      "default": true,
+      "is_example": true,
+      "example_value": true
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "Icon to show (default: zoek)",
+      "default": "zoek",
+      "is_example": true,
+      "example_value": "zoek"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "id": "search",
+    "name": "search",
+    "placeholder": "Zoeken...",
+    "label": "Zoeken",
+    "showClearButton": true,
+    "icon": "zoek"
+  }
+}

@@ -1,0 +1,32 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set sortable = _component_context.sortable | default(false) %}
+{% set active_sort = _component_context.activeSort | default(false) %}
+{% set sort_direction = _component_context.sortDirection | default('ascending') %}
+{% set size = _component_context.size | default('') %}
+{% set numeric = _component_context.numeric | default(false) %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+
+{% set css_classes = ['rvo-table-header'] %}
+{% if sortable %}{% set css_classes = css_classes + ['rvo-table-header--sortable'] %}{% endif %}
+{% if active_sort %}{% set css_classes = css_classes + ['rvo-table-header--active-sort'] %}{% endif %}
+{% if size %}{% set css_classes = css_classes + ['rvo-table-header--' + size] %}{% endif %}
+{% if numeric %}{% set css_classes = css_classes + ['rvo-table-header--numeric'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+{% set sort_icon = 'delta-omhoog' if sort_direction == 'ascending' else 'delta-omlaag' %}
+
+<th scope="col"
+    class="{{ css_classes | join(' ') }}"
+    data-roos-component="table-header"
+    {% if sortable and active_sort %}aria-sort="{{ sort_direction }}"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
+    {% if sortable %}
+        <div class="rvo-table-header__sortable-container{% if numeric %} rvo-table-header__sortable-container--numeric{% endif %}">
+            {{ children | safe }}
+            <span class="rvo-table-header__sorting-icon rvo-icon rvo-icon-pijl-met-lijnen rvo-icon--md" aria-hidden="true"{% if active_sort and sort_direction == 'ascending' %} style="transform: rotate(180deg);"{% endif %}></span>
+        </div>
+    {% else %}
+        {{ children | safe }}
+    {% endif %}
+</th>

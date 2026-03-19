@@ -607,22 +607,78 @@
       "description": "RVO card component with comprehensive styling and layout options",
       "attributes": [
         {
+          "name": "heading",
+          "type": "string",
+          "required": true,
+          "description": "Card heading"
+        },
+        {
+          "name": "subheading",
+          "type": "string",
+          "required": false,
+          "description": "Card subheading"
+        },
+        {
+          "name": "headingLevel",
+          "type": "enum",
+          "enum_values": ["1", "2", "3", "4", "5", "6"],
+          "default": "3",
+          "required": false,
+          "description": "Heading level (h1-h6)"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": "Card content / description"
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "description": "Link URL"
+        },
+        {
+          "name": "linkLabel",
+          "type": "string",
+          "required": false,
+          "description": "Link label text (shown as separate link below content)"
+        },
+        {
+          "name": "metadata",
+          "type": "string",
+          "required": false,
+          "description": "Metadata text shown above heading"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "required": false,
+          "description": "Link target attribute (e.g. _blank)"
+        },
+        {
+          "name": "avatar",
+          "type": "string",
+          "required": false,
+          "description": "Avatar text (e.g. initials) shown as circle placeholder"
+        },
+        {
           "name": "title",
           "type": "string",
           "required": false,
-          "description": "Card title (displayed in header)"
+          "description": "Card title (legacy, use heading instead)"
         },
         {
           "name": "content",
           "type": "string",
           "required": false,
-          "description": "Card content text"
+          "description": "Card content text (legacy, use description instead)"
         },
         {
           "name": "link",
           "type": "string",
           "required": false,
-          "description": "Card link URL"
+          "description": "Card link URL (legacy, use href instead)"
         },
         {
           "name": "fullCardLink",
@@ -724,13 +780,6 @@
           "default": false,
           "required": false,
           "description": "Render image inline with content"
-        },
-        {
-          "name": "invertedColors",
-          "type": "boolean",
-          "default": false,
-          "required": false,
-          "description": "Use inverted color scheme"
         },
         {
           "name": "class",
@@ -2251,6 +2300,12 @@
           "description": "Site subtitle text displayed below title"
         },
         {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "description": "Logo/emblem size: sm, md, lg, xl"
+        },
+        {
           "name": "class",
           "type": "string",
           "required": false,
@@ -2262,6 +2317,7 @@
       ],
       "examples": [
         "<c-header text=\"Site Title\" subtitle=\"Department\" link=\"/home\" />",
+        "<c-header size=\"lg\" />",
         "<c-header text=\"Custom Site\" class=\"custom-header\" />"
       ],
       "allow_preview": true,

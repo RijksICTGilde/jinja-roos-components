@@ -75,6 +75,10 @@ def escape_attr(value: str) -> str:
     return str(value).replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+# Attributes that contain component markup and must not be escaped
+HTML_CONTENT_ATTRS = frozenset({"footer", "content"})
+
+
 def strip_template_syntax(value: str) -> str:
     """Remove Jinja2 template syntax to prevent SSTI."""
     return value.replace("{{", "").replace("}}", "").replace("{%", "").replace("%}", "")
@@ -94,27 +98,54 @@ def render_component(req: RenderRequest):
 
     source = build_source(req.component, req.attrs, req.content)
 
-    # Build template string with escaped values
-    attrs_str = ""
-    for key, value in req.attrs.items():
-        if isinstance(value, bool):
-            attrs_str += f' {key}="{str(value).lower()}"'
-        elif value is not None and value != "":
-            attrs_str += f' {key}="{escape_attr(value)}"'
+    # Check if any attribute contains component markup or complex objects (lists/dicts)
+    has_component_attrs = any(
+        (key in HTML_CONTENT_ATTRS and isinstance(value, str) and "<c-" in value)
+        or isinstance(value, (list, dict))
+        for key, value in req.attrs.items()
+    )
 
-    # Strip any Jinja2 template syntax from content to prevent SSTI
-    content = strip_template_syntax(req.content) if req.content else ""
-
-    if content:
-        template_str = f"<c-{req.component}{attrs_str}>{content}</c-{req.component}>"
+    if has_component_attrs:
+        # Render directly via the component template to avoid quote-escaping issues
+        context = {}
+        for key, value in req.attrs.items():
+            if key in HTML_CONTENT_ATTRS and isinstance(value, str) and "<c-" in value:
+                # Pre-render component markup in this attribute
+                sanitized = strip_template_syntax(value)
+                tpl = jinja_env.from_string(sanitized)  # nosec B703
+                context[key] = tpl.render()
+            else:
+                context[key] = value
+        # Add content as the 'content' key
+        if req.content:
+            content = strip_template_syntax(req.content)
+            if "<c-" in content:
+                tpl = jinja_env.from_string(content)  # nosec B703
+                context["content"] = tpl.render()
+            else:
+                context["content"] = content
+        # Render the component template directly with _component_context
+        template = jinja_env.get_template(f"components/{req.component}.html.j2")
+        html = template.render(_component_context=context)
     else:
-        template_str = f"<c-{req.component}{attrs_str} />"
+        # Standard path: build <c-*> tag string for the preprocessor
+        attrs_str = ""
+        for key, value in req.attrs.items():
+            if isinstance(value, bool):
+                attrs_str += f' {key}="{str(value).lower()}"'
+            elif value is not None and value != "":
+                attrs_str += f' {key}="{escape_attr(value)}"'
 
-    # Safe: component name is validated against allowlist, attrs are escaped,
-    # content is stripped of template syntax. from_string is needed because
-    # the component extension preprocesses <c-*> tags at parse time.
-    template = jinja_env.from_string(template_str)  # nosec B703
-    html = template.render()
+        content = strip_template_syntax(req.content) if req.content else ""
+
+        if content:
+            template_str = f"<c-{req.component}{attrs_str}>{content}</c-{req.component}>"
+        else:
+            template_str = f"<c-{req.component}{attrs_str} />"
+
+        template = jinja_env.from_string(template_str)  # nosec B703
+        html = template.render()
+
     return RenderResponse(html=html, source=source)
 
 

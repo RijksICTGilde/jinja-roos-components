@@ -1,0 +1,20 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set numeric = _component_context.numeric | default(false) %}
+{% set fit_content = _component_context.fitContent | default(false) %}
+{% set colspan = _component_context.colspan | default('') %}
+{% set rowspan = _component_context.rowspan | default('') %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+
+{% set css_classes = ['rvo-table-cell'] %}
+{% if numeric %}{% set css_classes = css_classes + ['rvo-table-cell--numeric'] %}{% endif %}
+{% if fit_content %}{% set css_classes = css_classes + ['rvo-table-cell--fit-content'] %}{% endif %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+<td class="{{ css_classes | join(' ') }}"
+    data-roos-component="table-cell"
+    {% if colspan %}colspan="{{ colspan }}"{% endif %}
+    {% if rowspan %}rowspan="{{ rowspan }}"{% endif %}
+    {{ attrs.render_extra_attributes(_component_context) }}>
+    {{ children | safe }}
+</td>

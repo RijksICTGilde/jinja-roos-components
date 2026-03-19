@@ -1,8 +1,16 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
 
 {% set title = _component_context.title | default('') %}
+{% set heading = _component_context.heading | default('') %}
+{% set subheading = _component_context.subheading | default('') %}
+{% set heading_level = _component_context.headingLevel | default('3') | string %}
 {% set content = _component_context.content | default('') %}
+{% set description = _component_context.description | default('') %}
 {% set link = _component_context.link | default('') %}
+{% set href = _component_context.href | default('') %}
+{% set link_label = _component_context.linkLabel | default('') %}
+{% set metadata = _component_context.metadata | default('') %}
+{% set target = _component_context.target | default('') %}
 {% set full_card_link = _component_context.fullCardLink | default(false) %}
 {% set show_link_indicator = _component_context.showLinkIndicator | default(false) %}
 {% set outline = _component_context.outline | default(false) %}
@@ -15,11 +23,19 @@
 {% set image_size = _component_context.imageSize | default('md') %}
 {% set inline_image = _component_context.inlineImage | default(false) %}
 {% set inverted_colors = _component_context.invertedColors | default(false) %}
+{% set avatar = _component_context.avatar | default('') %}
 {% set additional_class = _component_context.class | default('') %}
 {% set element_id = _component_context.id | default('') %}
 
+{# Resolve heading: prefer 'heading' over legacy 'title' #}
+{% set card_heading = heading or title %}
+{# Resolve link: prefer 'href' over legacy 'link' #}
+{% set card_link = href or link %}
+{# Resolve content: prefer 'description' over legacy 'content' #}
+{% set card_content = description or content %}
+
 {# Determine if has link indicator #}
-{% set has_link_indicator = show_link_indicator and link and full_card_link %}
+{% set has_link_indicator = show_link_indicator and card_link and full_card_link %}
 {% set has_background_image = background_image %}
 
 {# Check if backgroundColor is a named RVO color or hex color #}
@@ -42,68 +58,94 @@
 {% set content_classes = ['rvo-card__content'] %}
 {% if layout == 'row' %}{% set content_classes = content_classes + ['rvo-layout-row', 'rvo-layout-align-content-center', 'rvo-layout-gap--md'] %}{% endif %}
 
-{# Link classes #}
-{% set link_classes = ['rvo-card__link'] %}
-{% if full_card_link %}{% set link_classes = link_classes + ['rvo-card__full-card-link'] %}{% endif %}
-
+{# Card is either a clickable <a> or a plain <div> #}
+{% if card_link %}
+<a href="{{ card_link }}" class="{{ css_classes | join(' ') }} rvo-card--clickable" data-roos-component="card"
+     {% if element_id %}id="{{ element_id }}"{% endif %}
+     {% if target %}target="{{ target }}"{% endif %}
+     {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
+     {{ attrs.render_extra_attributes(_component_context) }}>
+{% else %}
 <div class="{{ css_classes | join(' ') }}" data-roos-component="card"
      {% if element_id %}id="{{ element_id }}"{% endif %}
      {% if is_named_color or is_hex_color %}style="background-color: {{ resolved_color }};"{% endif %}
      {{ attrs.render_extra_attributes(_component_context) }}>
-    
+{% endif %}
+
     {# Background image container #}
     {% if has_background_image %}
         <div class="rvo-card__background-image-container">
             <img src="{{ background_image }}" class="rvo-card__background-image" alt="" />
         </div>
     {% endif %}
-    
+
     {# Image container (not inline) #}
     {% if image and not inline_image %}
         <div class="rvo-card__image-container{% if layout == 'row' %} rvo-card__image-container--row{% endif %}">
-            <img src="{{ image }}" 
+            <img src="{{ image }}"
                  class="rvo-card__image{% if image_size %} rvo-card-img--{{ image_size }}{% endif %}"
                  alt="{{ image_alt }}" />
         </div>
     {% endif %}
-    
+
     {# Content container with optional link indicator wrapper #}
     {% if has_link_indicator %}
         <div class="rvo-card--with-link-indicator">
     {% endif %}
-    
-            <div class="{{ content_classes | join(' ') }}">
-                {# Inline image for row layout #}
-                {% if image and inline_image and layout == 'row' %}
-                    <img src="{{ image }}" 
-                         class="rvo-card__image{% if image_size %} rvo-card-img--{{ image_size }}{% endif %}"
-                         alt="{{ image_alt }}" />
+
+            <div class="{{ content_classes | join(' ') }}{% if avatar %} rvo-card__content--with-avatar{% endif %}">
+                {# Avatar #}
+                {% if avatar %}
+                    <div class="rvo-card__avatar">{{ avatar }}</div>
                 {% endif %}
-                
-                {# Title with optional link #}
-                {% if title %}
-                    <h3 class="utrecht-heading-3">
-                        {% if link %}
-                            <a href="{{ link }}" class="{{ link_classes | join(' ') }}">{{ title | safe }}</a>
-                        {% else %}
-                            {{ title | safe }}
-                        {% endif %}
-                    </h3>
-                {% endif %}
-                
-                {# Content #}
-                {% if content %}
-                    {{ content | safe }}
-                {% endif %}
+
+                <div class="rvo-card__text">
+                    {# Inline image for row layout #}
+                    {% if image and inline_image and layout == 'row' %}
+                        <img src="{{ image }}"
+                             class="rvo-card__image{% if image_size %} rvo-card-img--{{ image_size }}{% endif %}"
+                             alt="{{ image_alt }}" />
+                    {% endif %}
+
+                    {# Metadata #}
+                    {% if metadata %}
+                        <p class="rvo-card__metadata">{{ metadata | safe }}</p>
+                    {% endif %}
+
+                    {# Heading #}
+                    {% if card_heading %}
+                        <h{{ heading_level }} class="utrecht-heading-{{ heading_level }}">{{ card_heading | safe }}</h{{ heading_level }}>
+                    {% endif %}
+
+                    {# Subheading #}
+                    {% if subheading %}
+                        <p class="rvo-card__subheading">{{ subheading | safe }}</p>
+                    {% endif %}
+
+                    {# Content / Description #}
+                    {% if card_content %}
+                        {{ card_content | safe }}
+                    {% endif %}
+
+                    {# Link label #}
+                    {% if link_label %}
+                        <span class="rvo-card__link-label">{{ link_label }}</span>
+                    {% endif %}
+                </div>
             </div>
-            
+
             {# Link indicator #}
             {% if has_link_indicator %}
-                <span class="rvo-icon rvo-icon--delta-naar-rechts rvo-icon--sm rvo-card__link-indicator" 
+                <span class="rvo-icon rvo-icon-delta-naar-rechts rvo-icon--sm rvo-card__link-indicator"
                       aria-label="Delta naar rechts" role="img"></span>
             {% endif %}
-    
+
     {% if has_link_indicator %}
         </div>
     {% endif %}
+
+{% if card_link %}
+</a>
+{% else %}
 </div>
+{% endif %}

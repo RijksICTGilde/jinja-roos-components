@@ -1,0 +1,35 @@
+{
+  "name": "table",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "responsive",
+      "type": "boolean",
+      "required": false,
+      "description": "Wrap table in a responsive container with horizontal scroll",
+      "default": true,
+      "is_example": true,
+      "example_value": true
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "responsive": true
+  }
+}
