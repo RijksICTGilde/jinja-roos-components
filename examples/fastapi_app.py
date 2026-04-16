@@ -30,7 +30,7 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound, DebugUndefined
-from src.jinja_roos_components import setup_components
+from jinja_roos_components import setup_components
 import os
 import sys
 
