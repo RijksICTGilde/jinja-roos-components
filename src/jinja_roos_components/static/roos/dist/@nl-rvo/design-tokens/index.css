@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Thu, 05 Mar 2026 12:15:22 GMT
+ * Generated on Fri, 17 Apr 2026 08:13:37 GMT
  */
 
 .rvo-theme {
@@ -92,9 +92,10 @@
   --rvo-textbox-max-width: 100%;
   --rvo-textbox-outline-offset: 0;
   --rvo-tag-pill-border-radius: 25px;
-  --rvo-tabs-active-border-bottom-style: solid;
-  --rvo-tabs-hover-border-bottom-style: solid;
-  --rvo-tabs-border-bottom-style: solid;
+  --rvo-tabs-panel-border-width: 1px;
+  --rvo-tabs-panel-border-style: solid;
+  --rvo-tabs-border-width: 1px;
+  --rvo-tabs-border-style: solid;
   --rvo-table-cell-border-bottom-style: solid;
   --rvo-table-cell-border-bottom-width: 0.05rem;
   --rvo-table-header-size-xl: 75%;
@@ -278,6 +279,12 @@
   --rvo-color-grijs-200: #E2E8F0;
   --rvo-color-grijs-100: #F1F5F9;
   --rvo-color-grijs-050: #F8FAFC;
+  --rvo-color-violet-750: #BE4088;
+  --rvo-color-violet-600: #CB66A0;
+  --rvo-color-violet-450: #D88CB7;
+  --rvo-color-violet-300: #E5B2CF;
+  --rvo-color-violet-150: #F2D9E7;
+  --rvo-color-violet: #a90061;
   --rvo-color-rood-750: #E06056;
   --rvo-color-rood-600: #E68078;
   --rvo-color-rood-450: #EC9F99;
@@ -559,21 +566,27 @@
   --rvo-tag-padding-block-start: var(--rvo-space-2xs);
   --rvo-tag-padding-block-end: var(--rvo-space-2xs);
   --rvo-tag-border-radius: var(--rvo-border-radius-sm);
-  --rvo-tabs-active-hover-color: var(--rvo-color-grijs-700);
   --rvo-tabs-active-font-weight: var(--rvo-font-weight-bold);
-  --rvo-tabs-active-color: var(--rvo-color-hemelblauw);
-  --rvo-tabs-active-border-bottom-width: var(--rvo-size-3xs);
-  --rvo-tabs-active-border-bottom-color: var(--rvo-color-hemelblauw);
-  --rvo-tabs-hover-border-bottom-width: var(--rvo-size-3xs);
-  --rvo-tabs-hover-border-bottom-color: var(--rvo-color-zwart);
+  --rvo-tabs-active-color: var(--rvo-color-zwart);
+  --rvo-tabs-active-background: var(--rvo-color-wit);
+  --rvo-tabs-focus-width: var(--utrecht-focus-outline-width);
+  --rvo-tabs-focus-offset: var(--utrecht-focus-outline-offset);
+  --rvo-tabs-focus-color: var(--rvo-color-hemelblauw);
+  --rvo-tabs-panel-border-color: var(--rvo-color-grijs-400);
+  --rvo-tabs-panel-padding-inline-end: var(--rvo-space-md);
+  --rvo-tabs-panel-padding-inline-start: var(--rvo-space-md);
+  --rvo-tabs-panel-padding-block-end: var(--rvo-space-md);
+  --rvo-tabs-panel-padding-block-start: var(--rvo-space-md);
+  --rvo-tabs-gap: var(--rvo-space-2xs);
   --rvo-tabs-font-weight: var(--rvo-font-weight-normal);
+  --rvo-tabs-font-size: var(--rvo-font-size-md);
   --rvo-tabs-padding-inline-end: var(--rvo-space-md);
   --rvo-tabs-padding-inline-start: var(--rvo-space-md);
   --rvo-tabs-padding-block-end: var(--rvo-space-xs);
   --rvo-tabs-padding-block-start: var(--rvo-space-xs);
-  --rvo-tabs-color: var(--rvo-color-grijs-800);
-  --rvo-tabs-border-bottom-width: var(--rvo-size-3xs);
-  --rvo-tabs-border-bottom-color: var(--rvo-color-grijs-300);
+  --rvo-tabs-color: var(--rvo-color-donkerblauw);
+  --rvo-tabs-border-color: var(--rvo-color-grijs-400);
+  --rvo-tabs-background: var(--rvo-color-grijs-200);
   --rvo-table-cell-padding-inline-start: var(--rvo-space-md);
   --rvo-table-cell-padding-inline-end: var(--rvo-space-md);
   --rvo-table-cell-padding-block-start: var(--rvo-space-xs);
@@ -940,7 +953,7 @@
   --rvo-alert-padding-xs-padding-block-start: var(--rvo-space-xs);
   --rvo-alert-padding-xs-padding-block-end: var(--rvo-space-xs);
   --rvo-alert-success-background-color: var(--rvo-color-groen-300);
-  --rvo-alert-error-background-color: var(--rvo-color-rood-300);
+  --rvo-alert-error-background-color: var(--rvo-color-rood-150);
   --rvo-alert-warning-background-color: var(--rvo-color-donkergeel-300);
   --rvo-alert-info-background-color: var(--rvo-color-hemelblauw-300);
   --rvo-alert-line-height: var(--rvo-line-height-md);
