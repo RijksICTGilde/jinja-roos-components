@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Thu, 05 Mar 2026 12:15:22 GMT
+ * Generated on Fri, 17 Apr 2026 08:13:37 GMT
  */
 
 export const rvoBorderRadiusSm = "3px";
@@ -56,6 +56,12 @@ export const rvoColorRood300 = "#F3C0BC";
 export const rvoColorRood450 = "#EC9F99";
 export const rvoColorRood600 = "#E68078";
 export const rvoColorRood750 = "#E06056";
+export const rvoColorViolet = "#a90061";
+export const rvoColorViolet150 = "#F2D9E7";
+export const rvoColorViolet300 = "#E5B2CF";
+export const rvoColorViolet450 = "#D88CB7";
+export const rvoColorViolet600 = "#CB66A0";
+export const rvoColorViolet750 = "#BE4088";
 export const rvoColorGrijs050 = "#F8FAFC";
 export const rvoColorGrijs100 = "#F1F5F9";
 export const rvoColorGrijs200 = "#E2E8F0";
@@ -151,7 +157,7 @@ export const rvoAlertFieldsetMargin = "-24px";
 export const rvoAlertLineHeight = "150%";
 export const rvoAlertInfoBackgroundColor = "#B3D7EE";
 export const rvoAlertWarningBackgroundColor = "#FFE9B8";
-export const rvoAlertErrorBackgroundColor = "#F3C0BC";
+export const rvoAlertErrorBackgroundColor = "#F9DFDD";
 export const rvoAlertSuccessBackgroundColor = "#C4DBB7";
 export const rvoAlertPaddingXsPaddingBlockEnd = "8px";
 export const rvoAlertPaddingXsPaddingBlockStart = "8px";
@@ -639,24 +645,31 @@ export const rvoTableCellPaddingBlockEnd = "8px";
 export const rvoTableCellPaddingBlockStart = "8px";
 export const rvoTableCellPaddingInlineEnd = "16px";
 export const rvoTableCellPaddingInlineStart = "16px";
-export const rvoTabsBorderBottomColor = "#CBD5E1";
-export const rvoTabsBorderBottomStyle = "solid";
-export const rvoTabsBorderBottomWidth = "2px";
-export const rvoTabsColor = "#1E293B";
+export const rvoTabsBackground = "#E2E8F0";
+export const rvoTabsBorderColor = "#94A3B8";
+export const rvoTabsBorderStyle = "solid";
+export const rvoTabsBorderWidth = "1px";
+export const rvoTabsColor = "#01689b";
 export const rvoTabsPaddingBlockStart = "8px";
 export const rvoTabsPaddingBlockEnd = "8px";
 export const rvoTabsPaddingInlineStart = "16px";
 export const rvoTabsPaddingInlineEnd = "16px";
+export const rvoTabsFontSize = "1rem";
 export const rvoTabsFontWeight = "400";
-export const rvoTabsHoverBorderBottomColor = "#000000";
-export const rvoTabsHoverBorderBottomStyle = "solid";
-export const rvoTabsHoverBorderBottomWidth = "2px";
-export const rvoTabsActiveBorderBottomColor = "#007BC7";
-export const rvoTabsActiveBorderBottomStyle = "solid";
-export const rvoTabsActiveBorderBottomWidth = "2px";
-export const rvoTabsActiveColor = "#007BC7";
+export const rvoTabsGap = "4px";
+export const rvoTabsPanelPaddingBlockStart = "16px";
+export const rvoTabsPanelPaddingBlockEnd = "16px";
+export const rvoTabsPanelPaddingInlineStart = "16px";
+export const rvoTabsPanelPaddingInlineEnd = "16px";
+export const rvoTabsPanelBorderColor = "#94A3B8";
+export const rvoTabsPanelBorderStyle = "solid";
+export const rvoTabsPanelBorderWidth = "1px";
+export const rvoTabsFocusColor = "#007BC7";
+export const rvoTabsFocusOffset = "3px";
+export const rvoTabsFocusWidth = "2px";
+export const rvoTabsActiveBackground = "#FFFFFF";
+export const rvoTabsActiveColor = "#000000";
 export const rvoTabsActiveFontWeight = "700";
-export const rvoTabsActiveHoverColor = "#334155";
 export const rvoTagBorderRadius = "3px";
 export const rvoTagPaddingBlockEnd = "4px";
 export const rvoTagPaddingBlockStart = "4px";
