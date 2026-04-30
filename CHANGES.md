@@ -1,6 +1,10 @@
 # [Unreleased]
 - ...
 
+# [0.5] - 2026-04-29
+- Upgraded `@nl-rvo/component-library-css` from `4.19.0` to `4.20.1`
+- Upgraded `@nl-rvo/design-tokens` from `2.2.0` to `2.4.0`: adds design tokens for new tabs v2 component
+
 # [0.4] - 2026-03-18
 - Upgraded `@nl-rvo/assets` from `1.0.0-alpha.360` to `1.0.0`
 - Upgraded `@nl-rvo/component-library-css` from `4.7.0` to `4.19.0`
