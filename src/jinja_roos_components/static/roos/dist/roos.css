@@ -1042,4 +1042,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 .rvo-card__metadata{font-size:var(--rvo-font-size-sm, .875rem);color:var(--rvo-color-grijs-600, #555);margin-bottom:.25rem}
 .rvo-card__subheading{font-size:var(--rvo-font-size-md, 1rem);font-weight:600;color:inherit;margin:0}
 
+/* Tabs: borderless variant — panel without border/background (e.g. inside dialogs/panels) */
+.rvo-tabs--borderless .rvo-tabs__panel{border:none;background:none;padding-inline:0}
+
 /*# sourceMappingURL=roos.css.map*/

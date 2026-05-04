@@ -96,6 +96,15 @@ def render_component(req: RenderRequest):
         if not ATTR_NAME_RE.match(key):
             raise HTTPException(status_code=400, detail=f"Invalid attribute name: {key}")
 
+    # Parse JSON string values into lists/dicts (Storybook sends text controls as strings)
+    import json as _json
+    for key, value in list(req.attrs.items()):
+        if isinstance(value, str) and value.startswith("["):
+            try:
+                req.attrs[key] = _json.loads(value)
+            except _json.JSONDecodeError:
+                pass
+
     source = build_source(req.component, req.attrs, req.content)
 
     # Check if any attribute contains component markup or complex objects (lists/dicts)
