@@ -50,7 +50,7 @@ def test_button(env):
 
 def test_card(env):
     """Test card component renders without errors."""
-    template_str = '<c-card />'
+    template_str = '<c-card heading="Test" />'
     template = env.from_string(template_str)
     result = template.render()
     assert result is not None

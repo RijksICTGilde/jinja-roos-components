@@ -1,0 +1,23 @@
+{% import 'components/_generic_attributes.j2' as attrs %}
+{% set responsive = _component_context.responsive | default(true) %}
+{% set additional_class = _component_context.class | default('') %}
+{% set children = _component_context.content | default('') %}
+{% set element_id = _component_context.id | default('') %}
+
+{% set css_classes = ['rvo-table'] %}
+{% if additional_class %}{% set css_classes = css_classes + [additional_class] %}{% endif %}
+
+{% if responsive %}
+<div class="rvo-table--responsive"{% if element_id %} id="{{ element_id }}"{% endif %}>
+{% endif %}
+
+<table class="{{ css_classes | join(' ') }}"
+       data-roos-component="table"
+       {% if not responsive and element_id %}id="{{ element_id }}"{% endif %}
+       {{ attrs.render_extra_attributes(_component_context) }}>
+    {{ children | safe }}
+</table>
+
+{% if responsive %}
+</div>
+{% endif %}

@@ -227,11 +227,19 @@ class ComponentExtensionDOM(Extension):
     def _is_generic_html_attribute(self, attr_name: str) -> bool:
         """Check if an attribute is a generic HTML attribute that should be allowed on all components."""
         # Check for common prefixes
-        generic_prefixes = ['data-', 'aria-', 'hx-']
+        generic_prefixes = ['data-', 'aria-', 'hx-', 'on']
         for prefix in generic_prefixes:
             if attr_name.startswith(prefix):
                 return True
-        return False
+        # Allow standard HTML global attributes
+        global_attrs = {
+            'role', 'tabindex', 'title', 'lang', 'dir', 'hidden', 'autofocus',
+            'draggable', 'contenteditable', 'spellcheck', 'translate',
+            'accesskey', 'autocapitalize', 'enterkeyhint', 'inputmode',
+            'is', 'itemid', 'itemprop', 'itemref', 'itemscope', 'itemtype',
+            'nonce', 'part', 'slot', 'name', 'value', 'for',
+        }
+        return attr_name in global_attrs
 
     def _build_include(self, component_name: str, attrs: Dict[str, Any], content: Optional[str]) -> str:
         """Build the Jinja2 include statement from component name, attributes, and content."""

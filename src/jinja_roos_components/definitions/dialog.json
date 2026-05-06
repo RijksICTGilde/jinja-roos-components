@@ -1,0 +1,106 @@
+{
+  "name": "dialog",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "modalTitle",
+      "type": "string",
+      "required": false,
+      "description": "Dialog title shown in the header",
+      "default": "",
+      "is_example": true,
+      "example_value": "Dialog titel"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Show the dialog (for static rendering; normally use .showModal() in JS)",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "required": false,
+      "description": "Dialog width size",
+      "enum_values": ["sm", "md", "lg", "xl"],
+      "default": "md",
+      "is_example": true,
+      "example_value": "md"
+    },
+    {
+      "name": "type",
+      "type": "enum",
+      "required": false,
+      "description": "Dialog positioning type",
+      "enum_values": ["centered", "inset-inline-start", "inset-inline-end"],
+      "default": "centered",
+      "is_example": true,
+      "example_value": "centered"
+    },
+    {
+      "name": "closedby",
+      "type": "enum",
+      "required": false,
+      "description": "How the dialog can be closed",
+      "enum_values": ["any", "closerequest", "none"],
+      "default": "any",
+      "is_example": true,
+      "example_value": "any"
+    },
+    {
+      "name": "showCloseButton",
+      "type": "boolean",
+      "required": false,
+      "description": "Show close button",
+      "default": true,
+      "is_example": true,
+      "example_value": true
+    },
+    {
+      "name": "closeLabel",
+      "type": "string",
+      "required": false,
+      "description": "Label for the close button",
+      "default": "Sluiten",
+      "is_example": true,
+      "example_value": "Sluiten"
+    },
+    {
+      "name": "footer",
+      "type": "string",
+      "required": false,
+      "description": "Footer content (typically buttons)",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "modalTitle": "Dialog titel",
+    "size": "md",
+    "type": "centered",
+    "closedby": "any",
+    "showCloseButton": true,
+    "closeLabel": "Sluiten"
+  }
+}
