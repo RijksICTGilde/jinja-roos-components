@@ -1,5 +1,18 @@
 # [Unreleased]
-- ...
+- Added table components (c-table, c-table-head, c-table-body, c-table-row, c-table-cell, c-table-header) — converted from RVO component library
+- Added dialog component (c-dialog) — converted from RVO component library
+- Added search field component (c-search-field) — converted from RVO component library
+- Button: support `href` attribute to render as `<a>` with button styling
+- Button: hide default "Button" text for icon-only buttons
+- Link: render as `<span>` when no `href` is provided (no hover state)
+- Link: added `weight` attribute (normal/bold)
+- Tabs: rewritten with ARIA `<button>` elements, added `size`, `variant` (borderless), per-tab custom attributes
+- Label: fix broken `parseContentMarkup` syntax
+- CSS: restore `<strong>`/`<em>` styling stripped by CSS reset
+- CSS: remove button hover underline
+- CSS: added link weight variants (`rvo-link--normal`, `rvo-link--bold`)
+- CSS: menubar active link styling (bold + lintblauw bottom border)
+- CSS: tabs borderless variant for panels/dialogs
 
 # [0.5] - 2026-04-29
 - Upgraded `@nl-rvo/component-library-css` from `4.19.0` to `4.20.1`
