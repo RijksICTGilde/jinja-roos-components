@@ -1,11 +1,15 @@
 {% import 'components/_generic_attributes.j2' as attrs %}
 {% set tabs = _component_context.tabs | default([]) %}
 {% set active_tab = _component_context.activeTab | default(0) %}
+{% set size = _component_context.size | default('md') %}
+{% set variant = _component_context.variant | default('default') %}
 {% set additional_class = _component_context.class | default('') %}
 {% set content = _component_context.content | default('') %}
 
 {# Build CSS classes #}
 {% set tabs_classes = ['rvo-tabs'] %}
+{% if size %}{% set tabs_classes = tabs_classes + ['rvo-tabs--' + size] %}{% endif %}
+{% if variant != 'default' %}{% set tabs_classes = tabs_classes + ['rvo-tabs--' + variant] %}{% endif %}
 {% if additional_class %}
     {% set tabs_classes = tabs_classes + [additional_class] %}
 {% endif %}
@@ -15,26 +19,27 @@
     data-roos-component="tabs"
     data-roos-active-tab="{{ active_tab }}"
     {{ attrs.render_extra_attributes(_component_context) }}>
-    
+
     {% if tabs | length > 0 %}
-        <nav class="rvo-tabs__nav" role="tablist">
+        <div class="rvo-tabs__tablist" role="tablist" aria-label="{{ _component_context.get('ariaLabel', 'Tabs') }}">
             {% for tab in tabs %}
-                <a href="{{ tab.href | default('#') }}"
-                   class="rvo-tab{% if loop.index0 == active_tab %} rvo-tab--active{% endif %}"
-                   role="tab"
-                   {% if loop.index0 == active_tab %}aria-selected="true"{% else %}aria-selected="false"{% endif %}
-                   aria-controls="tab-panel-{{ loop.index0 }}"
-                   id="tab-{{ loop.index0 }}">
-                    {{ tab.label }}
-                </a>
+                <button
+                    id="{{ tab.id | default('tab-' ~ loop.index0) }}"
+                    type="button"
+                    role="tab"
+                    class="rvo-tabs__tab{% if loop.index0 == active_tab %} rvo-tabs__tab--active{% endif %}"
+                    aria-selected="{{ 'true' if loop.index0 == active_tab else 'false' }}"
+                    aria-controls="{{ tab.panelId | default('tab-panel-' ~ loop.index0) }}"
+                    tabindex="{{ 0 if loop.index0 == active_tab else -1 }}"
+                    {% for attr_key, attr_val in tab.items() if attr_key not in ('label', 'id', 'panelId') %}{{ attr_key }}="{{ attr_val }}" {% endfor %}>
+                    <span class="rvo-tabs__label">{{ tab.label }}</span>
+                </button>
             {% endfor %}
-        </nav>
-    {% endif %}
-    
-    {% if content %}
-        <div class="rvo-tabs__content">
-            {{ content | safe }}
         </div>
     {% endif %}
-    
+
+    {% if content %}
+        {{ content | safe }}
+    {% endif %}
+
 </div>

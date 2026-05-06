@@ -383,11 +383,19 @@ class ComponentExtension(Extension):
     def _is_generic_html_attribute(self, attr_name: str) -> bool:
         """Check if an attribute is a generic HTML attribute that should be allowed on all components."""
         # Check for common prefixes
-        generic_prefixes = ['data-', 'aria-', 'hx-']
+        generic_prefixes = ['data-', 'aria-', 'hx-', 'on']
         for prefix in generic_prefixes:
             if attr_name.startswith(prefix):
                 return True
-        return False
+        # Allow standard HTML global attributes
+        global_attrs = {
+            'role', 'tabindex', 'title', 'lang', 'dir', 'hidden', 'autofocus',
+            'draggable', 'contenteditable', 'spellcheck', 'translate',
+            'accesskey', 'autocapitalize', 'enterkeyhint', 'inputmode',
+            'is', 'itemid', 'itemprop', 'itemref', 'itemscope', 'itemtype',
+            'nonce', 'part', 'slot', 'name', 'value', 'for',
+        }
+        return attr_name in global_attrs
 
     def _validate_utility_attribute(self, attr_name: str, attr_value: str, component_tag: str) -> None:
         """

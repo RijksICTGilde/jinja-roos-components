@@ -18,5 +18,5 @@
     id="{{ id }}"
     type="{{ type }}"
     {{ attrs.render_extra_attributes(_component_context) }}>
-    {{ parseContentMarkup(children if parseContentMarkup(children else content) | safe }}
+    {{ (children if children else content) | safe }}
 </label>
