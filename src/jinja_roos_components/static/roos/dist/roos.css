@@ -1056,7 +1056,7 @@ em,i{font-style:italic}
 /* Menubar: active link styling — bold with bottom border aligned to horizontal rule */
 .rvo-menubar .rvo-menubar__link.rvo-link--active{font-weight:700;text-decoration:none}
 .rvo-menubar .rvo-menubar__item:has(.rvo-link--active){position:relative}
-.rvo-menubar .rvo-menubar__item:has(.rvo-link--active)::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:currentColor}
+.rvo-menubar .rvo-menubar__item:has(.rvo-link--active)::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--rvo-color-lintblauw, #154273)}
 
 /* Tabs: borderless variant — panel without border/background (e.g. inside dialogs/panels) */
 .rvo-tabs.rvo-tabs--borderless .rvo-tabs__panel{border:none;background:none;padding-inline:0}
