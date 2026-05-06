@@ -129,6 +129,15 @@
       "example_value": ""
     },
     {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the field is required",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
       "name": "errorText",
       "type": "string",
       "required": false,
