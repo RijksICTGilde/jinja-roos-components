@@ -45,15 +45,6 @@
 {% if _component_context.get('class') %}
     {% set css_classes = css_classes + _component_context['class'].split() %}
 {% endif %}
-{% set href = _component_context.get('href') %}
-{% if href %}
-<a  href="{{ href }}"
-    class="{{ css_classes | join(' ') }}"
-    data-roos-component="button"
-    {{ attrs.render_extra_attributes(_component_context) }}>
-    {% if icon and iconPlacement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{% if children %}{{ children | safe }}{% elif _component_context.get('label') is not none %}{{ label | safe }}{% endif %}{% if icon and iconPlacement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
-</a>
-{% else %}
 <button
     class="{{ css_classes | join(' ') }}"
     data-roos-component="button"
@@ -62,4 +53,3 @@
     {{ attrs.render_extra_attributes(_component_context) }}>
     {% if icon and iconPlacement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{% if children %}{{ children | safe }}{% elif _component_context.get('label') is not none %}{{ label | safe }}{% endif %}{% if icon and iconPlacement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
 </button>
-{% endif %}

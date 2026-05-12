@@ -245,13 +245,6 @@
       "required": false,
       "description": "Children/content support added via customization",
       "default": ""
-    },
-    {
-      "name": "href",
-      "type": "string",
-      "required": false,
-      "description": "URL to link to. When set, renders as <a> instead of <button>",
-      "default": ""
     }
   ],
   "manual_review_items": [
