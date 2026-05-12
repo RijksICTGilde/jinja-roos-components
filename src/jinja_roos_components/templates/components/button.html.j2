@@ -51,5 +51,5 @@
     {% if disabled %}disabled{% endif %}
     type="{{ type_attr }}"
     {{ attrs.render_extra_attributes(_component_context) }}>
-    {% if icon and iconPlacement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{{ children if children else label | safe }}{% if icon and iconPlacement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
+    {% if icon and iconPlacement == 'before' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}{% if children %}{{ children | safe }}{% elif _component_context.get('label') is not none %}{{ label | safe }}{% endif %}{% if icon and iconPlacement == 'after' %}<span class="utrecht-icon rvo-icon rvo-icon-{{ icon }} rvo-icon--{{ size }} rvo-icon--{{ color }}" role="img" aria-label="{{ iconAriaLabel | title }}"></span>{% endif %}
 </button>

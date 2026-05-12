@@ -1,0 +1,63 @@
+{
+  "name": "table-cell",
+  "source_file": "manual",
+  "base_components": [],
+  "nested_components": [],
+  "attributes": [
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "required": false,
+      "description": "Right-align for numeric content",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "fitContent",
+      "type": "boolean",
+      "required": false,
+      "description": "Fit cell width to content",
+      "default": false,
+      "is_example": true,
+      "example_value": false
+    },
+    {
+      "name": "colspan",
+      "type": "string",
+      "required": false,
+      "description": "Number of columns to span",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "rowspan",
+      "type": "string",
+      "required": false,
+      "description": "Number of rows to span",
+      "default": "",
+      "is_example": true,
+      "example_value": ""
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "className attribute",
+      "default": ""
+    },
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "children attribute",
+      "default": ""
+    }
+  ],
+  "manual_review_items": [],
+  "example_values": {
+    "numeric": false,
+    "fitContent": false
+  }
+}

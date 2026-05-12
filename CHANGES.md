@@ -1,5 +1,8 @@
 # [Unreleased]
-- ...
+- #29: Added new components from RVO library (table, dialog, search-field) and improved existing components (link weight, tabs ARIA/borderless, label fix)
+- #29: CSS fixes in roos.css (restore strong/em, button hover underline, menubar active state, link weights, tabs borderless)
+- (!backwards incompatible) #29: Tabs component now renders `<button>` elements instead of `<a>` links for ARIA compliance
+- #30: Added Link and Tabs stories to Storybook, improved render API
 
 # [0.5] - 2026-04-29
 - Upgraded `@nl-rvo/component-library-css` from `4.19.0` to `4.20.1`

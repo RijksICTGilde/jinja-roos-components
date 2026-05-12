@@ -55,4 +55,4 @@ storybook-static/
 *.tsbuildinfo
 uv.lock
 
-rvo
+rvo.npm-cache/

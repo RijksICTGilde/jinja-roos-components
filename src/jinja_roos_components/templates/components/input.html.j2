@@ -12,6 +12,7 @@
 {% set default_value = _component_context.defaultValue | default('') %}
 {% set max_length = _component_context.maxLength | default('') %}
 {% set size = _component_context.size | default('md') %}
+{% if size is sameas true or size == 'true' %}{% set size = 'none' %}{% endif %}
 {% set prefix = _component_context.prefix | default('') %}
 {% set suffix = _component_context.suffix | default('') %}
 {% set validation = _component_context.validation | default('none') %}
